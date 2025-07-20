@@ -1,49 +1,8 @@
 import { StyleSheet, View, Text, Image, ScrollView } from 'react-native';
 import React from 'react';
 import Book from '../components/Book';
+import { libraryDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
-
-const libraryDummyData = [
-    {
-        title: '빨간 모자',
-        author: '그림 형제',
-        translator: '김미혜',
-        publishDate: new Date('2014-10-31'),
-        bookmarkNum: 19820,
-        isBookmarked: true,
-    },
-    {
-        title: '노란 모자',
-        author: '그림 형제',
-        publishDate: new Date('2014-10-31'),
-        bookmarkNum: 210,
-        isBookmarked: false,
-    },
-    {
-        title: '파란 모자',
-        author: '그림 형제',
-        translator: '김미혜',
-        publishDate: new Date('2014-10-31'),
-        bookmarkNum: 19820,
-        isBookmarked: true,
-    },
-    {
-        title: '보라 모자',
-        author: '그림 형제',
-        translator: '김미혜',
-        publishDate: new Date('2014-10-31'),
-        bookmarkNum: 19820,
-        isBookmarked: true,
-    },
-    {
-        title: '파란 모자',
-        author: '그림 형제',
-        translator: '김미혜',
-        publishDate: new Date('2014-10-31'),
-        bookmarkNum: 19820,
-        isBookmarked: false,
-    },
-];
 
 const Library = () => {
     return (
