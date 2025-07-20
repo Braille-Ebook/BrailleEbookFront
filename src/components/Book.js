@@ -1,5 +1,6 @@
-import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import React from 'react';
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
+
 import commonStyles from '../../assets/styles/commonStyles';
 
 const Book = ({ data }) => {

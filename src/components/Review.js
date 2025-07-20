@@ -1,5 +1,6 @@
-import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
 

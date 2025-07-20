@@ -15,7 +15,7 @@ import commonColors from '../../assets/colors/commonColors';
 
 const Book = () => {
     return (
-        <ScrollView>
+        <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.bookContainer}>
                 <Image
                     source={require('../../assets/images/littleRedRidingHood.png')}
