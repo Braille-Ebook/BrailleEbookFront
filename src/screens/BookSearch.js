@@ -6,7 +6,7 @@ import { bookDummyData } from '../../assets/dummy';
 const BookSearch = () => {
     return (
         <View>
-            <Book data={bookDummyData} />
+            <Text>BookSearch</Text>
         </View>
     );
 };

@@ -1,4 +1,4 @@
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import React from 'react';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
@@ -14,14 +14,17 @@ const Review = ({ data }) => {
                         style={commonStyles.smallText}
                     >{`좋아요 ${data.likeNum}개`}</Text>
                 </View>
-                <Image
-                    source={
-                        data.isLiked
-                            ? require('../../assets/icons/thumbFill.png')
-                            : require('../../assets/icons/thumb.png')
-                    }
-                    style={styles.icon}
-                />
+
+                <Pressable>
+                    <Image
+                        source={
+                            data.isLiked
+                                ? require('../../assets/icons/thumbFill.png')
+                                : require('../../assets/icons/thumb.png')
+                        }
+                        style={styles.icon}
+                    />
+                </Pressable>
             </View>
         </View>
     );

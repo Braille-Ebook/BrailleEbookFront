@@ -1,4 +1,4 @@
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import React from 'react';
 import commonStyles from '../../assets/styles/commonStyles';
 
@@ -21,13 +21,16 @@ const Book = ({ data }) => {
                 }.${data.publishDate.getDate()}`}</Text>
 
                 <View style={styles.bookmarkContainer}>
-                    <Image
-                        source={
-                            data.isBookmarked
-                                ? require('../../assets/icons/bookmarkIconFill.png')
-                                : require('../../assets/icons/bookmarkIcon.png')
-                        }
-                    />
+                    <Pressable>
+                        <Image
+                            source={
+                                data.isBookmarked
+                                    ? require('../../assets/icons/bookmarkIconFill.png')
+                                    : require('../../assets/icons/bookmarkIcon.png')
+                            }
+                        />
+                    </Pressable>
+
                     <Text>{`북마크 ${data.bookmarkNum}`}</Text>
                 </View>
             </View>

@@ -7,11 +7,13 @@ import {
     StyleSheet,
 } from 'react-native';
 import React from 'react';
-import commonStyles from '../../assets/styles/commonStyles';
+
 import Review from '../components/Review';
+import { bookDummyData as data } from '../../assets/dummy';
+import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
 
-const Book = ({ data }) => {
+const Book = () => {
     return (
         <ScrollView>
             <View style={styles.bookContainer}>
@@ -36,13 +38,16 @@ const Book = ({ data }) => {
                         data.publishDate.getMonth() + 1
                     }.${data.publishDate.getDate()}`}</Text>
                     <View style={styles.bookmarkContainer}>
-                        <Image
-                            source={
-                                data.isBookmarked
-                                    ? require('../../assets/icons/bookmarkIconFill.png')
-                                    : require('../../assets/icons/bookmarkIcon.png')
-                            }
-                        />
+                        <Pressable>
+                            <Image
+                                source={
+                                    data.isBookmarked
+                                        ? require('../../assets/icons/bookmarkIconFill.png')
+                                        : require('../../assets/icons/bookmarkIcon.png')
+                                }
+                            />
+                        </Pressable>
+
                         <Text>{`북마크 ${data.bookmarkNum}회`}</Text>
                     </View>
                     <View style={styles.buttonContainer}>
@@ -69,9 +74,11 @@ const Book = ({ data }) => {
                     {data.bestReviews.map((review) => (
                         <Review data={review} />
                     ))}
-                    <Text
-                        style={[commonStyles.smallText, styles.more]}
-                    >{`> 리뷰 더 보기`}</Text>
+                    <Pressable>
+                        <Text
+                            style={[commonStyles.smallText, styles.more]}
+                        >{`> 리뷰 더 보기`}</Text>
+                    </Pressable>
                 </View>
                 <View style={styles.contentContainer}>
                     <Text style={[commonStyles.subtitleText, styles.subtitle]}>

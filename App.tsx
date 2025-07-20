@@ -5,6 +5,7 @@ import React from 'react';
 import BookSearch from './src/screens/BookSearch';
 import Library from './src/screens/Library';
 import MyPage from './src/screens/MyPage';
+import Book from './src/screens/Book';
 
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -32,6 +33,7 @@ function App() {
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name='Bottom' component={BottomTabScreen} />
+                <Stack.Screen name='Book' component={Book} />
             </Stack.Navigator>
         </NavigationContainer>
     );
