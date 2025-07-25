@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
 
-import BookSearch from './src/screens/BookSearch';
+import BookSearch from './src/screens/Home';
 import Library from './src/screens/Library';
 import MyPage from './src/screens/MyPage';
 
