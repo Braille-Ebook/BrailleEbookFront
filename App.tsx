@@ -6,6 +6,8 @@ import BookSearchScreen from './src/screens/BookSearchScreen';
 import LibraryScreen from './src/screens/LibraryScreen';
 import MyPageScreen from './src/screens/MyPageScreen';
 import BookScreen from './src/screens/BookScreen';
+import ReviewScreen from './src/screens/ReviewScreen';
+import ReviewEditScreen from './src/screens/ReviewEditScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -36,7 +38,12 @@ function App() {
         <NavigationContainer>
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name='Bottom' component={BottomTabScreen} />
-                <Stack.Screen name='Book' component={BookScreen} />
+                <Stack.Screen name='BookScreen' component={BookScreen} />
+                <Stack.Screen name='ReviewScreen' component={ReviewScreen} />
+                <Stack.Screen
+                    name='ReviewEditScreen'
+                    component={ReviewEditScreen}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );

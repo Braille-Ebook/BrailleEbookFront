@@ -94,3 +94,34 @@ export const bookDummyData = {
         },
     ],
 };
+
+export const reviewDummyData = [
+    {
+        nickname: 'user1',
+        likeNum: 21,
+        created_at: '2025-07-24T12:18:54.000Z',
+        content: '얘가 뭔 책이었지?',
+        isLiked: false,
+    },
+    {
+        nickname: 'user2',
+        likeNum: 19,
+        created_at: '2025-07-24T12:18:54.000Z',
+        content: '제가 제일 좋아하는 책이에요',
+        isLiked: null,
+    },
+    {
+        nickname: 'user3',
+        likeNum: 5,
+        created_at: '2025-07-24T12:18:54.000Z',
+        content: '읽어도 읽어도 다시 읽고 싶은 고전 명작',
+        isLiked: true,
+    },
+    {
+        nickname: 'user4',
+        likeNum: 1,
+        created_at: '2025-07-24T12:18:54.000Z',
+        content: 'scifi의 대가이군',
+        isLiked: false,
+    },
+];
