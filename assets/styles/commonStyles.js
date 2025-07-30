@@ -7,6 +7,9 @@ const commonStyles = StyleSheet.create({
     subtitleText: {
         fontSize: 16,
     },
+    smallText: {
+        fontSize: 12,
+    },
 });
 
 export default commonStyles;
