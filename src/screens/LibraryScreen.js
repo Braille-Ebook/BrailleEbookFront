@@ -31,7 +31,7 @@ const Library = () => {
                 {libraryDummyData.map((data, index) => (
                     <Pressable
                         onPress={() => {
-                            navigation.navigate('Book');
+                            navigation.navigate('BookScreen');
                         }}
                     >
                         <Book data={data} key={index} />

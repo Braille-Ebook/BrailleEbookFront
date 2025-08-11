@@ -7,6 +7,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import React from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 import Review from '../components/Review';
 import { bookDummyData as data } from '../../assets/dummy';
@@ -14,6 +15,7 @@ import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
 
 const Book = () => {
+    const navigation = useNavigation();
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.bookContainer}>
@@ -74,7 +76,11 @@ const Book = () => {
                     {data.bestReviews.map((review) => (
                         <Review data={review} />
                     ))}
-                    <Pressable>
+                    <Pressable
+                        onPress={() => {
+                            navigation.navigate('ReviewScreen');
+                        }}
+                    >
                         <Text
                             style={[commonStyles.smallText, styles.more]}
                         >{`> 리뷰 더 보기`}</Text>
