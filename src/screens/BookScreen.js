@@ -9,12 +9,13 @@ import {
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-import Review from '../components/Review';
+import ReviewListItem from '../components/ReviewListItem';
+import { getAuthorAndTranslator, getDateString } from '../utils';
 import { bookDummyData as data } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
 
-const Book = () => {
+const BookScreen = () => {
     const navigation = useNavigation();
     return (
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -29,16 +30,12 @@ const Book = () => {
                     </Text>
                     <Text>{data.imageUrl}</Text>
                     <Text style={styles.contentText}>
-                        {data.translator
-                            ? `${data.author} 글, ${data.translator} 번역`
-                            : `${data.author} 글`}
+                        {getAuthorAndTranslator(data.author, data.translator)}
                     </Text>
                     <Text style={styles.contentText}>{data.publisher}</Text>
-                    <Text
-                        style={styles.contentText}
-                    >{`${data.publishDate.getFullYear()}.${
-                        data.publishDate.getMonth() + 1
-                    }.${data.publishDate.getDate()}`}</Text>
+                    <Text style={styles.contentText}>
+                        {getDateString(data.publishDate)}
+                    </Text>
                     <View style={styles.bookmarkContainer}>
                         <Pressable>
                             <Image
@@ -73,8 +70,8 @@ const Book = () => {
                     <Text style={[commonStyles.subtitleText, styles.subtitle]}>
                         리뷰
                     </Text>
-                    {data.bestReviews.map((review) => (
-                        <Review data={review} />
+                    {data.bestReviews.map((review, index) => (
+                        <ReviewListItem data={review} key={index} />
                     ))}
                     <Pressable
                         onPress={() => {
@@ -97,7 +94,7 @@ const Book = () => {
                         목차
                     </Text>
                     {data.toc.map((c, index) => (
-                        <Text>{`${index + 1}장 ${c}`}</Text>
+                        <Text key={index}>{`${index + 1}장 ${c}`}</Text>
                     ))}
                 </View>
                 <View style={styles.contentContainer}>
@@ -110,11 +107,9 @@ const Book = () => {
                     </View>
                     <View style={styles.tableRow}>
                         <Text style={styles.column1}>발행(출시)일자</Text>
-                        <Text
-                            style={styles.column2}
-                        >{`${data.publishDate.getFullYear()}년 ${
-                            data.publishDate.getMonth() + 1
-                        }월 ${data.publishDate.getDate()}일`}</Text>
+                        <Text style={styles.column2}>
+                            {getDateString(data.publishDate)}
+                        </Text>
                     </View>
                     <View style={styles.tableRow}>
                         <Text style={styles.column1}>쪽수</Text>
@@ -201,4 +196,4 @@ const styles = StyleSheet.create({
     column2: { width: '50%' },
 });
 
-export default Book;
+export default BookScreen;

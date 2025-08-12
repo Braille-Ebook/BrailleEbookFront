@@ -125,3 +125,75 @@ export const reviewDummyData = [
         isLiked: false,
     },
 ];
+export const userDummyData = {
+    nickname: 'tester15',
+    numOfReview: 5,
+    numOfReadBooks: 3,
+};
+
+export const myReadBooksDummyData = [
+    {
+        title: '소년이 온다',
+        author: '한강',
+        lastReadDate: new Date('2025-08-05T06:12:00'),
+        isBookmarked: true,
+    },
+    {
+        title: '아기가 온다',
+        author: '금강',
+        lastReadDate: new Date('2025-08-01T00:24:00'),
+        isBookmarked: false,
+    },
+    {
+        title: '청년이 온다',
+        author: '나일강',
+        lastReadDate: new Date('2025-07-24T21:24:00'),
+        isBookmarked: true,
+    },
+    {
+        title: '어른이 온다',
+        author: '미시시피강',
+        lastReadDate: new Date('2025-06-01T03:24:00'),
+        isBookmarked: true,
+    },
+    {
+        title: '노인이 온다',
+        author: '신천',
+        lastReadDate: new Date('2024-11-20T03:24:00'),
+        isBookmarked: false,
+    },
+];
+
+export const myReviewsDummyData = [
+    {
+        title: '소년이 온다',
+        author: '한강',
+        content: '역시 고전 명작',
+        isBookmarked: true,
+    },
+    {
+        title: '아기가 온다',
+        author: '금강',
+        content:
+            '빨간 모자를 신선하게 재해석한 소설이었습니다. 매우 흥미로웠고 다시 읽을 의사가',
+        isBookmarked: false,
+    },
+    {
+        title: '청년이 온다',
+        author: '나일강',
+        content: '아 좀 뻔해지는 기분이 듭니다.',
+        isBookmarked: true,
+    },
+    {
+        title: '어른이 온다',
+        author: '미시시피강',
+        content: '어른이 오면 어른이 오고 어른이 오면 어른이 온거죠',
+        isBookmarked: true,
+    },
+    {
+        title: '노인이 온다',
+        author: '신천',
+        content: '올수 있을까요',
+        isBookmarked: false,
+    },
+];

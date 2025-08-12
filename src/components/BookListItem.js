@@ -1,9 +1,11 @@
+import { StyleSheet, View, Text, Image } from 'react-native';
 import React from 'react';
-import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 
+import { getAuthorAndTranslator, getDateString } from '../utils';
 import commonStyles from '../../assets/styles/commonStyles';
 
-const Book = ({ data }) => {
+//책 사진까지 있는 List Item
+const BookListItem = ({ data }) => {
     return (
         <View style={styles.bookContainer}>
             <Image
@@ -13,25 +15,18 @@ const Book = ({ data }) => {
             <View>
                 <Text style={commonStyles.subtitleText}>{data.title}</Text>
                 <Text>
-                    {data.translator
-                        ? `${data.author} 글, ${data.translator} 번역`
-                        : `${data.author} 글`}
+                    {getAuthorAndTranslator(data.author, data.translator)}
                 </Text>
-                <Text>{`${data.publishDate.getFullYear()}.${
-                    data.publishDate.getMonth() + 1
-                }.${data.publishDate.getDate()}`}</Text>
+                <Text>{getDateString(data.publishDate)}</Text>
 
                 <View style={styles.bookmarkContainer}>
-                    <Pressable>
-                        <Image
-                            source={
-                                data.isBookmarked
-                                    ? require('../../assets/icons/bookmarkIconFill.png')
-                                    : require('../../assets/icons/bookmarkIcon.png')
-                            }
-                        />
-                    </Pressable>
-
+                    <Image
+                        source={
+                            data.isBookmarked
+                                ? require('../../assets/icons/bookmarkIconFill.png')
+                                : require('../../assets/icons/bookmarkIcon.png')
+                        }
+                    />
                     <Text>{`북마크 ${data.bookmarkNum}`}</Text>
                 </View>
             </View>
@@ -54,4 +49,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Book;
+export default BookListItem;

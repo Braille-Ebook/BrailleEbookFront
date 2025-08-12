@@ -9,11 +9,11 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import Book from '../components/Book';
+import BookListItem from '../components/BookListItem';
 import { libraryDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
-const Library = () => {
+const LibraryScreen = () => {
     const navigation = useNavigation();
     return (
         <View style={styles.libraryContainer}>
@@ -33,8 +33,9 @@ const Library = () => {
                         onPress={() => {
                             navigation.navigate('BookScreen');
                         }}
+                        key={index}
                     >
-                        <Book data={data} key={index} />
+                        <BookListItem data={data} />
                     </Pressable>
                 ))}
             </ScrollView>
@@ -59,4 +60,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default Library;
+export default LibraryScreen;
