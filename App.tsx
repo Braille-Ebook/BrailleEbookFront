@@ -5,6 +5,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import BookSearchScreen from './src/screens/BookSearchScreen';
 import LibraryScreen from './src/screens/LibraryScreen';
 import MyPageScreen from './src/screens/MyPageScreen';
+import MyBooksScreen from './src/screens/MyBooksScreen';
+import MyReviewsScreen from './src/screens/MyReviewsScreen';
 import BookScreen from './src/screens/BookScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ReviewEditScreen from './src/screens/ReviewEditScreen';
@@ -43,6 +45,11 @@ function App() {
                 <Stack.Screen
                     name='ReviewEditScreen'
                     component={ReviewEditScreen}
+                />
+                <Stack.Screen name='MyBooksScreen' component={MyBooksScreen} />
+                <Stack.Screen
+                    name='MyReviewsScreen'
+                    component={MyReviewsScreen}
                 />
             </Stack.Navigator>
         </NavigationContainer>

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { React, useState } from 'react';
 
-import Review from '../components/Review';
+import ReviewListItem from '../components/ReviewListItem';
 import CommentInputBar from '../components/CommentInputBar';
 import { reviewDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
@@ -32,7 +32,7 @@ const ReviewScreen = () => {
                         </Text>
                         <ScrollView contentContainerStyle={styles.scroll}>
                             {reviewDummyData.map((data, idx) => (
-                                <Review key={idx} data={data} />
+                                <ReviewListItem key={idx} data={data} />
                             ))}
                         </ScrollView>
                     </View>
