@@ -2,6 +2,7 @@ import { View, Text, Image, StyleSheet, TextInput } from 'react-native';
 import { React, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 
+import { send } from '../../assets/icons';
 import commonStyles from '../../assets/styles/commonStyles';
 
 const ReviewEditScreen = () => {
@@ -14,10 +15,7 @@ const ReviewEditScreen = () => {
                 <Text style={[commonStyles.subtitleText, styles.title]}>
                     리뷰 편집
                 </Text>
-                <Image
-                    source={require('../../assets/icons/send.png')}
-                    style={styles.icon}
-                />
+                <Image source={send} style={styles.icon} />
             </View>
             <TextInput
                 multiline={true}

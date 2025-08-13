@@ -1,6 +1,8 @@
 import { View, Text, StyleSheet, Image, Dimensions } from 'react-native';
 import React from 'react';
 
+import { bookmarkIcon, bookmarkIconFill } from '../../assets/icons';
+
 const ItemListItem = ({ title, body, bookmark }) => {
     return (
         <View style={styles.itemContainer}>
@@ -17,11 +19,7 @@ const ItemListItem = ({ title, body, bookmark }) => {
                 ))}
             </View>
             <Image
-                source={
-                    bookmark.isBookmarked
-                        ? require('../../assets/icons/bookmarkIconFill.png')
-                        : require('../../assets/icons/bookmarkIcon.png')
-                }
+                source={bookmark.isBookmarked ? bookmarkIcon : bookmarkIconFill}
             />
         </View>
     );
