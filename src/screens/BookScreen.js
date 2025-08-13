@@ -9,7 +9,7 @@ import {
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-import ReviewListItem from '../components/ReviewListItem';
+import { ReviewListItem } from '../components';
 import { getAuthorAndTranslator, getDateString } from '../utils';
 import { bookDummyData as data } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';

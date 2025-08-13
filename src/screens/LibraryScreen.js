@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import BookListItem from '../components/BookListItem';
+import { BookListItem } from '../components';
 import { libraryDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 

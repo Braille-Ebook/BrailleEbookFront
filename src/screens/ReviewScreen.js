@@ -11,8 +11,7 @@ import {
 } from 'react-native';
 import { React, useState } from 'react';
 
-import ReviewListItem from '../components/ReviewListItem';
-import CommentInputBar from '../components/CommentInputBar';
+import { ReviewListItem, CommentInputBar } from '../components';
 import { reviewDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
