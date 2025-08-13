@@ -11,6 +11,7 @@ import { useNavigation } from '@react-navigation/native';
 
 import { ReviewListItem } from '../components';
 import { getAuthorAndTranslator, getDateString } from '../utils';
+import { bookmarkIcon, bookmarkIconFill } from '../../assets/icons';
 import { bookDummyData as data } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
@@ -41,8 +42,8 @@ const BookScreen = () => {
                             <Image
                                 source={
                                     data.isBookmarked
-                                        ? require('../../assets/icons/bookmarkIconFill.png')
-                                        : require('../../assets/icons/bookmarkIcon.png')
+                                        ? bookmarkIconFill
+                                        : bookmarkIcon
                                 }
                             />
                         </Pressable>

@@ -10,6 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 import { BookListItem } from '../components';
+import { bookOpened } from '../../assets/icons';
 import { libraryDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
@@ -18,10 +19,7 @@ const LibraryScreen = () => {
     return (
         <View style={styles.libraryContainer}>
             <View style={styles.titleContainer}>
-                <Image
-                    source={require('../../assets/icons/bookOpened.png')}
-                    style={styles.bookOpened}
-                />
+                <Image source={bookOpened} style={styles.bookOpened} />
                 <Text style={commonStyles.titleText}>내 라이브러리</Text>
             </View>
             <ScrollView
