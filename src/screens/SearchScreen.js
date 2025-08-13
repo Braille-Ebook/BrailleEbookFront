@@ -12,7 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SearchInput, SearchContent } from '../components';
 
-const Search = () => {
+const SearchScreen = () => {
     return (
         <SafeAreaView
             style={{
@@ -28,3 +28,5 @@ const Search = () => {
         </SafeAreaView>
     );
 };
+
+export default SearchScreen;
