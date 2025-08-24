@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-import ItemListItem from '../components/ItemListItem';
+import { ItemListItem } from '../components';
 import { getTimeAgo } from '../utils';
 import { myReadBooksDummyData } from '../../assets/dummy';
 import commonColors from '../../assets/colors/commonColors';

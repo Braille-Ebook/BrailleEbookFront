@@ -1,6 +1,8 @@
 import { View, StyleSheet, TextInput, Image } from 'react-native';
 import React from 'react';
 
+import { send } from '../../assets/icons';
+
 const CommentInputBar = ({ text, onChangeText, placeholder }) => {
     return (
         <View style={styles.commentInputBar}>
@@ -11,10 +13,7 @@ const CommentInputBar = ({ text, onChangeText, placeholder }) => {
                     placeholder={placeholder}
                     style={styles.textInput}
                 />
-                <Image
-                    source={require('../../assets/icons/send.png')}
-                    style={styles.sendIcon}
-                />
+                <Image source={send} style={styles.sendIcon} />
             </View>
         </View>
     );
