@@ -10,6 +10,8 @@ import MyReviewsScreen from './src/screens/MyReviewsScreen';
 import BookScreen from './src/screens/BookScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ReviewEditScreen from './src/screens/ReviewEditScreen';
+import FindNewPwScreen from './src/screens/FindNewPwScreen';
+import FindNewPwSuccessScreen from './src/screens/FindNewPwSuccessScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 
@@ -50,6 +52,14 @@ function App() {
                 <Stack.Screen
                     name='MyReviewsScreen'
                     component={MyReviewsScreen}
+                />
+                <Stack.Screen
+                    name='FindNewPwScreen'
+                    component={FindNewPwScreen}
+                />
+                <Stack.Screen
+                    name='FindNewPwSuccessScreen'
+                    component={FindNewPwSuccessScreen}
                 />
             </Stack.Navigator>
         </NavigationContainer>
