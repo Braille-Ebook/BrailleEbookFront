@@ -1,11 +1,14 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
+import { edit, thumb, thumbFill } from '../../assets/icons';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
 
 //댓글 모양의 리뷰 리스트 아이템
 const ReviewListItem = ({ data }) => {
+    const navigation = useNavigation();
     return (
         <View style={styles.reviewContainer}>
             <Text style={styles.nickname}>{data.nickname}</Text>
@@ -17,12 +20,21 @@ const ReviewListItem = ({ data }) => {
                     >{`좋아요 ${data.likeNum}개`}</Text>
                 </View>
 
-                <Pressable>
+                <Pressable
+                    onPress={() => {
+                        if (data.isLiked == null)
+                            navigation.navigate('ReviewEditScreen', {
+                                orgText: data.content,
+                            });
+                    }}
+                >
                     <Image
                         source={
-                            data.isLiked
-                                ? require('../../assets/icons/thumbFill.png')
-                                : require('../../assets/icons/thumb.png')
+                            data.isLiked == null
+                                ? edit
+                                : data.isLiked
+                                ? thumbFill
+                                : thumb
                         }
                         style={styles.icon}
                     />
@@ -46,6 +58,10 @@ const styles = StyleSheet.create({
     textContainer: {},
     content: {
         marginVertical: 5,
+    },
+    icon: {
+        width: 25,
+        height: 25,
     },
 });
 
