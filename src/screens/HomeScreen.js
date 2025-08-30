@@ -2,6 +2,8 @@ import { View, Text, TextInput, Image, ScrollView } from 'react-native';
 import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { CategoryMenu } from '../components';
+import GenreSelector from '../components/GenreSelector';
+import { GENRE_BOOKS } from '../data/genreBooks';
 
 // 책 더미데이터
 const BOOK_DATA = [
@@ -63,9 +65,11 @@ const BookItem = ({ item }) => (
 
 const BookSearch = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
+    const [selectedCategory, setSelectedCategory] = useState('문학');
+    const [selectedGenre, setSelectedGenre] = useState(null);
     const categories = ['홈', '인기 도서', '신간 도서', '장르별 도서'];
 
-    // 카테고리별 렌더링 내용
+    // 카테고리별 화면
     const renderContent = () => {
         switch (selectedIndex) {
             case 0: // 홈
@@ -109,7 +113,7 @@ const BookSearch = () => {
                                 marginBottom: 10,
                             }}
                         >
-                            📚 신간 도서
+                            신간 도서
                         </Text>
                         {BOOK_DATA.map((book) => (
                             <BookItem key={book.id} item={book} />
@@ -126,11 +130,23 @@ const BookSearch = () => {
                                 marginBottom: 10,
                             }}
                         >
-                            🎭 장르별 도서
+                            장르별 도서
                         </Text>
-                        {BOOK_DATA.map((book) => (
-                            <BookItem key={book.id} item={book} />
-                        ))}
+                        <GenreSelector
+                            selectedCategory={selectedCategory}
+                            setSelectedCategory={setSelectedCategory}
+                            selectedGenre={selectedGenre}
+                            setSelectedGenre={setSelectedGenre}
+                        />
+                        {selectedGenre && GENRE_BOOKS[selectedGenre] ? (
+                            GENRE_BOOKS[selectedGenre].map((book) => (
+                                <BookItem key={book.id} item={book} />
+                            ))
+                        ) : (
+                            <Text style={{ textAlign: 'center', color: '#999' }}>
+                                장르를 선택해 주세요
+                            </Text>
+                        )}
                     </>
                 );
             default:
@@ -159,14 +175,17 @@ const BookSearch = () => {
                 <Ionicons name='search' size={20} color='#555' />
             </View>
 
-            {/* 메뉴바 (공통 컴포넌트) */}
+            {/* 메뉴바 */}
             <CategoryMenu
                 categories={categories}
                 selectedIndex={selectedIndex}
-                onSelect={(idx) => setSelectedIndex(idx)}
+                onSelect={(idx) => {
+                    setSelectedIndex(idx);
+                    setSelectedGenre(null); // 장르 초기화
+                }}
             />
 
-            {/* 선택된 메뉴에 따른 화면 */}
+            {/* 선택된 메뉴에 따른 화면 - 홈, 인기 도서, 신간 도서, 장르별 도서 */}
             {renderContent()}
         </ScrollView>
     );
