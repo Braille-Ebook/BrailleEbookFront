@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { Ionicons } from '@expo/vector-icons';
 import { CategoryMenu } from '../components';
 import GenreSelector from '../components/GenreSelector';
-import { GENRE_BOOKS } from '../data/genreBooks';
+import { GENRE_BOOKS } from '../../assets/dummy';
 
 // 책 더미데이터
+// TODO: - 아래 책 더미데이터 index.js 파일에 옮기기
 const BOOK_DATA = [
     {
         id: '1',
