@@ -68,10 +68,9 @@ const BookSearch = () => {
     const [selectedIndex, setSelectedIndex] = useState(0);
     const [selectedCategory, setSelectedCategory] = useState('문학');
     const [selectedGenre, setSelectedGenre] = useState(null);
-
     const categories = ['홈', '인기 도서', '신간 도서', '장르별 도서'];
 
-    // 카테고리별 렌더링 내용
+    // 카테고리별 화면
     const renderContent = () => {
         switch (selectedIndex) {
             case 0: // 홈
@@ -115,7 +114,7 @@ const BookSearch = () => {
                                 marginBottom: 10,
                             }}
                         >
-                            📚 신간 도서
+                            신간 도서
                         </Text>
                         {BOOK_DATA.map((book) => (
                             <BookItem key={book.id} item={book} />
@@ -132,7 +131,7 @@ const BookSearch = () => {
                                 marginBottom: 10,
                             }}
                         >
-                            🎭 장르별 도서
+                            장르별 도서
                         </Text>
                         <GenreSelector
                             selectedCategory={selectedCategory}

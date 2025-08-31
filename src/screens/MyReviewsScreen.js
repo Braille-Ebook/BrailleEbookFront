@@ -3,7 +3,7 @@ import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
 
-import ItemListItem from '../components/ItemListItem';
+import { ItemListItem } from '../components';
 import { myReviewsDummyData } from '../../assets/dummy';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
