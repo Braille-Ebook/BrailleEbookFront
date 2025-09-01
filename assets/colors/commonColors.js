@@ -4,6 +4,7 @@ const commonColors = {
     lightGrey: '#999999',
     black: '#2c2c2c',
     white: '#f5f5f5',
+    blue: '#08F',
 };
 
 export default commonColors;

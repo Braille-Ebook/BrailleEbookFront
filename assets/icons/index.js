@@ -6,3 +6,4 @@ export { default as profile } from './profile.png';
 export { default as send } from './send.png';
 export { default as thumb } from './thumb.png';
 export { default as thumbFill } from './thumbFill.png';
+export { default as pw } from './pw.png';
