@@ -2,10 +2,8 @@ import { StyleSheet, View, Text, Image } from 'react-native';
 import React from 'react';
 
 import { getAuthorAndTranslator, getDateString } from '../utils';
-import { bookmarkIcon, bookmarkIconFill } from '../../assets/icons';
 import commonStyles from '../../assets/styles/commonStyles';
 
-//책 사진까지 있는 List Item
 const BookListItem = ({ data }) => {
     return (
         <View style={styles.bookContainer}>
@@ -23,7 +21,9 @@ const BookListItem = ({ data }) => {
                 <View style={styles.bookmarkContainer}>
                     <Image
                         source={
-                            data.isBookmarked ? bookmarkIconFill : bookmarkIcon
+                            data.isBookmarked
+                                ? require('../../assets/icons/bookmarkIconFill.png')
+                                : require('../../assets/icons/bookmarkIcon.png')
                         }
                     />
                     <Text>{`북마크 ${data.bookmarkNum}`}</Text>

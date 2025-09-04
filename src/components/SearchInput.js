@@ -1,12 +1,12 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, Pressable } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
 
 const SearchInput = ({ query, onChange, onBack, onClear }) => {
   return (
     <View style={styles.container}>
       <Pressable onPress={onBack} style={styles.icon}>
-        <Ionicons name="arrow-back" size={24} color="black" />
+        {/* 뒤로가기 아이콘 */}
+        {/* 검색 아이콘 */}
       </Pressable>
       <TextInput
         style={styles.input}
@@ -17,7 +17,7 @@ const SearchInput = ({ query, onChange, onBack, onClear }) => {
       />
       {query.length > 0 && (
         <Pressable onPress={onClear} style={styles.icon}>
-          <Ionicons name="close" size={20} color="gray" />
+          {/* 취소 아이콘 */}
         </Pressable>
       )}
     </View>
