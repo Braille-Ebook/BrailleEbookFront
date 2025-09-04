@@ -1,3 +1,6 @@
+// ==========================
+// Library Dummy Data
+// ==========================
 export const libraryDummyData = [
     {
         title: '빨간 모자',
@@ -40,6 +43,9 @@ export const libraryDummyData = [
     },
 ];
 
+// ==========================
+// Book Dummy Data
+// ==========================
 export const bookDummyData = {
     title: '빨간 모자',
     titleOrg: 'Little Red Riding Hood',
@@ -95,6 +101,9 @@ export const bookDummyData = {
     ],
 };
 
+// ==========================
+// review Dummy Data
+// ==========================
 export const reviewDummyData = [
     {
         nickname: 'user1',
@@ -125,12 +134,19 @@ export const reviewDummyData = [
         isLiked: false,
     },
 ];
+
+// ==========================
+// user Dummy Data
+// ==========================
 export const userDummyData = {
     nickname: 'tester15',
     numOfReview: 5,
     numOfReadBooks: 3,
 };
 
+// ==========================
+// myReadBooks Dummy Data
+// ==========================
 export const myReadBooksDummyData = [
     {
         title: '소년이 온다',
@@ -164,6 +180,9 @@ export const myReadBooksDummyData = [
     },
 ];
 
+// ==========================
+// myReviews Dummy Data
+// ==========================
 export const myReviewsDummyData = [
     {
         title: '소년이 온다',
@@ -198,7 +217,26 @@ export const myReviewsDummyData = [
     },
 ];
 
-export const GENRE_BOOKS = {
+// ==========================
+// RecentlyReadBooksDummy Data > libraryDummyData 사용
+// ==========================
+
+// ==========================
+// RecommendedBooks Dummy Data > libraryDummyData 사용
+// ==========================
+
+// ==========================
+// bestseller Dummy Data > libraryDummyData 사용
+// ==========================
+
+// ==========================
+// newBooks Dummy Data >libraryDummyData 사용
+// ==========================
+
+// ==========================
+// genreBooks Dummy Data
+// ==========================
+export const genreBooksDummyData = {
   문학: [
     {
       id: '101',
@@ -254,45 +292,3 @@ export const GENRE_BOOKS = {
     },
   ],
 };
-
-export const libraryDummyData = [
-  {
-    title: '빨간 모자',
-    author: '그림 형제',
-    translator: '김미혜',
-    publishDate: new Date('2014-10-31'),
-    bookmarkNum: 19820,
-    isBookmarked: true,
-  },
-  {
-    title: '노란 모자',
-    author: '그림 형제',
-    publishDate: new Date('2014-10-31'),
-    bookmarkNum: 210,
-    isBookmarked: false,
-  },
-  {
-    title: '파란 모자',
-    author: '그림 형제',
-    translator: '김미혜',
-    publishDate: new Date('2014-10-31'),
-    bookmarkNum: 19820,
-    isBookmarked: true,
-  },
-  {
-    title: '보라 모자',
-    author: '그림 형제',
-    translator: '김미혜',
-    publishDate: new Date('2014-10-31'),
-    bookmarkNum: 19820,
-    isBookmarked: true,
-  },
-  {
-    title: '파란 모자',
-    author: '그림 형제',
-    translator: '김미혜',
-    publishDate: new Date('2014-10-31'),
-    bookmarkNum: 19820,
-    isBookmarked: false,
-  },
-];
