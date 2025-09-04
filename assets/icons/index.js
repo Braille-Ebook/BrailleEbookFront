@@ -20,3 +20,5 @@ export { default as SearchIcon } from './SearchIcon.png';
 
 export { default as whiteBackIcon } from './whiteBackIcon.png';
 export { default as savedPageIcon } from './savedPageIcon.png';
+
+export { default as pw } from './pw.png';

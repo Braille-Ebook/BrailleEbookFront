@@ -11,7 +11,13 @@ const MyPageScreen = () => {
     return (
         <View style={styles.myPageScreen}>
             <View style={styles.profileContainer}>
-                <Image source={profile} />
+                <Pressable
+                    onPress={() => {
+                        navigation.navigate('FindNewPwScreen');
+                    }}
+                >
+                    <Image source={profile} />
+                </Pressable>
             </View>
             <View>
                 <View style={styles.row}>
