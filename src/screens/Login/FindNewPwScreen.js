@@ -9,10 +9,10 @@ import {
 import { React, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
-import { ConfirmModal } from '../modals';
+import { ConfirmModal } from '../../modals';
 
-import commonStyles from '../../assets/styles/commonStyles';
-import commonColors from '../../assets/colors/commonColors';
+import commonStyles from '../../../assets/styles/commonStyles';
+import commonColors from '../../../assets/colors/commonColors';
 
 const FindNewPwScreen = () => {
     const navigation = useNavigation();

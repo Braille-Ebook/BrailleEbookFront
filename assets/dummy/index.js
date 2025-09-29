@@ -1,3 +1,6 @@
+// ==========================
+// Library Dummy Data
+// ==========================
 export const libraryDummyData = [
     {
         title: '빨간 모자',
@@ -40,6 +43,9 @@ export const libraryDummyData = [
     },
 ];
 
+// ==========================
+// Book Dummy Data
+// ==========================
 export const bookDummyData = {
     title: '빨간 모자',
     titleOrg: 'Little Red Riding Hood',
@@ -95,6 +101,9 @@ export const bookDummyData = {
     ],
 };
 
+// ==========================
+// review Dummy Data
+// ==========================
 export const reviewDummyData = [
     {
         nickname: 'user1',
@@ -125,12 +134,19 @@ export const reviewDummyData = [
         isLiked: false,
     },
 ];
+
+// ==========================
+// user Dummy Data
+// ==========================
 export const userDummyData = {
     nickname: 'tester15',
     numOfReview: 5,
     numOfReadBooks: 3,
 };
 
+// ==========================
+// myReadBooks Dummy Data
+// ==========================
 export const myReadBooksDummyData = [
     {
         title: '소년이 온다',
@@ -164,6 +180,9 @@ export const myReadBooksDummyData = [
     },
 ];
 
+// ==========================
+// myReviews Dummy Data
+// ==========================
 export const myReviewsDummyData = [
     {
         title: '소년이 온다',
@@ -197,3 +216,79 @@ export const myReviewsDummyData = [
         isBookmarked: false,
     },
 ];
+
+// ==========================
+// RecentlyReadBooksDummy Data > libraryDummyData 사용
+// ==========================
+
+// ==========================
+// RecommendedBooks Dummy Data > libraryDummyData 사용
+// ==========================
+
+// ==========================
+// bestseller Dummy Data > libraryDummyData 사용
+// ==========================
+
+// ==========================
+// newBooks Dummy Data >libraryDummyData 사용
+// ==========================
+
+// ==========================
+// genreBooks Dummy Data
+// ==========================
+export const genreBooksDummyData = {
+  문학: [
+    {
+      id: '101',
+      title: '어린 왕자',
+      author: '앙투안 드 생텍쥐페리',
+      date: '2018.03.01',
+      bookmark: 1200,
+      iconColor: '#6E44FF',
+    },
+    {
+      id: '102',
+      title: '데미안',
+      author: '헤르만 헤세',
+      date: '2019.05.12',
+      bookmark: 850,
+      iconColor: '#B0B0B0',
+    },
+  ],
+  판타지: [
+    {
+      id: '201',
+      title: '해리포터와 마법사의 돌',
+      author: 'J.K. 롤링',
+      date: '2005.12.10',
+      bookmark: 5320,
+      iconColor: '#6E44FF',
+    },
+    {
+      id: '202',
+      title: '나니아 연대기',
+      author: 'C.S. 루이스',
+      date: '2006.07.20',
+      bookmark: 2100,
+      iconColor: '#B0B0B0',
+    },
+  ],
+  역사: [
+    {
+      id: '301',
+      title: '사피엔스',
+      author: '유발 하라리',
+      date: '2017.02.14',
+      bookmark: 4320,
+      iconColor: '#6E44FF',
+    },
+    {
+      id: '302',
+      title: '총, 균, 쇠',
+      author: '재레드 다이아몬드',
+      date: '2016.11.03',
+      bookmark: 2900,
+      iconColor: '#B0B0B0',
+    },
+  ],
+};

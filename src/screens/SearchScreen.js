@@ -5,28 +5,35 @@ import {
     Image,
     ScrollView,
     TouchableOpacity,
+    StyleSheet,
 } from 'react-native';
 import React from 'react';
-import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { SearchInput, SearchContent } from '../components';
 
 const SearchScreen = () => {
     return (
-        <SafeAreaView
-            style={{
-                width: '100%',
-                backgroundColor: 'white',
-                position: 'relative',
-            }}
-        >
-            <ScrollView showsVerticalScrollIndicator={false}>
+        <SafeAreaView style={styles.container}>
+            <ScrollView
+                contentContainerStyle={styles.scrollContent}
+                showsVerticalScrollIndicator={false}
+            >
                 <SearchInput />
                 <SearchContent />
             </ScrollView>
         </SafeAreaView>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white',
+    },
+    scrollContent: {
+        padding: 16,
+    },
+});
 
 export default SearchScreen;
