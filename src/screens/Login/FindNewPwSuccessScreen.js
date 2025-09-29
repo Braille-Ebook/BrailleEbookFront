@@ -2,9 +2,9 @@ import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { React } from 'react';
 
-import commonStyles from '../../assets/styles/commonStyles';
-import commonColors from '../../assets/colors/commonColors';
-import { pw } from '../../assets/icons';
+import commonStyles from '../../../assets/styles/commonStyles';
+import commonColors from '../../../assets/colors/commonColors';
+import { pw } from '../../../assets/icons';
 
 const FindNewPwSuccessScreen = () => {
     const navigation = useNavigation();

@@ -7,8 +7,8 @@ import BookList from '../../components/BookList';
 import { libraryDummyData } from '../../../assets/dummy/index';
 
 const BestsellerScreen = () => (
-    <ScrollView style={{ padding: 16 }}>
-        <BookList title="인기 도서" books={libraryDummyData} />
+    <ScrollView>
+        <BookList books={libraryDummyData} />
     </ScrollView>
 );
 

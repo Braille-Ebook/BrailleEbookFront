@@ -1,3 +1,7 @@
+// npx react-native run-android로 실행
+// npx react-native run-ios로 실행
+// npm start로 Metro Bundler 실행
+
 import React from 'react';
 import { Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -5,7 +9,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { starIcon, starFillIcon } from './assets/icons/';
 
-import BookSearchScreen from './src/screens/BookSearchScreen';
+import BookSearchScreen from './src/screens/HomeMenu/BookSearchScreen';
 import GenreListScreen from './src/screens/HomeMenu/GenreListScreen';
 
 import LibraryScreen from './src/screens/LibraryScreen';
@@ -15,8 +19,8 @@ import MyReviewsScreen from './src/screens/MyReviewsScreen';
 import BookScreen from './src/screens/BookScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ReviewEditScreen from './src/screens/ReviewEditScreen';
-import FindNewPwScreen from './src/screens/FindNewPwScreen';
-import FindNewPwSuccessScreen from './src/screens/FindNewPwSuccessScreen';
+import FindNewPwScreen from './src/screens/Login/FindNewPwScreen';
+import FindNewPwSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
 
 function App() {
     const Stack = createNativeStackNavigator();

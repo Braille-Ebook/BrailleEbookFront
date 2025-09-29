@@ -8,8 +8,8 @@ import BookList from '../../components/BookList';
 import { libraryDummyData } from '../../../assets/dummy/index';
 
 const NewbooksScreen = () => (
-    <ScrollView style={{ padding: 16 }}>
-        <BookList title="신간 도서" books={libraryDummyData} />
+    <ScrollView>
+        <BookList books={libraryDummyData} />
     </ScrollView>
 );
 

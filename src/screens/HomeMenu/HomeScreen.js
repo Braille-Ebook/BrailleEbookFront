@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { StyleSheet, View, Text, Image, ScrollView, Pressable} from 'react-native';
 import commonColors from '../../../assets/colors/commonColors';
 import commonStyles from '../../../assets/styles/commonStyles';
 
@@ -20,6 +20,16 @@ const HomeScreen = () => {
             />
         </ScrollView>
     );
+
 };
+
+const styles = StyleSheet.create({
+    libraryContainer: {
+        height: '100%',
+    },
+    scrollView: {
+        flex: 1,
+    }
+});
 
 export default HomeScreen;

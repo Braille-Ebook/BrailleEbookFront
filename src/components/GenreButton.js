@@ -17,19 +17,17 @@ const styles = StyleSheet.create({
   genreButton: {
     marginBottom: 12,
     width: '48%', // 2열
-    padding: 14,
     borderRadius: 12,
-    backgroundColor: '#f3f3f3',
     justifyContent: 'center',
     alignItems: 'center',
   },
   icon: {
-    width: 40,
-    height: 40,
-    marginBottom: 8,
+    width: 150,
+    height: 150,
+    borderRadius: 12,
   },
   text: {
-    color: '#333',
+    color: commonColors.white,
     textAlign: 'center',
   },
 });
