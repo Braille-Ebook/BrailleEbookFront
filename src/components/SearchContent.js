@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, FlatList, StyleSheet, Pressable } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const SearchContent = ({ results, onToggleBookmark }) => {
   const renderItem = ({ item }) => (
@@ -9,7 +10,11 @@ const SearchContent = ({ results, onToggleBookmark }) => {
         <Text style={styles.author}>{item.author}</Text>
       </View>
       <Pressable onPress={() => onToggleBookmark(item.id)}>
-        {/* 북마크 아이콘 */}
+        <MaterialIcons
+          name={item.bookmarked ? 'bookmark' : 'bookmark-outline'}
+          size={24}
+          color={item.bookmarked ? '#673ab7' : '#ccc'}
+        />
       </Pressable>
     </View>
   );
