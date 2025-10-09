@@ -33,10 +33,10 @@ const GenrebooksScreen = () => {
   };
 
   return (
-    <ScrollView style={{ padding: 16 }}>
+    <ScrollView style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
       {Object.entries(genres).map(([category, genreList]) => (
         <View key={category} style={{ marginBottom: 24 }}>
-          <Text style={[commonStyles.subtitleText, { marginBottom: 12 }]}>{category}</Text>
+          <Text style={[commonStyles.titleText, { fontWeight: 'bold' }, { marginBottom: 10 }]}>{category}</Text>
           <View style={styles.genreGrid}>
             {genreList.map((genre) => (
               <GenreButton
@@ -58,7 +58,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-  },
+    columnGap: 6,
+    rowGap: 8,
+  }
 });
+
 
 export default GenrebooksScreen;
