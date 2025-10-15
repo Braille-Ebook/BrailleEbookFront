@@ -9,8 +9,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { starIcon, starFillIcon } from './assets/icons/';
 
-//로그인화면 가져오기
-//아이디찾기화면 가져오기
+import LoginScreen from './src/screens/Login/LoginScreen';
+import FindNewIdScreen from './src/screens/Login/FindNewPwScreen';
+import FindNewIdSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
 import FindNewPwScreen from './src/screens/Login/FindNewPwScreen';
 import FindNewPwSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
 
@@ -66,6 +67,10 @@ function App() {
                 <Stack.Screen name='ReviewEditScreen' component={ReviewEditScreen} />
                 <Stack.Screen name='MyBooksScreen' component={MyBooksScreen} />
                 <Stack.Screen name='MyReviewsScreen'component={MyReviewsScreen} />
+                
+                <Stack.Screen name='LoginScreen' component={LoginScreen} />
+                <Stack.Screen name='FindNewIdScreen'component={FindNewIdScreen} />
+                <Stack.Screen name='FindNewIdSuccessScreen'component={FindNewIdSuccessScreen} />
                 <Stack.Screen name='FindNewPwScreen'component={FindNewPwScreen} />
                 <Stack.Screen name='FindNewPwSuccessScreen'component={FindNewPwSuccessScreen} />
             </Stack.Navigator>
