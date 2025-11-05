@@ -12,6 +12,7 @@ import BookmarkedPage from '../components/BookmarkedPage';
 
 export default function PdfScreen() {
     const totalPage = 6;
+    const [currentChar, setCurrentChar] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
@@ -22,10 +23,12 @@ export default function PdfScreen() {
         // Swipe left → next page
         if (translationX < -50) {
             setCurrentPage((prev) => (prev < totalPage ? prev + 1 : prev));
+            setCurrentChar(0);
         }
         // Swipe right → previous page
         else if (translationX > 50) {
             setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
+            setCurrentChar(0);
         }
     });
 
@@ -43,6 +46,8 @@ export default function PdfScreen() {
                             <PdfPage
                                 currentPage={currentPage}
                                 totalPage={totalPage}
+                                char={currentChar}
+                                setChar={setCurrentChar}
                             />
                         </View>
                     </GestureDetector>
