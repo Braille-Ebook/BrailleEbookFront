@@ -16,12 +16,8 @@ export default function BookmarkedPage() {
                     {Array(10)
                         .fill(bookContentData)
                         .map((p, i) => (
-                            <View style={styles.pageContainer}>
-                                <Page
-                                    key={i}
-                                    page={p.page}
-                                    content={p.content}
-                                />
+                            <View key={i} style={styles.pageContainer}>
+                                <Page page={p.page} content={p.content} />
                             </View>
                         ))}
                 </View>
