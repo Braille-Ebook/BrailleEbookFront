@@ -237,58 +237,64 @@ export const myReviewsDummyData = [
 // genreBooks Dummy Data
 // ==========================
 export const genreBooksDummyData = {
-  문학: [
-    {
-      id: '101',
-      title: '어린 왕자',
-      author: '앙투안 드 생텍쥐페리',
-      date: '2018.03.01',
-      bookmark: 1200,
-      iconColor: '#6E44FF',
-    },
-    {
-      id: '102',
-      title: '데미안',
-      author: '헤르만 헤세',
-      date: '2019.05.12',
-      bookmark: 850,
-      iconColor: '#B0B0B0',
-    },
-  ],
-  판타지: [
-    {
-      id: '201',
-      title: '해리포터와 마법사의 돌',
-      author: 'J.K. 롤링',
-      date: '2005.12.10',
-      bookmark: 5320,
-      iconColor: '#6E44FF',
-    },
-    {
-      id: '202',
-      title: '나니아 연대기',
-      author: 'C.S. 루이스',
-      date: '2006.07.20',
-      bookmark: 2100,
-      iconColor: '#B0B0B0',
-    },
-  ],
-  역사: [
-    {
-      id: '301',
-      title: '사피엔스',
-      author: '유발 하라리',
-      date: '2017.02.14',
-      bookmark: 4320,
-      iconColor: '#6E44FF',
-    },
-    {
-      id: '302',
-      title: '총, 균, 쇠',
-      author: '재레드 다이아몬드',
-      date: '2016.11.03',
-      bookmark: 2900,
-      iconColor: '#B0B0B0',
-    },
-  ],
+    문학: [
+        {
+            id: '101',
+            title: '어린 왕자',
+            author: '앙투안 드 생텍쥐페리',
+            date: '2018.03.01',
+            bookmark: 1200,
+            iconColor: '#6E44FF',
+        },
+        {
+            id: '102',
+            title: '데미안',
+            author: '헤르만 헤세',
+            date: '2019.05.12',
+            bookmark: 850,
+            iconColor: '#B0B0B0',
+        },
+    ],
+    판타지: [
+        {
+            id: '201',
+            title: '해리포터와 마법사의 돌',
+            author: 'J.K. 롤링',
+            date: '2005.12.10',
+            bookmark: 5320,
+            iconColor: '#6E44FF',
+        },
+        {
+            id: '202',
+            title: '나니아 연대기',
+            author: 'C.S. 루이스',
+            date: '2006.07.20',
+            bookmark: 2100,
+            iconColor: '#B0B0B0',
+        },
+    ],
+    역사: [
+        {
+            id: '301',
+            title: '사피엔스',
+            author: '유발 하라리',
+            date: '2017.02.14',
+            bookmark: 4320,
+            iconColor: '#6E44FF',
+        },
+        {
+            id: '302',
+            title: '총, 균, 쇠',
+            author: '재레드 다이아몬드',
+            date: '2016.11.03',
+            bookmark: 2900,
+            iconColor: '#B0B0B0',
+        },
+    ],
+};
+
+export const bookContentData = {
+    page: 1,
+    content:
+        "옛날 옛날에 모두의 사랑을 받는 작고 귀여운 소녀가 있었습니다. 하지만 그 소녀를 가장 사랑하는 것은 그녀의 할머니였습니다. 할머니는 소녀에게 무엇을 줘야 할지 몰랐습니다. 한번은 할머니가 소녀에게 붉은 벨벳으로 만들어진 모자를 선물했습니다. 소녀에게 그 모자가 잘 어울렸고, 소녀가 그 모자가 아닌 다른 것은 쓰지 않으려고 했습니다. 그래서 그 소녀는 '빨간 모자'라고 불렸습니다. 어느 날, 소녀의 엄마가 그녀에게 말했습니다. '빨간 모자, 여기로 와보렴. 여기 케이크 한 조각과 와인 한 병을 할머니에게 가져다 주렴. 할머니가 편찮으시니까 네가 가면 기뻐하실 거야. 더워지기 전에 출발하렴. 그리고 할머니 댁에 갈 때, 조심해서 가고 길에서 벗어나지 마렴. 그렇지 않으면 네가 넘어져서 병을 깨뜨릴 거야. 그러면 할머니는 아무것도 받지 못하신단다. ",
 };

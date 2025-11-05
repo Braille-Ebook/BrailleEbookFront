@@ -21,6 +21,7 @@ import ReviewScreen from './src/screens/ReviewScreen';
 import ReviewEditScreen from './src/screens/ReviewEditScreen';
 import FindNewPwScreen from './src/screens/Login/FindNewPwScreen';
 import FindNewPwSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
+import PdfScreen from './src/screens/PdfScreen';
 
 function App() {
     const Stack = createNativeStackNavigator();
@@ -41,7 +42,10 @@ function App() {
                     ),
                 })}
             >
-                <Tab.Screen name='BookSearchScreen' component={BookSearchScreen} />
+                <Tab.Screen
+                    name='BookSearchScreen'
+                    component={BookSearchScreen}
+                />
                 <Tab.Screen name='LibraryScreen' component={LibraryScreen} />
                 <Tab.Screen name='MyPageScreen' component={MyPageScreen} />
             </Tab.Navigator>
@@ -54,15 +58,31 @@ function App() {
             <Stack.Navigator screenOptions={{ headerShown: false }}>
                 <Stack.Screen name='Bottom' component={BottomTabScreen} />
 
-                <Stack.Screen name="GenreListScreen" component={GenreListScreen} />
+                <Stack.Screen
+                    name='GenreListScreen'
+                    component={GenreListScreen}
+                />
 
                 <Stack.Screen name='BookScreen' component={BookScreen} />
                 <Stack.Screen name='ReviewScreen' component={ReviewScreen} />
-                <Stack.Screen name='ReviewEditScreen' component={ReviewEditScreen} />
+                <Stack.Screen
+                    name='ReviewEditScreen'
+                    component={ReviewEditScreen}
+                />
                 <Stack.Screen name='MyBooksScreen' component={MyBooksScreen} />
-                <Stack.Screen name='MyReviewsScreen'component={MyReviewsScreen} />
-                <Stack.Screen name='FindNewPwScreen'component={FindNewPwScreen} />
-                <Stack.Screen name='FindNewPwSuccessScreen'component={FindNewPwSuccessScreen} />
+                <Stack.Screen
+                    name='MyReviewsScreen'
+                    component={MyReviewsScreen}
+                />
+                <Stack.Screen
+                    name='FindNewPwScreen'
+                    component={FindNewPwScreen}
+                />
+                <Stack.Screen
+                    name='FindNewPwSuccessScreen'
+                    component={FindNewPwSuccessScreen}
+                />
+                <Stack.Screen name='PdfScreen' component={PdfScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
