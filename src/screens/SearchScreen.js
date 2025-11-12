@@ -37,8 +37,8 @@ const SearchScreen = () => {
       <Image
         source={
           item.isBookmarked
-            ? require('../../../assets/icons/bookmarkIconFill.png')
-            : require('../../../assets/icons/bookmarkIcon.png')
+            ? require('../../assets/icons/bookmarkIconFill.png')
+            : require('../../assets/icons/bookmarkIcon.png')
         }
         style={styles.bookmarkIcon}
       />
