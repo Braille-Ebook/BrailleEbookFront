@@ -36,8 +36,9 @@ const BookListItem = ({ data }) => {
 const styles = StyleSheet.create({
     bookContainer: {
         flexDirection: 'row',
-        paddingHorizontal: 36,
-        marginBottom: 10,
+        alignItems: 'flex-start',
+        marginBottom: 12,      
+        paddingVertical: 6,    
     },
     bookImage: {
         marginRight: 15,

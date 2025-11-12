@@ -9,7 +9,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { starIcon, starFillIcon } from './assets/icons/';
 
+import LoginScreen from './src/screens/Login/LoginScreen';
+import FindNewIdScreen from './src/screens/Login/FindNewPwScreen';
+import FindNewIdSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
+import FindNewPwScreen from './src/screens/Login/FindNewPwScreen';
+import FindNewPwSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
+
 import BookSearchScreen from './src/screens/HomeMenu/BookSearchScreen';
+import SearchScreen from './src/screens/SearchScreen';
 import GenreListScreen from './src/screens/HomeMenu/GenreListScreen';
 
 import LibraryScreen from './src/screens/LibraryScreen';
@@ -19,8 +26,6 @@ import MyReviewsScreen from './src/screens/MyReviewsScreen';
 import BookScreen from './src/screens/BookScreen';
 import ReviewScreen from './src/screens/ReviewScreen';
 import ReviewEditScreen from './src/screens/ReviewEditScreen';
-import FindNewPwScreen from './src/screens/Login/FindNewPwScreen';
-import FindNewPwSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
 
 function App() {
     const Stack = createNativeStackNavigator();
@@ -55,12 +60,17 @@ function App() {
                 <Stack.Screen name='Bottom' component={BottomTabScreen} />
 
                 <Stack.Screen name="GenreListScreen" component={GenreListScreen} />
+                <Stack.Screen name="SearchScreen" component={SearchScreen} />
 
                 <Stack.Screen name='BookScreen' component={BookScreen} />
                 <Stack.Screen name='ReviewScreen' component={ReviewScreen} />
                 <Stack.Screen name='ReviewEditScreen' component={ReviewEditScreen} />
                 <Stack.Screen name='MyBooksScreen' component={MyBooksScreen} />
                 <Stack.Screen name='MyReviewsScreen'component={MyReviewsScreen} />
+                
+                <Stack.Screen name='LoginScreen' component={LoginScreen} />
+                <Stack.Screen name='FindNewIdScreen'component={FindNewIdScreen} />
+                <Stack.Screen name='FindNewIdSuccessScreen'component={FindNewIdSuccessScreen} />
                 <Stack.Screen name='FindNewPwScreen'component={FindNewPwScreen} />
                 <Stack.Screen name='FindNewPwSuccessScreen'component={FindNewPwSuccessScreen} />
             </Stack.Navigator>
