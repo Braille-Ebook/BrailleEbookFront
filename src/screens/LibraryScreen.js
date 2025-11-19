@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1,
+        paddingLeft: 20,
     },
     titleContainer: {
         flexDirection: 'row',

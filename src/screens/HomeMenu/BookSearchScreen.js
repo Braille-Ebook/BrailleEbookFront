@@ -8,8 +8,10 @@ import {
   ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native'; 
 
 import HomeMenubar from '../../components/HomeMenubar';
+import SearchScreen from '../SearchScreen';
 
 import HomeScreen from './HomeScreen';
 import BestsellerScreen from './BestsellerScreen';
@@ -21,6 +23,7 @@ import { SearchIcon } from '../../../assets/icons';
 
 const BookSearchScreen = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const navigation = useNavigation(); 
   const categories = ['홈', '인기 도서', '신간 도서', '장르별 도서'];
 
   const renderContent = () => {
@@ -42,11 +45,18 @@ const BookSearchScreen = () => {
     <SafeAreaView style={styles.container}>
       <View style={styles.inner}>
         {/* 검색창 */}
-        <TouchableOpacity style={styles.searchBar}>
+        <TouchableOpacity
+          style={styles.searchBar}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate('SearchScreen')} 
+          accessibilityRole="button"
+          accessibilityLabel="검색창 열기"
+        >
           <TextInput
             placeholder="책을 검색해 보아요!"
             editable={false}
             style={styles.searchInput}
+            pointerEvents="none" 
           />
           <Image source={SearchIcon} style={styles.searchIcon} />
         </TouchableOpacity>
@@ -66,14 +76,8 @@ const BookSearchScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  inner: {
-    flex: 1,
-    paddingHorizontal: 16,
-  },
+  container: { flex: 1, backgroundColor: 'white' },
+  inner: { flex: 1, paddingHorizontal: 16 },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -83,17 +87,9 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     marginBottom: 16,
   },
-  searchInput: {
-    flex: 1,
-  },
-  searchIcon: {
-    width: 40,
-    height: 40,
-  },
-  contentContainer: {
-    flex: 1,
-    marginTop: 16,
-  },
+  searchInput: { flex: 1 },
+  searchIcon: { width: 40, height: 40 },
+  contentContainer: { flex: 1, marginTop: 16 },
 });
 
 export default BookSearchScreen;
