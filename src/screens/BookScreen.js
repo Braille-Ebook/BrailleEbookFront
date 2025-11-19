@@ -51,14 +51,22 @@ const BookScreen = () => {
                         <Text>{`북마크 ${data.bookmarkNum}회`}</Text>
                     </View>
                     <View style={styles.buttonContainer}>
-                        <Pressable>
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate('PdfScreen');
+                            }}
+                        >
                             <View style={styles.button}>
                                 <Text style={styles.buttonText}>
                                     처음부터 읽기
                                 </Text>
                             </View>
                         </Pressable>
-                        <Pressable>
+                        <Pressable
+                            onPress={() => {
+                                navigation.navigate('PdfScreen');
+                            }}
+                        >
                             <View style={styles.button}>
                                 <Text style={styles.buttonText}>이어 읽기</Text>
                             </View>
