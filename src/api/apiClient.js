@@ -2,7 +2,7 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const apiClient = axios.create({
-  baseURL: 'https://your-server-domain.com', // *** 실제 서버 주소로 변경하세요
+  baseURL: 'http://3.39.231.229:3000/', // *** 실제 서버 주소로 변경하세요
   timeout: 10000,
 });
 
