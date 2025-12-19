@@ -10,7 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import commonStyles from '../../../assets/styles/commonStyles';
 import commonColors from '../../../assets/colors/commonColors';
-import { kakaoIcon, braillebookIconPurple } from '../../../assets/icons';
+import { kakaoIcon, bookOpenedBig } from '../../../assets/icons';
 import LoginConfirmModal from '../../modals/LoginConfirmModal';
 
 const LoginScreen = () => {
@@ -35,8 +35,7 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={braillebookIconPurple} style={styles.logo} />
-            <Text style={styles.title}>점자이북</Text>
+            <Image source={bookOpenedBig} style={styles.logo} />
             <View style={styles.inputContainer}>
                 <TextInput
                     value={id}
@@ -100,7 +99,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
-    logo: { width: 120, height: 120, marginBottom: 30 },
+    logo: { width: 180, height: 180, marginBottom: 30 },
     title: {
         fontSize: 25,
         fontWeight: 800,
