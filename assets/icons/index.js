@@ -1,3 +1,5 @@
+export { default as braillebookIconPurple } from './braillebookIconPurple.png';
+
 export { default as bookmarkIcon } from './bookmarkIcon.png';
 export { default as bookmarkIconFill } from './bookmarkIconFill.png';
 
