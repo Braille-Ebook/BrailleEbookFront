@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+import { signUp } from '../../apis';
 import { ConfirmModal } from '../../modals';
 
 import commonStyles from '../../../assets/styles/commonStyles';
@@ -70,7 +71,12 @@ export default function SignUpScreen() {
                 )}
             </View>
             <View style={{ flex: 1 }} />
-            <Pressable>
+            <Pressable
+                onPress={async () => {
+                    const result = await signUp(data);
+                    console.log(result);
+                }}
+            >
                 <View style={styles.buttonContainer}>
                     <Text style={styles.buttonText}>가입하기</Text>
                 </View>
