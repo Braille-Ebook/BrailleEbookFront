@@ -9,6 +9,7 @@ import {
 import { React, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 
+import { resetPW } from '../../apis';
 import { ConfirmModal } from '../../modals';
 
 import commonStyles from '../../../assets/styles/commonStyles';
@@ -18,12 +19,13 @@ const FindNewPwScreen = () => {
     const navigation = useNavigation();
     const [text, onChangeText] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
-    const getNewPw = () => {
+    const getNewPw = async () => {
         if (!text) {
             setModalVisible(true);
-        } else {
-            navigation.navigate('FindNewPwSuccessScreen');
         }
+        const result = await resetPW({ email: text });
+        console.log(result);
+        navigation.navigate('FindNewPwSuccessScreen');
     };
     return (
         <View style={styles.findNewPwScreen}>
@@ -45,8 +47,8 @@ const FindNewPwScreen = () => {
             <ConfirmModal
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
-                title={'아이디 오류'}
-                text={'존재하지 않는 아이디입니다.'}
+                title={'이메일 오류'}
+                text={'존재하지 않는 이메일입니다.'}
                 buttonText={'확인'}
             />
         </View>
