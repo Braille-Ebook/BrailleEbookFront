@@ -1,3 +1,5 @@
+export { default as braillebookIconPurple } from './braillebookIconPurple.png';
+
 export { default as bookmarkIcon } from './bookmarkIcon.png';
 export { default as bookmarkIconFill } from './bookmarkIconFill.png';
 
@@ -5,6 +7,7 @@ export { default as starIcon } from './starIcon.png';
 export { default as starFillIcon } from './starFillIcon.png';
 
 export { default as bookOpened } from './bookOpened.png';
+export { default as bookOpenedBig } from './bookOpenedBig.png';
 export { default as edit } from './edit.png';
 export { default as profile } from './profile.png';
 export { default as send } from './send.png';

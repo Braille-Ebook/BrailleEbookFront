@@ -51,7 +51,11 @@ const MyPageScreen = () => {
                         <Text style={styles.buttonText}>비밀번호 변경</Text>
                     </View>
                 </Pressable>
-                <Pressable>
+                <Pressable
+                    onPress={() => {
+                        navigation.navigate('LoginScreen');
+                    }}
+                >
                     <View style={styles.button}>
                         <Text style={styles.buttonText}>로그아웃</Text>
                     </View>
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     },
     rowTitle: {
         width: 100,
-        color: commonColors.lightPurple,
+        color: commonColors.purple,
     },
     buttonContainer: {
         flexDirection: 'row',

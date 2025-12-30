@@ -10,7 +10,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import commonStyles from '../../../assets/styles/commonStyles';
 import commonColors from '../../../assets/colors/commonColors';
-import { kakaoIcon, book } from '../../../assets/icons';
+import { kakaoIcon, bookOpenedBig } from '../../../assets/icons';
 import LoginConfirmModal from '../../modals/LoginConfirmModal';
 
 const LoginScreen = () => {
@@ -35,22 +35,29 @@ const LoginScreen = () => {
 
     return (
         <View style={styles.container}>
-            <Image source={book} style={styles.logo} />
+            <Image source={bookOpenedBig} style={styles.logo} />
             <View style={styles.inputContainer}>
                 <TextInput
                     value={id}
                     onChangeText={setId}
-                    placeholder="아이디"
+                    placeholder='아이디'
                     style={styles.textInput}
                 />
                 <TextInput
                     value={pw}
                     onChangeText={setPw}
-                    placeholder="비밀번호"
+                    placeholder='비밀번호'
                     secureTextEntry
                     style={[styles.textInput, { marginTop: 8 }]}
                 />
             </View>
+
+            {/* 로그인하기 버튼 */}
+            <Pressable onPress={handleLogin} style={styles.loginButton}>
+                <View>
+                    <Text style={styles.loginButtonText}>로그인하기</Text>
+                </View>
+            </Pressable>
 
             {/* 카카오 로그인 버튼 */}
             <Pressable style={styles.kakaoButton}>
@@ -64,17 +71,16 @@ const LoginScreen = () => {
                     <Text style={styles.findText}>아이디 찾기</Text>
                 </Pressable>
                 <Text style={{ marginHorizontal: 4 }}>/</Text>
-                <Pressable onPress={() => navigation.navigate('FindNewPwScreen')}>
+                <Pressable
+                    onPress={() => navigation.navigate('FindNewPwScreen')}
+                >
                     <Text style={styles.findText}>비밀번호 찾기</Text>
                 </Pressable>
+                <Text style={{ marginHorizontal: 4 }}>/</Text>
+                <Pressable onPress={() => navigation.navigate('SignUpScreen')}>
+                    <Text style={styles.findText}>회원가입</Text>
+                </Pressable>
             </View>
-
-            {/* 로그인하기 버튼 */}
-            <Pressable onPress={handleLogin} style={{ marginTop: 10 }}>
-                <View style={styles.loginButton}>
-                    <Text style={styles.loginButtonText}>로그인하기</Text>
-                </View>
-            </Pressable>
 
             <LoginConfirmModal
                 modalVisible={modalVisible}
@@ -89,10 +95,17 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 42,
-        paddingTop: 60,
+        flexDirection: 'column',
+        justifyContent: 'center',
         alignItems: 'center',
     },
-    logo: { width: 120, height: 120, marginBottom: 30 },
+    logo: { width: 180, height: 180, marginBottom: 30 },
+    title: {
+        fontSize: 25,
+        fontWeight: 800,
+        color: commonColors.purple,
+        marginBottom: 30,
+    },
     inputContainer: { width: '100%' },
     textInput: {
         width: '100%',
@@ -102,27 +115,10 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         paddingHorizontal: 10,
     },
-    kakaoButton: {
-        width: '100%',
-        height: 40,
-        borderRadius: 10,
-        backgroundColor: '#FEE500',
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop: 15,
-    },
-    kakaoIcon: { width: 20, height: 20, marginRight: 8 },
-    kakaoText: { color: '#000', fontWeight: 'bold' },
-    findContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 15,
-    },
-    findText: { textDecorationLine: 'underline', color: 'black' },
     loginButton: {
         width: '100%',
         height: 40,
+        marginTop: 10,
         borderRadius: 10,
         backgroundColor: commonColors.black,
         justifyContent: 'center',
@@ -132,6 +128,24 @@ const styles = StyleSheet.create({
         color: commonColors.white,
         fontWeight: 'bold',
     },
+    kakaoButton: {
+        width: '100%',
+        height: 40,
+        borderRadius: 10,
+        backgroundColor: '#FEE500',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginTop: 10,
+    },
+    kakaoIcon: { width: 20, height: 20, marginRight: 8 },
+    kakaoText: { color: '#000', fontWeight: 'bold' },
+    findContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 15,
+    },
+    findText: { textDecorationLine: 'underline', color: 'black' },
 });
 
 export default LoginScreen;
