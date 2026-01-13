@@ -1,37 +1,47 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { ScrollView, Text, StyleSheet, View, ActivityIndicator } from 'react-native';
 import BookList from '../../components/BookList';
-import { getRecentBooks, getRecommendBooks } from '../../api/bookApi';
+import commonColors from '../../../assets/colors/commonColors';
+import { getRecentBooks, getRecommendedBooks } from '../../api/homeApi';
 
 const HomeScreen = () => {
   const [recentBooks, setRecentBooks] = useState([]);
-  const [recommendBooks, setRecommendBooks] = useState([]);
+  const [recommendedBooks, setRecommendedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    async function loadHomeData() {
       try {
-        const recent = await getRecentBooks();
-        const recommend = await getRecommendBooks();
-        setRecentBooks(recent.map((item) => item.Book)); // BookList에 맞게 변환
-        setRecommendBooks(recommend);
+        const [recentRes, recommendRes] = await Promise.all([
+          getRecentBooks(),
+          getRecommendedBooks(),
+        ]);
+        setRecentBooks(recentRes.data || []);
+        setRecommendedBooks(recommendRes.data || []);
       } catch (err) {
-        console.error('Error fetching books:', err);
+        console.error('홈 데이터 불러오기 실패:', err);
       } finally {
         setLoading(false);
       }
-    };
-    fetchBooks();
+    }
+    loadHomeData();
   }, []);
 
-  if (loading) return <ActivityIndicator size="large" style={{ marginTop: 40 }} />;
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={commonColors.purple} />
+      </View>
+    );
+  }
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <Text style={styles.title}>최근에 읽은 책</Text>
-      <BookList books={recentBooks} />
-      <Text style={styles.title}>추천 책</Text>
-      <BookList books={recommendBooks} />
+      <BookList books={recentBooks.map((item) => item.Book || item)} />
+
+      <Text style={styles.title}>추천 도서</Text>
+      <BookList books={recommendedBooks} />
     </ScrollView>
   );
 };
@@ -39,14 +49,15 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   scrollContainer: {
     paddingLeft: 5,
-    paddingVertical: 5,  
+    paddingVertical: 5,
     alignItems: 'flex-start',
   },
   title: {
-    fontSize: 20,       
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: -20,
   },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
 
 export default HomeScreen;

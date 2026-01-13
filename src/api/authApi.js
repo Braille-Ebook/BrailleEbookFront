@@ -1,114 +1,67 @@
-// src/api/authApi.js
-import { request } from './httpClient';
+import { http } from './http';
 
 /**
  * [1] 회원가입
- * POST /auth/join
- * body: { userId, email, nick, password }
  */
-export function join({ userId, email, nick, password }) {
-  return request('/auth/join', {
-    method: 'POST',
-    body: { userId, email, nick, password },
-  });
+export async function join(payload) {
+  const res = await http.post('/auth/join', payload);
+  return res.data;
 }
 
 /**
  * [2] 로그인
- * POST /auth/login
- * body: { identifier, password }
  */
-export function login({ identifier, password }) {
-  return request('/auth/login', {
-    method: 'POST',
-    body: { identifier, password },
-  });
+export async function login(payload) {
+  const res = await http.post('/auth/login', payload);
+  return res.data;
 }
 
 /**
- * [3] 로그아웃 (토큰 필요)
- * POST /auth/logout
+ * [3] 로그아웃 (토큰 자동 첨부)
  */
-export function logout() {
-  return request('/auth/logout', {
-    method: 'POST',
-    auth: true,
-  });
+export async function logout() {
+  const res = await http.post('/auth/logout');
+  return res.data;
 }
 
 /**
- * [4] 카카오 로그인 (GET /auth/kakao)
- * RN에서는 보통 웹뷰/딥링크로 열어야 함. 여기서는 URL만 반환하도록 둠.
+ * [4~5] 카카오 로그인/콜백 URL 반환
  */
-export function getKakaoLoginUrl() {
-  return '/auth/kakao';
+export const getKakaoLoginUrl = () => '/auth/kakao';
+export const getKakaoCallbackPath = () => '/auth/kakao/callback';
+
+/**
+ * [6~10] 이메일 관련 API
+ */
+export async function sendEmailCode(payload) {
+  const res = await http.post('/auth/send-code', payload);
+  return res.data;
+}
+
+export async function verifyEmailCode(payload) {
+  const res = await http.post('/auth/verify-code', payload);
+  return res.data;
+}
+
+export async function findIdByEmail(payload) {
+  const res = await http.post('/auth/find-id', payload);
+  return res.data;
+}
+
+export async function findEmailByUserId(payload) {
+  const res = await http.post('/auth/find-email', payload);
+  return res.data;
+}
+
+export async function sendTempPassword(payload) {
+  const res = await http.post('/auth/reset-password/temp', payload);
+  return res.data;
 }
 
 /**
- * [5] 카카오 콜백 처리 (GET /auth/kakao/callback)
- * RN에서는 보통 웹뷰/딥링크로 열어야 함. 여기서는 URL만 반환하도록 둠.
+ * [11] 비밀번호 변경 (토큰 자동 첨부)
  */
-export function getKakaoCallbackPath() {
-  return '/auth/kakao/callback';
-}
-
-/**
- * [6] 이메일 인증코드 발송
- */
-export function sendEmailCode({ email }) {
-  return request('/auth/send-code', {
-    method: 'POST',
-    body: { email },
-  });
-}
-
-/**
- * [7] 이메일 인증코드 확인
- */
-export function verifyEmailCode({ email, code }) {
-  return request('/auth/verify-code', {
-    method: 'POST',
-    body: { email, code },
-  });
-}
-
-/**
- * [8] 이메일로 아이디 찾기
- */
-export function findIdByEmail({ email }) {
-  return request('/auth/find-id', {
-    method: 'POST',
-    body: { email },
-  });
-}
-
-/**
- * [9] 아이디로 이메일 찾기
- */
-export function findEmailByUserId({ userId }) {
-  return request('/auth/find-email', {
-    method: 'POST',
-    body: { userId },
-  });
-}
-
-/**
- * [10] 임시 비밀번호 전송
- */
-export function sendTempPassword({ email }) {
-  return request('/auth/reset-password/temp', {
-    method: 'POST',
-    body: { email },
-  });
-}
-
-/**
- * [11] 비밀번호 변경 (토큰 필요)
- */
-export function resetPassword({ currentPassword, newPassword }) {
-  return request('/auth/reset-password', {
-    method: 'PATCH',
-    body: { currentPassword, newPassword },
-    auth: true,
-  });
+export async function resetPassword(payload) {
+  const res = await http.patch('/auth/reset-password', payload);
+  return res.data;
 }
