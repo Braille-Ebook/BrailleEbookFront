@@ -12,7 +12,7 @@ import { getMypageInfo } from '../api';
 const MyPageScreen = () => {
     const navigation = useNavigation();
     const { realData, isLoading, error } = useQuery({
-        queryKey: ['mypageInfo'],
+        queryKey: ['myPage'],
         queryFn: getMypageInfo,
     });
     return (

@@ -10,13 +10,24 @@ import {
     Keyboard,
 } from 'react-native';
 import { React, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useRoute } from '@react-navigation/native';
 
 import { ReviewListItem, CommentInputBar } from '../components';
 import { reviewDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
+import { getReviews, postReviews } from '../api';
+
 const ReviewScreen = () => {
+    const route = useRoute();
+    /*const { bookId } = route.params;*/
+
     const [text, onChangeText] = useState('');
+    const { realData, isLoading, error } = useQuery({
+        queryKey: ['bookReviews', '/*bookId*/'],
+        queryFn: getReviews,
+    });
     return (
         <SafeAreaView style={styles.safeArea}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -39,6 +50,9 @@ const ReviewScreen = () => {
                         text={text}
                         onChangeText={onChangeText}
                         placeholder={'댓글을 입력하세요.'}
+                        onSubmit={(content) =>
+                            postReviews({ bookId: '/*bookId*/', content })
+                        }
                     />
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
