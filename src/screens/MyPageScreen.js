@@ -1,13 +1,20 @@
 import { View, Text, Image, Pressable, StyleSheet } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
 
 import { profile } from '../../assets/icons';
 import commonColors from '../../assets/colors/commonColors';
 import { userDummyData as data } from '../../assets/dummy';
 
+import { getMypageInfo } from '../api';
+
 const MyPageScreen = () => {
     const navigation = useNavigation();
+    const { realData, isLoading, error } = useQuery({
+        queryKey: ['myPage'],
+        queryFn: getMypageInfo,
+    });
     return (
         <View style={styles.myPageScreen}>
             <View style={styles.profileContainer}>

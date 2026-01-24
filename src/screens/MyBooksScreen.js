@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Pressable, ScrollView } from 'react-native';
 import React from 'react';
 import { useNavigation } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
 
 import { ItemListItem } from '../components';
 import { getTimeAgo } from '../utils';
@@ -8,8 +9,14 @@ import { myReadBooksDummyData } from '../../assets/dummy';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
 
+import { getMypageBooks } from '../api';
+
 const MyBooksScreen = () => {
     const navigation = useNavigation();
+    const { realData, isLoading, error } = useQuery({
+        queryKey: ['myPageBooks'],
+        queryFn: getMypageBooks,
+    });
     return (
         <View style={styles.myBookScreen}>
             <Text style={[commonStyles.titleText, styles.titleText]}>

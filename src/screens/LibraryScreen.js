@@ -8,14 +8,21 @@ import {
     Pressable,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
 
 import { BookListItem } from '../components';
 import { bookOpened } from '../../assets/icons';
 import { libraryDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
+import { getLibraryInfo } from '../api';
+
 const LibraryScreen = () => {
     const navigation = useNavigation();
+    const { realData, isLoading, error } = useQuery({
+        queryKey: ['library'],
+        queryFn: getLibraryInfo,
+    });
     return (
         <View style={styles.libraryContainer}>
             <View style={styles.titleContainer}>

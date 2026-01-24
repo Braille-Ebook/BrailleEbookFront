@@ -7,6 +7,7 @@ import { Image } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { starIcon, starFillIcon } from './assets/icons/';
 
 import LoginScreen from './src/screens/Login/LoginScreen';
@@ -33,6 +34,7 @@ import PdfScreen from './src/screens/PdfScreen';
 function App() {
     const Stack = createNativeStackNavigator();
     const Tab = createBottomTabNavigator();
+    const queryClient = new QueryClient();
 
     // BottomTab
     function BottomTabScreen() {
@@ -61,48 +63,62 @@ function App() {
 
     // App Navigator
     return (
-        <NavigationContainer>
-            <Stack.Navigator screenOptions={{ headerShown: false }}>
-                <Stack.Screen name='Bottom' component={BottomTabScreen} />
-                <Stack.Screen
-                    name='GenreListScreen'
-                    component={GenreListScreen}
-                />
-                <Stack.Screen name='SearchScreen' component={SearchScreen} />
-                <Stack.Screen name='BookScreen' component={BookScreen} />
-                <Stack.Screen name='ReviewScreen' component={ReviewScreen} />
-                <Stack.Screen
-                    name='ReviewEditScreen'
-                    component={ReviewEditScreen}
-                />
+        <QueryClientProvider client={queryClient}>
+            <NavigationContainer>
+                <Stack.Navigator screenOptions={{ headerShown: false }}>
+                    <Stack.Screen name='Bottom' component={BottomTabScreen} />
+                    <Stack.Screen
+                        name='GenreListScreen'
+                        component={GenreListScreen}
+                    />
+                    <Stack.Screen
+                        name='SearchScreen'
+                        component={SearchScreen}
+                    />
+                    <Stack.Screen name='BookScreen' component={BookScreen} />
+                    <Stack.Screen
+                        name='ReviewScreen'
+                        component={ReviewScreen}
+                    />
+                    <Stack.Screen
+                        name='ReviewEditScreen'
+                        component={ReviewEditScreen}
+                    />
 
-                <Stack.Screen name='MyBooksScreen' component={MyBooksScreen} />
-                <Stack.Screen name='PdfScreen' component={PdfScreen} />
-                <Stack.Screen
-                    name='MyReviewsScreen'
-                    component={MyReviewsScreen}
-                />
+                    <Stack.Screen
+                        name='MyBooksScreen'
+                        component={MyBooksScreen}
+                    />
+                    <Stack.Screen name='PdfScreen' component={PdfScreen} />
+                    <Stack.Screen
+                        name='MyReviewsScreen'
+                        component={MyReviewsScreen}
+                    />
 
-                <Stack.Screen name='LoginScreen' component={LoginScreen} />
-                <Stack.Screen name='SignUpScreen' component={SignUpScreen} />
-                <Stack.Screen
-                    name='FindNewIdScreen'
-                    component={FindNewIdScreen}
-                />
-                <Stack.Screen
-                    name='FindNewIdSuccessScreen'
-                    component={FindNewIdSuccessScreen}
-                />
-                <Stack.Screen
-                    name='FindNewPwScreen'
-                    component={FindNewPwScreen}
-                />
-                <Stack.Screen
-                    name='FindNewPwSuccessScreen'
-                    component={FindNewPwSuccessScreen}
-                />
-            </Stack.Navigator>
-        </NavigationContainer>
+                    <Stack.Screen name='LoginScreen' component={LoginScreen} />
+                    <Stack.Screen
+                        name='SignUpScreen'
+                        component={SignUpScreen}
+                    />
+                    <Stack.Screen
+                        name='FindNewIdScreen'
+                        component={FindNewIdScreen}
+                    />
+                    <Stack.Screen
+                        name='FindNewIdSuccessScreen'
+                        component={FindNewIdSuccessScreen}
+                    />
+                    <Stack.Screen
+                        name='FindNewPwScreen'
+                        component={FindNewPwScreen}
+                    />
+                    <Stack.Screen
+                        name='FindNewPwSuccessScreen'
+                        component={FindNewPwSuccessScreen}
+                    />
+                </Stack.Navigator>
+            </NavigationContainer>
+        </QueryClientProvider>
     );
 }
 
