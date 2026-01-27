@@ -1,49 +1,37 @@
 import React, { useState } from 'react';
 import {
   View,
-  Text,
   TextInput,
   TouchableOpacity,
   Image,
   StyleSheet,
-  FlatList,
+  ActivityIndicator,
+  ScrollView,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-
 import commonColors from '../../assets/colors/commonColors';
 import { BackIcon, CloseIcon } from '../../assets/icons';
-import { libraryDummyData } from '../../assets/dummy';
+import BookList from '../components/BookList';
+import { searchBooks } from '../api/searchApi';
 
 const SearchScreen = () => {
   const navigation = useNavigation();
   const [query, setQuery] = useState('');
+  const [books, setBooks] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  // 검색 결과 필터링
-  const filteredBooks = libraryDummyData.filter(
-    (book) =>
-      book.title.includes(query) ||
-      book.author.includes(query) ||
-      book.translator?.includes(query)
-  );
-
-  const renderItem = ({ item }) => (
-    <View style={styles.bookItem}>
-      <View>
-        <Text style={styles.title}>{item.title}</Text>
-        <Text style={styles.subText}>
-          {item.author} {item.translator ? `, ${item.translator}` : ''} {item.category || ''}
-        </Text>
-      </View>
-      <Image
-        source={
-          item.isBookmarked
-            ? require('../../assets/icons/bookmarkIconFill.png')
-            : require('../../assets/icons/bookmarkIcon.png')
-        }
-        style={styles.bookmarkIcon}
-      />
-    </View>
-  );
+  const handleSearch = async () => {
+    if (!query.trim()) return;
+    setLoading(true);
+    try {
+      const res = await searchBooks(query);
+      setBooks(res.data?.items || []);
+    } catch (err) {
+      console.error('검색 실패:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -59,6 +47,7 @@ const SearchScreen = () => {
           placeholder="책을 검색하세요"
           placeholderTextColor={commonColors.grey}
           style={styles.input}
+          onSubmitEditing={handleSearch}
           autoFocus
         />
 
@@ -69,14 +58,13 @@ const SearchScreen = () => {
         )}
       </View>
 
-      {/* 검색 결과 리스트 */}
-      <FlatList
-        data={filteredBooks}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={renderItem}
-        contentContainerStyle={styles.listContainer}
-        keyboardShouldPersistTaps="handled"
-      />
+      {loading ? (
+        <ActivityIndicator size="large" color={commonColors.purple} />
+      ) : (
+        <ScrollView contentContainerStyle={styles.listContainer}>
+          <BookList books={books} />
+        </ScrollView>
+      )}
     </View>
   );
 };
@@ -106,30 +94,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: commonColors.black,
   },
-  listContainer: {
-    paddingHorizontal: 16,
-  },
-  bookItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingVertical: 12,
-    borderBottomWidth: 0.5,
-    borderBottomColor: commonColors.lightGrey,
-  },
-  title: {
-    fontSize: 17,
-    fontWeight: '500',
-    color: commonColors.black,
-  },
-  subText: {
-    fontSize: 14,
-    color: commonColors.darkGrey,
-    marginTop: 2,
-  },
-  bookmarkIcon: {
-    width: 24,
-    height: 24,
-    tintColor: commonColors.purple,
-  },
-});         
+  listContainer: { paddingHorizontal: 16, paddingBottom: 20 },
+});

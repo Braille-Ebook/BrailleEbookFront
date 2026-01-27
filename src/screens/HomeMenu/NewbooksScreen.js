@@ -1,28 +1,33 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import BookList from '../../components/BookList';
+import { ScrollView, StyleSheet, Text, View, ActivityIndicator } from 'react-native';
 import commonColors from '../../../assets/colors/commonColors';
-import { getNewBooks } from '../../api/bookApi';
+import BookList from '../../components/BookList';
+import { getNewBooks } from '../../api/homeApi';
 
 const NewbooksScreen = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchNewBooks = async () => {
+    async function fetchNewBooks() {
       try {
-        const data = await getNewBooks();
-        setBooks(data);
-      } catch (error) {
-        console.error('Error fetching new books:', error);
+        const res = await getNewBooks();
+        setBooks(res.data || []);
+      } catch (err) {
+        console.error('신간 도서 불러오기 실패:', err);
       } finally {
         setLoading(false);
       }
-    };
+    }
     fetchNewBooks();
   }, []);
 
-  if (loading) return <ActivityIndicator size="large" style={{ marginTop: 40 }} />;
+  if (loading)
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color={commonColors.purple} />
+      </View>
+    );
 
   return (
     <ScrollView style={styles.scrollView}>
@@ -33,15 +38,14 @@ const NewbooksScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: {
-    paddingLeft: 5,
-  },
+  scrollView: { paddingLeft: 5 },
   sectionTitle: {
-    fontSize: 20,          
-    fontWeight: 'bold',    
+    fontSize: 20,
+    fontWeight: 'bold',
     color: commonColors.black,
     marginBottom: -20,
   },
+  loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
 });
 
 export default NewbooksScreen;

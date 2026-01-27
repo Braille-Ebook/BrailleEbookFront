@@ -5,7 +5,7 @@ import { getAuthToken, clearAuthToken } from './tokenStorage';
 import { ApiError } from './errors';
 
 export function attachInterceptors() {
-  // Request: 토큰 자동 첨부(토큰 있으면 항상 붙이는 방식 권장)
+  // Request: 토큰 자동 첨부 (토큰 있으면 항상 붙이는 방식 권장)
   http.interceptors.request.use(async (config) => {
     const token = await getAuthToken();
     if (token) {
