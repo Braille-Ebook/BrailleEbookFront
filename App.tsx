@@ -1,6 +1,9 @@
-// npx react-native run-android로 실행
-// npx react-native run-ios로 실행
-// npm start로 Metro Bundler 실행
+// 실행 명렁어
+// npx react-native run-android
+// npx react-native run-ios
+// npm start로 Metro Bundler
+
+// npx react-native start --reset-cache & npx react-native run-ios --simulator="iPhone 16 Pro"
 
 import React from 'react';
 import { Image } from 'react-native';
