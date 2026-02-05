@@ -3,7 +3,16 @@
 // npx react-native run-ios
 // npm start로 Metro Bundler
 
-// npx react-native start --reset-cache & npx react-native run-ios --simulator="iPhone 16 Pro"
+// iOS 실행
+// cd ~/Documents/GitHub/BrailleEbookFront npx react-native run-ios --simulator="iPhone 16 Pro"
+
+// metro 백그라운드 띄우고 iOS 실행
+// kill -9 $(lsof -t -i :8081) 2>/dev/null || true; \
+// rm -rf "$TMPDIR/metro-"* "$TMPDIR/haste-map-"* node_modules/.cache; \
+// npx react-native start --reset-cache & \
+// sleep 2; \
+// npx react-native run-ios --simulator="iPhone 16 Pro"
+
 
 import React from 'react';
 import { Image } from 'react-native';
