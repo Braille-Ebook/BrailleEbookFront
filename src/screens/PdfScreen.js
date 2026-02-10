@@ -11,7 +11,7 @@ import { useRoute, useFocusEffect } from '@react-navigation/native';
 import PdfBar from '../components/PdfBar';
 import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
-import { getLastPosition, getPdfPage, postLastPosition } from '../api';
+import { getLastPosition, getPdfPage, postLastPosition } from '../api/_index';
 
 export default function PdfScreen() {
     const route = useRoute();

@@ -13,7 +13,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { send } from '../../assets/icons';
 import commonStyles from '../../assets/styles/commonStyles';
 
-import { patchReviews } from '../api';
+import { patchReviews } from '../api/_index';
 
 const ReviewEditScreen = () => {
     const queryClient = useQueryClient();

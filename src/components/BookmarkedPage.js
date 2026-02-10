@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import Page from './Page';
 import { bookContentData } from '../../assets/dummy';
-import { getPageBookmarks } from '../api';
+import { getPageBookmarks } from '../api/_index';
 
 export default function BookmarkedPage({
     bookId,

@@ -6,7 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { edit, thumb, thumbFill } from '../../assets/icons';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
-import { likeReviews } from '../api';
+import { likeReviews } from '../api/_index';
 
 //댓글 모양의 리뷰 리스트 아이템
 const ReviewListItem = ({ data }) => {

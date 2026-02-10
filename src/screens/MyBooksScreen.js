@@ -9,7 +9,7 @@ import { myReadBooksDummyData } from '../../assets/dummy';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
 
-import { getMypageBooks } from '../api';
+import { getMypageBooks } from '../api/_index';
 
 const MyBooksScreen = () => {
     const navigation = useNavigation();

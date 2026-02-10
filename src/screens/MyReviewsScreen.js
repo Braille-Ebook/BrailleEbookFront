@@ -9,7 +9,7 @@ import { myReviewsDummyData } from '../../assets/dummy';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
 
-import { getMypageReviews } from '../api';
+import { getMypageReviews } from '../api/_index';
 
 const MyReviewsScreen = () => {
     const navigation = useNavigation();

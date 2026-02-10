@@ -15,7 +15,7 @@ import { bookOpened } from '../../assets/icons';
 import { libraryDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
-import { getLibraryInfo } from '../api';
+import { getLibraryInfo } from '../api/_index';
 
 const LibraryScreen = () => {
     const navigation = useNavigation();

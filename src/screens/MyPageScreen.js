@@ -7,7 +7,7 @@ import { profile } from '../../assets/icons';
 import commonColors from '../../assets/colors/commonColors';
 import { userDummyData as data } from '../../assets/dummy';
 
-import { getMypageInfo } from '../api';
+import { getMypageInfo } from '../api/_index';
 
 const MyPageScreen = () => {
     const navigation = useNavigation();

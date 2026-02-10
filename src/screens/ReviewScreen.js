@@ -17,7 +17,7 @@ import { ReviewListItem, CommentInputBar } from '../components';
 import { reviewDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
-import { getReviews, postReviews } from '../api';
+import { getReviews, postReviews } from '../api/_index';
 
 const ReviewScreen = () => {
     const route = useRoute();
