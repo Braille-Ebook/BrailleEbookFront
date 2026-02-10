@@ -1,3 +1,4 @@
+// App.tsx
 // 실행 명렁어
 // npx react-native run-android
 // npx react-native run-ios

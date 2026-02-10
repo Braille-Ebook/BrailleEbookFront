@@ -1,4 +1,6 @@
-import axios from 'axios';
+// src/api/http/client.js
+
+import axios from 'axios/dist/browser/axios.cjs';
 
 export const http = axios.create({
   baseURL: API_BASE_URL,

@@ -1,9 +1,8 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const {getDefaultConfig} = require('@react-native/metro-config');
 
-const defaultConfig = getDefaultConfig(__dirname);
+const config = getDefaultConfig(__dirname);
 
-module.exports = mergeConfig(defaultConfig, {
-  resolver: {
-    unstable_enablePackageExports: false,
-  },
-});
+// browser 우선으로 잡게 해서 axios가 dist/node로 가지 않게 함
+config.resolver.resolverMainFields = ['react-native', 'browser', 'main'];
+
+module.exports = config;
