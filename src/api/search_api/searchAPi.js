@@ -1,6 +1,6 @@
 // src/api/searchApi.js
-import { request } from './httpClient';
-import { API_BASE_URL } from './config';
+import { request } from '../_httpClient';
+import { API_BASE_URL } from '../http/config';
 
 /**
  * 1) 책/저자 검색
@@ -15,13 +15,13 @@ import { API_BASE_URL } from './config';
 
 /** 기본 검색 (+페이지 옵션) */
 export function searchBooks({ q, page }) {
-  return request('/search/books', {
-    method: 'GET',
-    params: {
-      q,
-      ...(page ? { page } : {}),
-    },
-  });
+    return request('/search/books', {
+        method: 'GET',
+        params: {
+            q,
+            ...(page ? { page } : {}),
+        },
+    });
 }
 
 /**
@@ -30,13 +30,13 @@ export function searchBooks({ q, page }) {
  * - nextUrl이 "http://..." 처럼 절대 URL이면, baseURL을 제거하고 path만 남겨서 호출
  */
 export function searchBooksByNextUrl({ nextUrl }) {
-  if (!nextUrl) throw new Error('nextUrl is required');
+    if (!nextUrl) throw new Error('nextUrl is required');
 
-  // 절대 URL로 오면(baseURL 포함) -> path만 추출
-  const normalizedBase = API_BASE_URL?.replace(/\/$/, '') ?? '';
-  const url = nextUrl.startsWith('http')
-    ? nextUrl.replace(normalizedBase, '')
-    : nextUrl;
+    // 절대 URL로 오면(baseURL 포함) -> path만 추출
+    const normalizedBase = API_BASE_URL?.replace(/\/$/, '') ?? '';
+    const url = nextUrl.startsWith('http')
+        ? nextUrl.replace(normalizedBase, '')
+        : nextUrl;
 
-  return request(url, { method: 'GET' });
+    return request(url, { method: 'GET' });
 }
