@@ -11,6 +11,8 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
+
 import { useAuth } from '../context/AuthContext';
 import { profile } from '../../assets/icons';
 import commonColors from '../../assets/colors/commonColors';
