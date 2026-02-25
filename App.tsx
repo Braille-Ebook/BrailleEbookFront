@@ -143,11 +143,7 @@ function RootNavigator() {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            {isAuthenticated ? (
-                <Stack.Screen name='Main' component={MainNavigator} />
-            ) : (
-                <Stack.Screen name='Auth' component={AuthNavigator} />
-            )}
+            <Stack.Screen name='Main' component={MainNavigator} />
         </Stack.Navigator>
     );
 }

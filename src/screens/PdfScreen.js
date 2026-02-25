@@ -1,17 +1,38 @@
 import { View, StyleSheet } from 'react-native';
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
     Gesture,
     GestureDetector,
     GestureHandlerRootView,
 } from 'react-native-gesture-handler';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { useRoute, useFocusEffect } from '@react-navigation/native';
 
 import PdfBar from '../components/PdfBar';
 import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
+import { getLastPosition, getPdfPage, postLastPosition } from '../api';
 
 export default function PdfScreen() {
+    const route = useRoute();
+    /*const { bookId } = route.params;*/
+    const positionQuery = useQuery({
+        queryKey: ['pagePosition', '/*bookId*/'],
+        queryFn: () => getLastPosition({ bookId: '/*bookId*/' }),
+    });
+    const contentQuery = useQuery({
+        queryKey: ['pageContent', '/*bookId*/', currentPage],
+        queryFn: () => getPdfPage({ bookId: '/*bookId*/', page: '/*page*/' }),
+        //enabled: !!positionQuery.data?.page
+    });
+    const mutation = useMutation({
+        mutationFn: ({ bookId, position }) =>
+            postLastPosition({ bookId, position }),
+        onSuccess: () => {},
+    });
+
     const totalPage = 6;
+    //positionQuery.data에서 데이터 받아 초기값 설정
     const [currentChar, setCurrentChar] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -31,6 +52,17 @@ export default function PdfScreen() {
             setCurrentChar(0);
         }
     });
+
+    useFocusEffect(
+        useCallback(() => {
+            return () => {
+                mutation.mutate({
+                    bookId: '/*bookId*/',
+                    position: { lastPage: currentPage, lastChar: currentChar },
+                });
+            };
+        }, [])
+    );
 
     return (
         <GestureHandlerRootView style={{ flex: 1 }}>
@@ -52,7 +84,12 @@ export default function PdfScreen() {
                         </View>
                     </GestureDetector>
                 ) : (
-                    <BookmarkedPage />
+                    <BookmarkedPage
+                        bookId={'/*bookId*/'}
+                        setIsMenuOpen={setIsMenuOpen}
+                        setCurrentPage={setCurrentPage}
+                        setCurrentChar={setCurrentChar}
+                    />
                 )}
             </View>
         </GestureHandlerRootView>
