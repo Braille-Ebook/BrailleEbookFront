@@ -14,7 +14,7 @@ import { getMypageBooks } from '../api';
 const MyBooksScreen = () => {
     const navigation = useNavigation();
     const { realData, isLoading, error } = useQuery({
-        queryKey: ['mypageBooks'],
+        queryKey: ['myPageBooks'],
         queryFn: getMypageBooks,
     });
     return (

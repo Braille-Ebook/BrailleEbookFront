@@ -1,14 +1,25 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { edit, thumb, thumbFill } from '../../assets/icons';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
+import { likeReviews } from '../api';
 
 //댓글 모양의 리뷰 리스트 아이템
 const ReviewListItem = ({ data }) => {
     const navigation = useNavigation();
+    const queryClient = useQueryClient();
+
+    const mutation = useMutation({
+        mutationFn: ({ bookId, reviewId }) => likeReviews(bookId, reviewId),
+        onSuccess: () => {
+            queryClient.invalidateQueries(['bookReviews', '/*data.bookId*/']);
+        },
+        onError: (e) => {},
+    });
     return (
         <View style={styles.reviewContainer}>
             <Text style={styles.nickname}>{data.nickname}</Text>
@@ -25,7 +36,12 @@ const ReviewListItem = ({ data }) => {
                         if (data.isLiked == null)
                             navigation.navigate('ReviewEditScreen', {
                                 orgText: data.content,
+                                bookId: '/*data.bookId*/',
+                                reviewId: '/*data.reviewId*/',
                             });
+                        else {
+                            /*mutation.mutate({data.bookId, data.reviewId})*/
+                        }
                     }}
                 >
                     <Image

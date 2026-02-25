@@ -14,7 +14,7 @@ import { getMypageReviews } from '../api';
 const MyReviewsScreen = () => {
     const navigation = useNavigation();
     const { realData, isLoading, error } = useQuery({
-        queryKey: ['mypageReviews'],
+        queryKey: ['myPageReviews'],
         queryFn: getMypageReviews,
     });
     return (

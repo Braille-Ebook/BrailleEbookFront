@@ -19,6 +19,8 @@ import commonColors from '../../assets/colors/commonColors';
 import { userDummyData as data } from '../../assets/dummy';
 import { resetPassword } from '../../api/authService';
 
+import { getMypageInfo } from '../api';
+
 const MyPageScreen = () => {
     const navigation = useNavigation();
     const { logout } = useAuth();
@@ -27,6 +29,14 @@ const MyPageScreen = () => {
     const [currentPw, setCurrentPw] = useState('');
     const [newPw, setNewPw] = useState('');
     const [checkPw, setCheckPw] = useState('');
+
+    // ------------------------------
+    // 유저 정보 꺼내기
+    // ------------------------------
+    const { realData, isLoading, error } = useQuery({
+        queryKey: ['myPage'],
+        queryFn: getMypageInfo,
+    });
 
     // ------------------------------
     // 비밀번호 변경 처리
