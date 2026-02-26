@@ -1,9 +1,18 @@
-import { View, StyleSheet, TextInput, Image } from 'react-native';
+import { View, StyleSheet, TextInput, Image, Pressable } from 'react-native';
 import React from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 import { send } from '../../assets/icons';
 
-const CommentInputBar = ({ text, onChangeText, placeholder }) => {
+const CommentInputBar = ({ text, onChangeText, placeholder, onSubmit }) => {
+    const mutation = useMutation({
+        mutationFn: (text) => onSubmit(text),
+        onSuccess: () => {
+            //queryClient.invalidateQueries(['bookReviews', '/*data.bookId*/']);
+            onChangeText('');
+        },
+        onError: (e) => {},
+    });
     return (
         <View style={styles.commentInputBar}>
             <View style={styles.textInputContainer}>
@@ -12,8 +21,21 @@ const CommentInputBar = ({ text, onChangeText, placeholder }) => {
                     onChangeText={onChangeText}
                     placeholder={placeholder}
                     style={styles.textInput}
+                    onSubmitEditing={() => {
+                        if (!mutation.isLoading) {
+                            mutation.mutate(text);
+                        }
+                    }}
                 />
-                <Image source={send} style={styles.sendIcon} />
+                <Pressable
+                    onPress={() => {
+                        if (!mutation.isLoading) {
+                            mutation.mutate(text);
+                        }
+                    }}
+                >
+                    <Image source={send} style={styles.sendIcon} />
+                </Pressable>
             </View>
         </View>
     );

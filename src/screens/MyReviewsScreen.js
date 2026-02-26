@@ -2,14 +2,21 @@ import { View, Text, Pressable, StyleSheet, ScrollView } from 'react-native';
 import React from 'react';
 
 import { useNavigation } from '@react-navigation/native';
+import { useQuery } from '@tanstack/react-query';
 
 import { ItemListItem } from '../components';
 import { myReviewsDummyData } from '../../assets/dummy';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
 
+import { getMypageReviews } from '../api';
+
 const MyReviewsScreen = () => {
     const navigation = useNavigation();
+    const { realData, isLoading, error } = useQuery({
+        queryKey: ['myPageReviews'],
+        queryFn: getMypageReviews,
+    });
     return (
         <View style={styles.myReviewsScreen}>
             <Text style={[commonStyles.titleText, styles.titleText]}>

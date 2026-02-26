@@ -10,20 +10,32 @@ import {
     Keyboard,
 } from 'react-native';
 import { React, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useRoute } from '@react-navigation/native';
 
 import { ReviewListItem, CommentInputBar } from '../components';
 import { reviewDummyData } from '../../assets/dummy';
 import commonStyles from '../../assets/styles/commonStyles';
 
+import { getReviews, postReviews } from '../api';
+
 const ReviewScreen = () => {
+    const route = useRoute();
+    /*const {bookId} = route.params;*/
+
     const [text, onChangeText] = useState('');
+    const { realData, isLoading, error } = useQuery({
+        queryKey: ['bookReviews', '/*bookId*/'],
+        queryFn: getReviews,
+    });
+
     return (
         <SafeAreaView style={styles.safeArea}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAvoidingView
                     style={styles.container}
-                    behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                    keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
                 >
                     <View style={styles.reviewContainer}>
                         <Text style={[commonStyles.subtitleText, styles.title]}>
@@ -39,6 +51,9 @@ const ReviewScreen = () => {
                         text={text}
                         onChangeText={onChangeText}
                         placeholder={'댓글을 입력하세요.'}
+                        onSubmit={(content) =>
+                            postReviews({ bookId: '/*bookId*/', content })
+                        }
                     />
                 </KeyboardAvoidingView>
             </TouchableWithoutFeedback>
