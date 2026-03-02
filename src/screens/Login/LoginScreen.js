@@ -12,8 +12,8 @@ import { useNavigation } from '@react-navigation/native';
 import commonColors from '../../../assets/colors/commonColors';
 import { kakaoIcon, bookOpenedBig } from '../../../assets/icons';
 import LoginConfirmModal from '../../modals/LoginConfirmModal';
-import { login } from '../../api/authService';
-import { validateLogin } from '../../api/authValidators';
+import { login } from '../../api/auth_api/authService';
+import { validateLogin } from '../../api/auth_api/authValidators';
 import { useAuth } from '../../context/AuthContext';
 
 const LoginScreen = () => {

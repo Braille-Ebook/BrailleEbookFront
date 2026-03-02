@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { join } from '../../api/authService';
-import { validateJoin } from '../../api/authValidators';
+import { join } from '../../api/auth_api/authService';
+import { validateJoin } from '../../api/auth_api/authValidators';
 import commonColors from '../../../assets/colors/commonColors';
 import commonStyles from '../../../assets/styles/commonStyles';
 import { ConfirmModal } from '../../modals';
