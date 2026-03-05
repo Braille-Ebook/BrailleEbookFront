@@ -90,6 +90,31 @@ const LoginScreen = () => {
                 setModalVisible={setModalVisible}
                 success={loginResult}
             />
+            <View style={styles.accountManagementContainer}>
+                <Pressable
+                    onPress={() => {
+                        navigation.navigate();
+                    }}
+                >
+                    <Text style={styles.accountManagement}>회원가입</Text>
+                </Pressable>
+                <Text style={styles.accountManagementDivider}>/</Text>
+                <Pressable
+                    onPress={() => {
+                        navigation.navigate('FindNewIdScreen');
+                    }}
+                >
+                    <Text style={styles.accountManagement}>아이디 찾기</Text>
+                </Pressable>
+                <Text style={styles.accountManagementDivider}>/</Text>
+                <Pressable
+                    onPress={() => {
+                        navigation.navigate('FindNewPwScreen');
+                    }}
+                >
+                    <Text style={styles.accountManagement}>임시비번 받기</Text>
+                </Pressable>
+            </View>
         </View>
     );
 };
@@ -133,6 +158,9 @@ const styles = StyleSheet.create({
     },
     kakaoIcon: { width: 20, height: 20, marginRight: 8 },
     kakaoText: { color: '#000', fontWeight: 'bold' },
+    accountManagementContainer: { flexDirection: 'row', marginTop: 5 },
+    accountManagementDivider: { color: '#4A90E2', marginHorizontal: 10 },
+    accountManagement: { color: '#4A90E2', textDecoration: 'underline' },
 });
 
 export default LoginScreen;
