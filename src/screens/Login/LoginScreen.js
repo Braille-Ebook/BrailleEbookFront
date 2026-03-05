@@ -93,7 +93,7 @@ const LoginScreen = () => {
             <View style={styles.accountManagementContainer}>
                 <Pressable
                     onPress={() => {
-                        navigation.navigate();
+                        navigation.navigate('SignUpScreen');
                     }}
                 >
                     <Text style={styles.accountManagement}>회원가입</Text>
