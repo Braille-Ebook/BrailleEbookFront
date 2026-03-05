@@ -125,7 +125,12 @@ const MyPageScreen = () => {
                     </View>
                 </Pressable>
 
-                <Pressable onPress={handleLogout}>
+                <Pressable
+                    onPress={() => {
+                        handleLogout();
+                        navigation.navigate('LoginScreen');
+                    }}
+                >
                     <View style={styles.button}>
                         <Text style={styles.buttonText}>로그아웃</Text>
                     </View>
