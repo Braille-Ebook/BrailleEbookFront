@@ -16,7 +16,7 @@ const BookListItem = ({ data }) => {
                 <Text>
                     {getAuthorAndTranslator(data.author, data.translator)}
                 </Text>
-                <Text>{getDateString(data.publishDate)}</Text>
+                <Text>{/*getDateString(data.publishDate)*/}</Text>
 
                 <View style={styles.bookmarkContainer}>
                     <Image
@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
     bookContainer: {
         flexDirection: 'row',
         alignItems: 'flex-start',
-        marginBottom: 12,      
-        paddingVertical: 6,    
+        marginBottom: 12,
+        paddingVertical: 6,
     },
     bookImage: {
         marginRight: 15,

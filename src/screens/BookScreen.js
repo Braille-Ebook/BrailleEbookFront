@@ -35,7 +35,7 @@ const BookScreen = () => {
                     </Text>
                     <Text style={styles.contentText}>{data.publisher}</Text>
                     <Text style={styles.contentText}>
-                        {getDateString(data.publishDate)}
+                        {/*getDateString(data.publishDate)*/}
                     </Text>
                     <View style={styles.bookmarkContainer}>
                         <Pressable>
