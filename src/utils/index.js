@@ -1,8 +1,11 @@
 export const getAuthorAndTranslator = (author, translator) => {
     return translator ? `${author} 글, ${translator} 번역` : `${author} 글`;
 };
-export const getDateString = (date) => {
-    return `${date.getFullYear()}.${date.getMonth() + 1}.${date.getDate()}`;
+export const getDateString = (stringDate) => {
+    const date = new Date(stringDate);
+    return `${date.getUTCFullYear()}.${
+        date.getUTCMonth() + 1
+    }.${date.getUTCDate()}`;
 };
 export const getTimeAgo = (date) => {
     const currentTime = new Date();

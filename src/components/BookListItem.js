@@ -8,15 +8,26 @@ const BookListItem = ({ data }) => {
     return (
         <View style={styles.bookContainer}>
             <Image
-                source={require('../../assets/images/littleRedRidingHood.png')}
+                source={
+                    data.image_url
+                        ? { uri: data.image_url }
+                        : require('../../assets/images/littleRedRidingHood.png')
+                }
                 style={styles.bookImage}
             />
-            <View>
-                <Text style={commonStyles.subtitleText}>{data.title}</Text>
-                <Text>
-                    {getAuthorAndTranslator(data.author, data.translator)}
-                </Text>
-                <Text>{/*getDateString(data.publishDate)*/}</Text>
+            <View style={styles.textContainer}>
+                <View style={styles.titleContainer}>
+                    <Text style={[commonStyles.subtitleText, styles.title]}>
+                        {data.title.trim()}
+                    </Text>
+                </View>
+
+                {(data.author || data.translator) && (
+                    <Text>
+                        {getAuthorAndTranslator(data.author, data.translator)}
+                    </Text>
+                )}
+                <Text>{getDateString(data.publish_date)}</Text>
 
                 <View style={styles.bookmarkContainer}>
                     <Image
@@ -26,7 +37,7 @@ const BookListItem = ({ data }) => {
                                 : require('../../assets/icons/bookmarkIcon.png')
                         }
                     />
-                    <Text>{`북마크 ${data.bookmarkNum}`}</Text>
+                    <Text>{`북마크 ${data.bookmark_num}`}</Text>
                 </View>
             </View>
         </View>
@@ -41,7 +52,19 @@ const styles = StyleSheet.create({
         paddingVertical: 6,
     },
     bookImage: {
+        width: 120,
+        height: 150,
         marginRight: 15,
+    },
+    textContainer: {
+        flex: 1,
+        paddingRight: 50,
+    },
+    titleContainer: {
+        flexShrink: 1,
+    },
+    title: {
+        flexShrink: 1,
     },
     bookmarkContainer: {
         flexDirection: 'row',

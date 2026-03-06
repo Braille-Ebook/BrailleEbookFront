@@ -7,10 +7,12 @@ function extractToken(loginResponse) {
 }
 
 export async function join(payload) {
+    //await logout();
     return authApi.join(payload);
 }
 
 export async function login(payload) {
+    //await logout();
     const data = await authApi.login(payload);
     const token = extractToken(data);
     if (token) await setAuthToken(token);
