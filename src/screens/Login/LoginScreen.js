@@ -85,6 +85,23 @@ const LoginScreen = () => {
                 <Text style={styles.kakaoText}>Login with Kakao</Text>
             </Pressable>
 
+            <View style={styles.linkRow}>
+                <Pressable onPress={() => navigation.navigate('FindNewIdScreen')}>
+                    <Text style={styles.linkText}>아이디 찾기</Text>
+                </Pressable>
+                <Text style={styles.linkDivider}>|</Text>
+                <Pressable onPress={() => navigation.navigate('FindNewPwScreen')}>
+                    <Text style={styles.linkText}>비밀번호 찾기</Text>
+                </Pressable>
+            </View>
+
+            <Pressable
+                onPress={() => navigation.navigate('SignUpScreen')}
+                style={styles.signUpButton}
+            >
+                <Text style={styles.signUpButtonText}>회원가입</Text>
+            </Pressable>
+
             <LoginConfirmModal
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
@@ -133,6 +150,34 @@ const styles = StyleSheet.create({
     },
     kakaoIcon: { width: 20, height: 20, marginRight: 8 },
     kakaoText: { color: '#000', fontWeight: 'bold' },
+    linkRow: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 16,
+    },
+    linkText: {
+        color: commonColors.gray || '#888',
+        fontSize: 13,
+    },
+    linkDivider: {
+        color: commonColors.gray || '#888',
+        marginHorizontal: 8,
+        fontSize: 13,
+    },
+    signUpButton: {
+        width: '100%',
+        height: 40,
+        marginTop: 12,
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: commonColors.black,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    signUpButtonText: {
+        color: commonColors.black,
+        fontWeight: 'bold',
+    },
 });
 
 export default LoginScreen;
