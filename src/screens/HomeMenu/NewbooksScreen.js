@@ -7,14 +7,15 @@ import { getNewBooks } from '../../api/homeApi';
 const NewbooksScreen = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     async function fetchNewBooks() {
       try {
         const res = await getNewBooks();
-        setBooks(res.data || []);
+        setBooks(res || []);
       } catch (err) {
-        console.error('신간 도서 불러오기 실패:', err);
+        setErrorMessage(err?.message || '신간 도서를 불러오지 못했습니다.');
       } finally {
         setLoading(false);
       }
@@ -31,6 +32,7 @@ const NewbooksScreen = () => {
 
   return (
     <ScrollView style={styles.scrollView}>
+      {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
       <Text style={styles.sectionTitle}>신간 도서</Text>
       <BookList books={books} />
     </ScrollView>
@@ -46,6 +48,10 @@ const styles = StyleSheet.create({
     marginBottom: -20,
   },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  errorText: {
+    color: commonColors.blue,
+    marginBottom: 12,
+  },
 });
 
 export default NewbooksScreen;

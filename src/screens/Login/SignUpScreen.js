@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+    Platform,
     View,
     Text,
     TextInput,
@@ -27,6 +28,16 @@ export default function SignUpScreen() {
     const [loading, setLoading] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalText, setModalText] = useState('');
+
+    // iOS occasionally treats signup password fields as "new password" and shows the strong password UI.
+    const passwordInputProps = Platform.select({
+        ios: {
+            textContentType: 'oneTimeCode',
+        },
+        default: {
+            autoComplete: 'off',
+        },
+    });
 
     const handleChange = (key) => (text) => {
         setData((prev) => ({ ...prev, [key]: text }));
@@ -63,8 +74,19 @@ export default function SignUpScreen() {
                 setModalVisible(true);
             }
         } catch (err) {
-            console.error('회원가입 실패:', err);
-            setModalText('서버 오류가 발생했습니다.');
+            if (__DEV__) {
+                console.log('회원가입 실패:', err);
+            }
+
+            if (err?.kind === 'NETWORK') {
+                setModalText(
+                    '회원가입 서버에 연결할 수 없습니다. 서버 주소 또는 포트 상태를 확인해주세요.',
+                );
+            } else if (err?.message) {
+                setModalText(err.message);
+            } else {
+                setModalText('서버 오류가 발생했습니다.');
+            }
             setModalVisible(true);
         } finally {
             setLoading(false);
@@ -81,6 +103,9 @@ export default function SignUpScreen() {
                     onChangeText={handleChange('userId')}
                     placeholder='아이디'
                     style={styles.textInput}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    spellCheck={false}
                 />
                 <TextInput
                     value={data.email}
@@ -89,12 +114,18 @@ export default function SignUpScreen() {
                     style={styles.textInput}
                     keyboardType='email-address'
                     autoCapitalize='none'
+                    autoCorrect={false}
+                    spellCheck={false}
+                    textContentType='emailAddress'
+                    autoComplete='email'
                 />
                 <TextInput
                     value={data.nick}
                     onChangeText={handleChange('nick')}
                     placeholder='닉네임'
                     style={styles.textInput}
+                    autoCorrect={false}
+                    spellCheck={false}
                 />
                 <TextInput
                     value={data.password}
@@ -102,12 +133,20 @@ export default function SignUpScreen() {
                     placeholder='비밀번호'
                     secureTextEntry
                     style={styles.textInput}
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    spellCheck={false}
+                    {...passwordInputProps}
                 />
                 <TextInput
                     value={data.checkPw}
                     onChangeText={handleChange('checkPw')}
                     placeholder='비밀번호 확인'
                     secureTextEntry
+                    autoCapitalize='none'
+                    autoCorrect={false}
+                    spellCheck={false}
+                    {...passwordInputProps}
                     onBlur={() => {
                         if (data.password !== data.checkPw) {
                             setPwError('비밀번호가 일치하지 않습니다.');

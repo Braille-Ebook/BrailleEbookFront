@@ -5,14 +5,22 @@ import {
     TextInput,
     Pressable,
     Image,
+    Alert,
     StyleSheet,
     ActivityIndicator,
+    Linking,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import commonColors from '../../../assets/colors/commonColors';
-import { kakaoIcon, bookOpenedBig } from '../../../assets/icons';
+import { bookOpenedBig } from '../../../assets/icons';
 import LoginConfirmModal from '../../modals/LoginConfirmModal';
-import { login } from '../../api/authService';
+import {
+    buildKakaoLoginUrl,
+    completeKakaoLoginFromCode,
+    completeSocialLogin,
+    login,
+    parseKakaoCallback,
+} from '../../api/authService';
 import { validateLogin } from '../../api/authValidators';
 import { useAuth } from '../../context/AuthContext';
 
@@ -26,10 +34,80 @@ const LoginScreen = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [loginResult, setLoginResult] = useState(null);
 
+    React.useEffect(() => {
+        const handleKakaoCallback = async incomingUrl => {
+            const result = parseKakaoCallback(incomingUrl);
+            if (!result) return;
+
+            if (result.error) {
+                Alert.alert('카카오 로그인 실패', result.error);
+                return;
+            }
+
+            try {
+                if (result.token) {
+                    await completeSocialLogin(result.token);
+                    setAuthLogin();
+                    return;
+                }
+
+                if (result.code) {
+                    const data = await completeKakaoLoginFromCode({
+                        code: result.code,
+                        state: result.state,
+                    });
+
+                    if (data?.success || data?.accessToken || data?.token) {
+                        setAuthLogin();
+                        return;
+                    }
+
+                    Alert.alert(
+                        '카카오 로그인 실패',
+                        '카카오 로그인 응답에서 로그인 완료 정보를 확인하지 못했습니다.',
+                    );
+                    return;
+                }
+            } catch (err) {
+                console.error('카카오 로그인 후처리 실패:', err);
+                Alert.alert(
+                    '카카오 로그인 실패',
+                    '카카오 로그인 후처리 중 오류가 발생했습니다.',
+                );
+                return;
+            }
+
+            if (!result.token && !result.code) {
+                Alert.alert(
+                    '카카오 로그인 실패',
+                    '로그인 콜백 파라미터를 확인할 수 없습니다. 서버 콜백 설정을 확인해주세요.',
+                );
+            }
+        };
+
+        Linking.getInitialURL()
+            .then(url => {
+                if (url) {
+                    handleKakaoCallback(url);
+                }
+            })
+            .catch(err => {
+                console.error('초기 카카오 딥링크 확인 실패:', err);
+            });
+
+        const subscription = Linking.addEventListener('url', ({ url }) => {
+            handleKakaoCallback(url);
+        });
+
+        return () => {
+            subscription.remove();
+        };
+    }, [setAuthLogin]);
+
     const handleLogin = async () => {
         const errorMsg = validateLogin({ identifier, password });
         if (errorMsg) {
-            alert(errorMsg);
+            Alert.alert('입력 오류', errorMsg);
             return;
         }
 
@@ -51,9 +129,25 @@ const LoginScreen = () => {
         }
     };
 
+    const handleKakaoLogin = async () => {
+        const kakaoLoginUrl = buildKakaoLoginUrl();
+
+        try {
+            await Linking.openURL(kakaoLoginUrl);
+        } catch (err) {
+            console.error('카카오 로그인 URL 열기 실패:', err);
+            Alert.alert(
+                '카카오 로그인 실패',
+                '카카오 로그인 화면을 열 수 없습니다.',
+            );
+        }
+    };
+
     return (
         <View style={styles.container}>
-            <Image source={bookOpenedBig} style={styles.logo} />
+            <View style={styles.logoWrapper}>
+                <Image source={bookOpenedBig} style={styles.logo} />
+            </View>
 
             <View style={styles.inputContainer}>
                 <TextInput
@@ -68,7 +162,7 @@ const LoginScreen = () => {
                     onChangeText={setPassword}
                     placeholder='비밀번호'
                     secureTextEntry
-                    style={[styles.textInput, { marginTop: 8 }]}
+                    style={[styles.textInput, styles.passwordInput]}
                 />
             </View>
 
@@ -80,8 +174,7 @@ const LoginScreen = () => {
                 </Pressable>
             )}
 
-            <Pressable style={styles.kakaoButton}>
-                <Image source={kakaoIcon} style={styles.kakaoIcon} />
+            <Pressable onPress={handleKakaoLogin} style={styles.kakaoButton}>
                 <Text style={styles.kakaoText}>Login with Kakao</Text>
             </Pressable>
 
@@ -126,6 +219,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    logoWrapper: {
+        alignItems: 'center',
+    },
     logo: { width: 180, height: 180, marginBottom: 30 },
     inputContainer: { width: '100%' },
     textInput: {
@@ -135,6 +231,9 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderRadius: 10,
         paddingHorizontal: 10,
+    },
+    passwordInput: {
+        marginTop: 8,
     },
     loginButton: {
         width: '100%',
@@ -156,7 +255,6 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 10,
     },
-    kakaoIcon: { width: 20, height: 20, marginRight: 8 },
     kakaoText: { color: '#000', fontWeight: 'bold' },
     accountManagementContainer: { flexDirection: 'row', marginTop: 5 },
     accountManagementDivider: { color: '#4A90E2', marginHorizontal: 10 },

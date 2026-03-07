@@ -9,7 +9,19 @@ export async function searchBooks(query, page = 1) {
   const res = await http.get('/search/books', {
     params: { q: query, page },
   });
-  return res.data;
+  return (
+    res.data?.data ?? {
+      items: [],
+      pagination: {
+        total: 0,
+        page,
+        limit: 20,
+        hasNext: false,
+        nextPage: null,
+        nextUrl: null,
+      },
+    }
+  );
 }
 
 /**
@@ -18,5 +30,5 @@ export async function searchBooks(query, page = 1) {
 export async function searchBooksByNextUrl(nextUrl) {
   if (!nextUrl) throw new Error('nextUrl이 필요합니다.');
   const res = await http.get(nextUrl);
-  return res.data;
+  return res.data?.data ?? { items: [], pagination: null };
 }

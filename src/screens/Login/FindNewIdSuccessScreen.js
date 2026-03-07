@@ -9,7 +9,7 @@ import { id_screen } from '../../../assets/icons';
 const FindNewIdSuccessScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
-    const { userId } = route.params || { userId: 'test15' };
+    const userId = route.params?.userId ?? 'test15';
 
     return (
         <View style={styles.findIdSuccessScreen}>
@@ -40,7 +40,11 @@ const styles = StyleSheet.create({
         paddingBottom: 40,
     },
     subText: { marginTop: 20 },
-    idText: { color: commonColors.lightPurple, marginTop: 8 },
+    idText: {
+        color: commonColors.blue,
+        marginTop: 8,
+        fontWeight: '600',
+    },
     idImage: { width: 160, height: 160, alignSelf: 'center', marginVertical: 40 },
     buttonContainer: {
         width: '100%',

@@ -10,14 +10,15 @@ const GenreListScreen = () => {
   const { genre } = route.params;
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     async function fetchGenreBooks() {
       try {
         const res = await getBooksByGenre(genre);
-        setBooks(res.data || []);
+        setBooks(res || []);
       } catch (err) {
-        console.error('장르별 도서 불러오기 실패:', err);
+        setErrorMessage(err?.message || '장르별 도서를 불러오지 못했습니다.');
       } finally {
         setLoading(false);
       }
@@ -37,6 +38,7 @@ const GenreListScreen = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.genreTitle}>{genre}</Text>
+        {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
         <BookList books={books} />
       </ScrollView>
     </View>
@@ -48,6 +50,10 @@ const styles = StyleSheet.create({
   scrollContent: { flexGrow: 1, paddingHorizontal: 16, paddingVertical: 20 },
   genreTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 10 },
   loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
+  errorText: {
+    color: commonColors.blue,
+    marginBottom: 12,
+  },
 });
 
 export default GenreListScreen;

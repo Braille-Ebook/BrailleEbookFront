@@ -14,6 +14,7 @@ const HomeScreen = () => {
     const [recentBooks, setRecentBooks] = useState([]);
     const [recommendedBooks, setRecommendedBooks] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [errorMessage, setErrorMessage] = useState('');
 
     useEffect(() => {
         async function loadHomeData() {
@@ -22,12 +23,10 @@ const HomeScreen = () => {
                     getRecentBooks(),
                     getRecommendedBooks(),
                 ]);
-                console.log(recentRes.data);
-                console.log(recommendRes.data);
-                setRecentBooks(recentRes.data || []);
-                setRecommendedBooks(recommendRes.data || []);
+                setRecentBooks(recentRes || []);
+                setRecommendedBooks(recommendRes || []);
             } catch (err) {
-                console.error('홈 데이터 불러오기 실패:', err);
+                setErrorMessage(err?.message || '홈 데이터를 불러오지 못했습니다.');
             } finally {
                 setLoading(false);
             }
@@ -45,8 +44,11 @@ const HomeScreen = () => {
 
     return (
         <ScrollView contentContainerStyle={styles.scrollContainer}>
+            {errorMessage !== '' && (
+                <Text style={styles.errorText}>{errorMessage}</Text>
+            )}
             <Text style={styles.title}>최근에 읽은 책</Text>
-            <BookList books={recentBooks.map((item) => item.Book || item)} />
+            <BookList books={recentBooks.map((item) => item?.Book || item)} />
 
             <Text style={styles.title}>추천 도서</Text>
             <BookList books={recommendedBooks} />
@@ -69,6 +71,10 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
+    },
+    errorText: {
+        color: commonColors.blue,
+        marginBottom: 12,
     },
 });
 

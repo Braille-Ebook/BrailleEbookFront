@@ -5,40 +5,40 @@ import { getAuthorAndTranslator, getDateString } from '../utils';
 import commonStyles from '../../assets/styles/commonStyles';
 
 const BookListItem = ({ data }) => {
+    const title = typeof data?.title === 'string' ? data.title.trim() : '제목 없음';
+    const authorText = getAuthorAndTranslator(data?.author, data?.translator);
+    const bookmarkCount = data?.bookmark_num ?? data?.bookmarkNum ?? 0;
+
     return (
         <View style={styles.bookContainer}>
             <Image
                 source={
-                    data.image_url
+                    data?.image_url
                         ? { uri: data.image_url }
                         : require('../../assets/images/littleRedRidingHood.png')
                 }
                 style={styles.bookImage}
             />
-            <View style={styles.textContainer}>
-                <View style={styles.titleContainer}>
-                    <Text style={[commonStyles.subtitleText, styles.title]}>
-                        {data.title.trim()}
-                    </Text>
-                </View>
+                <View style={styles.textContainer}>
+                    <View style={styles.titleContainer}>
+                        <Text style={[commonStyles.subtitleText, styles.title]}>
+                            {title}
+                        </Text>
+                    </View>
 
-                {(data.author || data.translator) && (
-                    <Text>
-                        {getAuthorAndTranslator(data.author, data.translator)}
-                    </Text>
-                )}
-                <Text>{getDateString(data.publish_date)}</Text>
+                    {authorText !== '' && <Text>{authorText}</Text>}
+                    <Text>{getDateString(data?.publish_date)}</Text>
 
-                <View style={styles.bookmarkContainer}>
-                    <Image
-                        source={
-                            data.isBookmarked
-                                ? require('../../assets/icons/bookmarkIconFill.png')
-                                : require('../../assets/icons/bookmarkIcon.png')
-                        }
-                    />
-                    <Text>{`북마크 ${data.bookmark_num}`}</Text>
-                </View>
+                    <View style={styles.bookmarkContainer}>
+                        <Image
+                            source={
+                                data?.isBookmarked
+                                    ? require('../../assets/icons/bookmarkIconFill.png')
+                                    : require('../../assets/icons/bookmarkIcon.png')
+                            }
+                        />
+                        <Text>{`북마크 ${bookmarkCount}`}</Text>
+                    </View>
             </View>
         </View>
     );
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     bookmarkContainer: {
         flexDirection: 'row',
         alignItems: 'center',
+        gap: 4,
     },
 });
 

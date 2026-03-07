@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   View,
+  Text,
   TextInput,
   TouchableOpacity,
   Image,
@@ -10,7 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import commonColors from '../../assets/colors/commonColors';
-import { BackIcon, CloseIcon } from '../../assets/icons';
+import { backIcon, cancelIcon } from '../../assets/icons';
 import BookList from '../components/BookList';
 import { searchBooks } from '../api/searchApi';
 
@@ -19,15 +20,18 @@ const SearchScreen = () => {
   const [query, setQuery] = useState('');
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSearch = async () => {
     if (!query.trim()) return;
     setLoading(true);
+    setErrorMessage('');
     try {
       const res = await searchBooks(query);
-      setBooks(res.data?.items || []);
+      setBooks(res?.items || []);
     } catch (err) {
-      console.error('검색 실패:', err);
+      setBooks([]);
+      setErrorMessage(err?.message || '검색에 실패했습니다.');
     } finally {
       setLoading(false);
     }
@@ -38,14 +42,14 @@ const SearchScreen = () => {
       {/* 상단 검색바 */}
       <View style={styles.searchBar}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Image source={BackIcon} style={styles.icon} />
+          <Image source={backIcon} style={styles.icon} />
         </TouchableOpacity>
 
         <TextInput
           value={query}
           onChangeText={setQuery}
           placeholder="책을 검색하세요"
-          placeholderTextColor={commonColors.grey}
+          placeholderTextColor={commonColors.lightGrey}
           style={styles.input}
           onSubmitEditing={handleSearch}
           autoFocus
@@ -53,7 +57,7 @@ const SearchScreen = () => {
 
         {query.length > 0 && (
           <TouchableOpacity onPress={() => setQuery('')}>
-            <Image source={CloseIcon} style={styles.icon} />
+            <Image source={cancelIcon} style={styles.icon} />
           </TouchableOpacity>
         )}
       </View>
@@ -62,6 +66,9 @@ const SearchScreen = () => {
         <ActivityIndicator size="large" color={commonColors.purple} />
       ) : (
         <ScrollView contentContainerStyle={styles.listContainer}>
+          {errorMessage !== '' && (
+            <Text style={styles.errorText}>{errorMessage}</Text>
+          )}
           <BookList books={books} />
         </ScrollView>
       )}
@@ -95,4 +102,8 @@ const styles = StyleSheet.create({
     color: commonColors.black,
   },
   listContainer: { paddingHorizontal: 16, paddingBottom: 20 },
+  errorText: {
+    color: commonColors.blue,
+    marginBottom: 12,
+  },
 });

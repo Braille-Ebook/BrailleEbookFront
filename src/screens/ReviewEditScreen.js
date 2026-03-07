@@ -32,10 +32,18 @@ const ReviewEditScreen = () => {
     const [text, setText] = useState(review?.content ?? '');
     */
     const mutation = useMutation({
-        mutationFn: ({ bookId, reviewId, content }) =>
-            patchReviews(bookId, reviewId, content),
+        mutationFn: ({
+            bookId: targetBookId,
+            reviewId: targetReviewId,
+            content,
+        }) =>
+            patchReviews({
+                bookId: targetBookId,
+                reviewId: targetReviewId,
+                body: { content },
+            }),
         onSuccess: () => {
-            queryClient.invalidateQueries(['bookReviews', bookId]);
+            queryClient.invalidateQueries({ queryKey: ['bookReviews', bookId] });
             navigation.goBack();
         },
     });

@@ -2,7 +2,7 @@ import { http } from './http';
 
 export const getLastPosition = async ({ bookId }) => {
     const result = await http.get(`/content/${bookId}/last`);
-    return result.data;
+    return result.data?.data ?? null;
 };
 export const postLastPosition = async ({ bookId, position }) => {
     const result = await http.post(`/content/${bookId}/last`, position);
@@ -14,7 +14,7 @@ export const postPageBookmark = async ({ bookId, page }) => {
 };
 export const getPageBookmarks = async ({ bookId }) => {
     const result = await http.get(`/content/${bookId}/bookmark`);
-    return result.data;
+    return result.data?.data ?? [];
 };
 export const deletePageBookmark = async (bookId, page) => {
     const result = await http.delete(
@@ -24,5 +24,5 @@ export const deletePageBookmark = async (bookId, page) => {
 };
 export const getPdfPage = async ({ bookId, page }) => {
     const result = await http.get(`/content/${bookId}?page=${page}`);
-    return result.data;
+    return result.data?.data ?? null;
 };

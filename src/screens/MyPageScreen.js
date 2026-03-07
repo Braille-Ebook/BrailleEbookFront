@@ -9,6 +9,7 @@ import {
     Modal,
     TextInput,
     TouchableOpacity,
+    ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
@@ -32,7 +33,7 @@ const MyPageScreen = () => {
     // ------------------------------
     // 유저 정보 꺼내기
     // ------------------------------
-    const { data, isLoading, error } = useQuery({
+    const { data = {}, isLoading, error } = useQuery({
         queryKey: ['myPage'],
         queryFn: getMypageInfo,
     });
@@ -73,8 +74,7 @@ const MyPageScreen = () => {
                 );
             }
         } catch (err) {
-            console.error('비밀번호 변경 실패:', err);
-            Alert.alert('오류', '서버 통신 중 문제가 발생했습니다.');
+            Alert.alert('오류', err?.message || '서버 통신 중 문제가 발생했습니다.');
         }
     };
 
@@ -91,19 +91,19 @@ const MyPageScreen = () => {
     return (
         <View style={styles.myPageScreen}>
             <View style={styles.profileContainer}>
-                <Image source={profile} style={{ width: 100, height: 100 }} />
+                <Image source={profile} style={styles.profileImage} />
             </View>
 
             {/* 사용자 정보 */}
             <View>
                 <View style={styles.row}>
                     <Text style={styles.rowTitle}>닉네임</Text>
-                    <Text>{data.nickname}</Text>
+                    <Text>{data?.nickname ?? data?.nick ?? '-'}</Text>
                 </View>
                 <Pressable onPress={() => navigation.navigate('MyBooksScreen')}>
                     <View style={styles.row}>
                         <Text style={styles.rowTitle}>내가 읽은 책</Text>
-                        <Text>{data.numOfReadBooks}</Text>
+                        <Text>{data?.numOfReadBooks ?? 0}</Text>
                     </View>
                 </Pressable>
                 <Pressable
@@ -111,9 +111,21 @@ const MyPageScreen = () => {
                 >
                     <View style={styles.row}>
                         <Text style={styles.rowTitle}>내가 쓴 리뷰</Text>
-                        <Text>{data.numOfReview}</Text>
+                        <Text>{data?.numOfReview ?? 0}</Text>
                     </View>
                 </Pressable>
+                {isLoading && (
+                    <ActivityIndicator
+                        size='small'
+                        color={commonColors.purple}
+                        style={styles.infoState}
+                    />
+                )}
+                {error && (
+                    <Text style={styles.infoStateText}>
+                        {error?.message || '마이페이지 정보를 불러오지 못했습니다.'}
+                    </Text>
+                )}
             </View>
 
             {/* 버튼 */}
@@ -127,7 +139,6 @@ const MyPageScreen = () => {
                 <Pressable
                     onPress={() => {
                         handleLogout();
-                        navigation.navigate('LoginScreen');
                     }}
                 >
                     <View style={styles.button}>
@@ -216,6 +227,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    profileImage: {
+        width: 100,
+        height: 100,
+    },
     row: { flexDirection: 'row', paddingVertical: 3 },
     rowTitle: { width: 100, color: commonColors.purple, fontWeight: 'bold' },
     buttonContainer: { flexDirection: 'row', marginTop: 40 },
@@ -273,6 +288,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalButtonText: { color: commonColors.white, fontWeight: 'bold' },
+    infoState: {
+        marginTop: 12,
+    },
+    infoStateText: {
+        color: commonColors.blue,
+        marginTop: 12,
+        textAlign: 'center',
+    },
 });
 
 export default MyPageScreen;

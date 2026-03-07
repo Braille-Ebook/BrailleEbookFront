@@ -1,32 +1,21 @@
-// src/api/bookApi.js
 import { http } from './http';
 
-// 최근에 읽은 책
-export const getRecentBooks = async () => {
-    const res = await http.get('/home/recent');
-    return res.data.data;
+export const getBookById = async (bookId) => {
+    const res = await http.get(`/book/${bookId}`);
+    return res.data?.data ?? null;
 };
 
-// 추천 책 (토큰 필요)
-export const getRecommendBooks = async () => {
-    const res = await http.get('/home/recommend');
-    return res.data.data;
+export const toggleBookBookmark = async (bookId) => {
+    const res = await http.post(`/book/${bookId}/bookmark`);
+    return res.data;
 };
 
-// 인기 도서
-export const getPopularBooks = async () => {
-    const res = await http.get('/home/popular');
-    return res.data.data;
+export const startBook = async (bookId) => {
+    const res = await http.post(`/book/${bookId}/start`);
+    return res.data;
 };
 
-// 신간 도서
-export const getNewBooks = async () => {
-    const res = await http.get('/home/new');
-    return res.data.data;
+export const getBookProgress = async (bookId) => {
+    const res = await http.get(`/book/${bookId}/progress`);
+    return res.data?.data ?? null;
 };
-
-// // 장르별 도서
-// export const getgenreBooks = async () => {
-//   const res = await http.get('/home/genre?gerne=장르이름');
-//   return res.data.data;
-// };

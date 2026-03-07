@@ -1,4 +1,4 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
 import React, { useState, useEffect, useCallback } from 'react';
 import {
     Gesture,
@@ -11,32 +11,70 @@ import { useRoute, useFocusEffect } from '@react-navigation/native';
 import PdfBar from '../components/PdfBar';
 import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
+import commonColors from '../../assets/colors/commonColors';
 import { getLastPosition, getPdfPage, postLastPosition } from '../api';
 
 export default function PdfScreen() {
     const route = useRoute();
-    /*const { bookId } = route.params;*/
-    const positionQuery = useQuery({
-        queryKey: ['pagePosition', '/*bookId*/'],
-        queryFn: () => getLastPosition({ bookId: '/*bookId*/' }),
-    });
-    const contentQuery = useQuery({
-        queryKey: ['pageContent', '/*bookId*/', currentPage],
-        queryFn: () => getPdfPage({ bookId: '/*bookId*/', page: '/*page*/' }),
-        //enabled: !!positionQuery.data?.page
-    });
-    const mutation = useMutation({
-        mutationFn: ({ bookId, position }) =>
-            postLastPosition({ bookId, position }),
-        onSuccess: () => {},
-    });
-
-    const totalPage = 6;
-    //positionQuery.data에서 데이터 받아 초기값 설정
+    const bookId = route.params?.bookId;
+    const startFromBeginning = route.params?.startFromBeginning ?? false;
     const [currentChar, setCurrentChar] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
+
+    const positionQuery = useQuery({
+        queryKey: ['pagePosition', bookId],
+        queryFn: () => getLastPosition({ bookId }),
+        enabled: !!bookId && !startFromBeginning,
+    });
+    const contentQuery = useQuery({
+        queryKey: ['pageContent', bookId, currentPage],
+        queryFn: () => getPdfPage({ bookId, page: currentPage }),
+        enabled: !!bookId,
+    });
+    const mutation = useMutation({
+        mutationFn: ({ bookId: targetBookId, position }) =>
+            postLastPosition({ bookId: targetBookId, position }),
+        onSuccess: () => {},
+    });
+
+    useEffect(() => {
+        if (startFromBeginning) {
+            setCurrentPage(1);
+            setCurrentChar(0);
+            return;
+        }
+
+        if (!positionQuery.data) {
+            return;
+        }
+
+        const savedPage =
+            Number(positionQuery.data?.lastPage ?? positionQuery.data?.page) ||
+            1;
+        const savedChar =
+            Number(positionQuery.data?.lastChar ?? positionQuery.data?.char) ||
+            0;
+
+        setCurrentPage(savedPage);
+        setCurrentChar(savedChar);
+    }, [positionQuery.data, startFromBeginning]);
+
+    const pagePayload = contentQuery.data;
+    const pageContent =
+        typeof pagePayload === 'string'
+            ? pagePayload
+            : pagePayload?.content ??
+              pagePayload?.text ??
+              pagePayload?.pageContent ??
+              '';
+    const totalPage =
+        Number(
+            pagePayload?.totalPage ??
+                pagePayload?.totalPages ??
+                pagePayload?.maxPage
+        ) || currentPage;
 
     const panGesture = Gesture.Pan().onEnd((event) => {
         const { translationX } = event;
@@ -56,16 +94,31 @@ export default function PdfScreen() {
     useFocusEffect(
         useCallback(() => {
             return () => {
-                mutation.mutate({
-                    bookId: '/*bookId*/',
-                    position: { lastPage: currentPage, lastChar: currentChar },
-                });
+                if (bookId) {
+                    mutation.mutate({
+                        bookId,
+                        position: {
+                            lastPage: currentPage,
+                            lastChar: currentChar,
+                        },
+                    });
+                }
             };
-        }, [])
+        }, [bookId, currentPage, currentChar, mutation])
     );
 
+    if (!bookId) {
+        return (
+            <View style={styles.centerContainer}>
+                <Text style={styles.messageText}>
+                    본문을 불러올 책 정보가 없습니다.
+                </Text>
+            </View>
+        );
+    }
+
     return (
-        <GestureHandlerRootView style={{ flex: 1 }}>
+        <GestureHandlerRootView style={styles.flexFill}>
             <View style={styles.pdfScreen}>
                 <PdfBar
                     setOpen={setIsMenuOpen}
@@ -74,18 +127,35 @@ export default function PdfScreen() {
                 />
                 {!isMenuOpen ? (
                     <GestureDetector gesture={panGesture}>
-                        <View style={{ flex: 1 }}>
-                            <PdfPage
-                                currentPage={currentPage}
-                                totalPage={totalPage}
-                                char={currentChar}
-                                setChar={setCurrentChar}
-                            />
+                        <View style={styles.flexFill}>
+                            {contentQuery.isLoading ? (
+                                <View style={styles.centerContainer}>
+                                    <ActivityIndicator
+                                        size='large'
+                                        color={commonColors.purple}
+                                    />
+                                </View>
+                            ) : contentQuery.error ? (
+                                <View style={styles.centerContainer}>
+                                    <Text style={styles.messageText}>
+                                        {contentQuery.error?.message ||
+                                            '본문을 불러오지 못했습니다.'}
+                                    </Text>
+                                </View>
+                            ) : (
+                                <PdfPage
+                                    currentPage={currentPage}
+                                    totalPage={totalPage}
+                                    char={currentChar}
+                                    setChar={setCurrentChar}
+                                    content={pageContent}
+                                />
+                            )}
                         </View>
                     </GestureDetector>
                 ) : (
                     <BookmarkedPage
-                        bookId={'/*bookId*/'}
+                        bookId={bookId}
                         setIsMenuOpen={setIsMenuOpen}
                         setCurrentPage={setCurrentPage}
                         setCurrentChar={setCurrentChar}
@@ -100,5 +170,18 @@ const styles = StyleSheet.create({
     pdfScreen: {
         flex: 1,
         flexDirection: 'column',
+    },
+    flexFill: {
+        flex: 1,
+    },
+    centerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 24,
+    },
+    messageText: {
+        color: commonColors.blue,
+        textAlign: 'center',
     },
 });

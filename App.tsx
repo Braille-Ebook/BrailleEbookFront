@@ -13,7 +13,7 @@ import { starIcon, starFillIcon } from './assets/icons';
 import LoginScreen from './src/screens/Login/LoginScreen';
 import SignUpScreen from './src/screens/Login/SignUpScreen';
 import FindNewIdScreen from './src/screens/Login/FindNewIdScreen';
-import FindNewIdSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
+import FindNewIdSuccessScreen from './src/screens/Login/FindNewIdSuccessScreen';
 import FindNewPwScreen from './src/screens/Login/FindNewPwScreen';
 import FindNewPwSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
 
@@ -41,7 +41,7 @@ const Tab = createBottomTabNavigator();
 function BottomTabScreen() {
     return (
         <Tab.Navigator
-            screenOptions={({ route }) => ({
+            screenOptions={() => ({
                 headerShown: false,
                 tabBarStyle: { height: 70 },
                 tabBarIcon: ({ focused }) => (

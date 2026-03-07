@@ -19,7 +19,7 @@ const ItemListItem = ({ title, body, bookmark }) => {
                 ))}
             </View>
             <Image
-                source={bookmark.isBookmarked ? bookmarkIcon : bookmarkIconFill}
+                source={bookmark?.isBookmarked ? bookmarkIconFill : bookmarkIcon}
             />
         </View>
     );

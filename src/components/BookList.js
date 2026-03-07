@@ -1,24 +1,38 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 import BookListItem from './BookListItem';
 
-const BookList = ({ title, books }) => {
+const BookList = ({ title, books = [] }) => {
+    const navigation = useNavigation();
+
     return (
-        <View style={{ marginBottom: 20 }}>
-            <Text
-                style={{ fontWeight: 'bold', fontSize: 16, marginBottom: 10 }}
-            >
-                {title}
-            </Text>
+        <View style={styles.container}>
+            <Text style={styles.title}>{title}</Text>
 
             <View>
                 {books.map((book, idx) => (
-                    <BookListItem key={idx} data={book} />
+                    <Pressable
+                        key={book?.book_id ?? book?.id ?? idx}
+                        disabled={!book?.book_id && !book?.id}
+                        onPress={() =>
+                            navigation.navigate('BookScreen', {
+                                bookId: book?.book_id ?? book?.id,
+                            })
+                        }
+                    >
+                        <BookListItem data={book} />
+                    </Pressable>
                 ))}
             </View>
         </View>
     );
+};
+
+const styles = {
+    container: { marginBottom: 20 },
+    title: { fontWeight: 'bold', fontSize: 16, marginBottom: 10 },
 };
 
 export default BookList;

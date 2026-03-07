@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, Pressable, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { React } from 'react';
 
 import commonStyles from '../../../assets/styles/commonStyles';
@@ -8,6 +8,8 @@ import { pw } from '../../../assets/icons';
 
 const FindNewPwSuccessScreen = () => {
     const navigation = useNavigation();
+    const route = useRoute();
+    const email = route.params?.email ?? 'mnevermore1122@gmail.com';
     return (
         <View style={styles.findNewPwSuccessScreen}>
             <View>
@@ -16,13 +18,13 @@ const FindNewPwSuccessScreen = () => {
                     아래의 이메일로 임시 비밀번호가 전송됐습니다.
                 </Text>
                 <Text style={[styles.emailText, commonStyles.subtitleText]}>
-                    mnevermore1122@gmail.com
+                    {email}
                 </Text>
             </View>
             <Image source={pw} style={styles.pwImage} />
             <Pressable
                 onPress={() => {
-                    navigation.navigate();
+                    navigation.navigate('LoginScreen');
                 }}
             >
                 <View style={styles.buttonContainer}>
@@ -40,7 +42,11 @@ const styles = StyleSheet.create({
         paddingBottom: 40,
     },
     subText: { marginTop: 20 },
-    emailText: { color: commonColors.lightPurple },
+    emailText: {
+        color: commonColors.blue,
+        marginTop: 8,
+        fontWeight: '600',
+    },
     pwImage: { width: 160, height: 200, margin: 'auto' },
     buttonContainer: {
         width: '100%',
