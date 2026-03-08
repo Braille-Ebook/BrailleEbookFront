@@ -14,6 +14,7 @@ import { sendTempPassword } from '../../api/authService';
 
 import commonStyles from '../../../assets/styles/commonStyles';
 import commonColors from '../../../assets/colors/commonColors';
+import AuthScreenLayout from '../../components/AuthScreenLayout';
 
 const FindNewPwScreen = () => {
     const navigation = useNavigation();
@@ -51,45 +52,47 @@ const FindNewPwScreen = () => {
         }
     };
     return (
-        <View style={styles.findNewPwScreen}>
-            <Text style={commonStyles.titleText}>임시 비밀번호 받기</Text>
-            <View style={styles.textInputContainer}>
-                <TextInput
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder='이메일'
-                    style={styles.textInput}
-                    keyboardType='email-address'
-                    autoCapitalize='none'
+        <AuthScreenLayout fallbackRoute='LoginScreen'>
+            <View style={styles.findNewPwScreen}>
+                <Text style={commonStyles.titleText}>임시 비밀번호 받기</Text>
+                <View style={styles.textInputContainer}>
+                    <TextInput
+                        value={email}
+                        onChangeText={setEmail}
+                        placeholder='이메일'
+                        style={styles.textInput}
+                        keyboardType='email-address'
+                        autoCapitalize='none'
+                    />
+                </View>
+                <View style={styles.spacer} />
+                {loading ? (
+                    <ActivityIndicator
+                        size='large'
+                        color={commonColors.purple}
+                    />
+                ) : (
+                    <Pressable onPress={getNewPw}>
+                        <View style={styles.buttonContainer}>
+                            <Text style={styles.buttonText}>비밀번호 받기</Text>
+                        </View>
+                    </Pressable>
+                )}
+                <ConfirmModal
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    title='알림'
+                    text={modalText}
+                    buttonText='확인'
                 />
             </View>
-            <View style={styles.spacer} />
-            {loading ? (
-                <ActivityIndicator size='large' color={commonColors.purple} />
-            ) : (
-                <Pressable onPress={getNewPw}>
-                    <View style={styles.buttonContainer}>
-                        <Text style={styles.buttonText}>비밀번호 받기</Text>
-                    </View>
-                </Pressable>
-            )}
-            <ConfirmModal
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
-                title={'알림'}
-                text={modalText}
-                buttonText={'확인'}
-            />
-        </View>
+        </AuthScreenLayout>
     );
 };
 
 const styles = StyleSheet.create({
     findNewPwScreen: {
         flex: 1,
-        paddingHorizontal: 42,
-        paddingTop: 60,
-        paddingBottom: 40,
     },
     textInputContainer: {
         width: '100%',

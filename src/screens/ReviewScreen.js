@@ -15,8 +15,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useRoute } from '@react-navigation/native';
 
 import { ReviewListItem, CommentInputBar } from '../components';
-import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
+import ScreenHeader from '../components/ScreenHeader';
 
 import { getReviews, postReviews } from '../api';
 
@@ -44,6 +44,7 @@ const ReviewScreen = () => {
     if (!bookId) {
         return (
             <SafeAreaView style={styles.safeArea}>
+                <ScreenHeader fallbackRoute='Bottom' title='리뷰' />
                 <View style={styles.centerContainer}>
                     <Text style={styles.messageText}>
                         리뷰를 불러올 책 정보가 없습니다.
@@ -55,6 +56,10 @@ const ReviewScreen = () => {
 
     return (
         <SafeAreaView style={styles.safeArea}>
+            <ScreenHeader
+                fallbackRoute={{ name: 'BookScreen', params: { bookId } }}
+                title='리뷰'
+            />
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <KeyboardAvoidingView
                     style={styles.container}
@@ -62,9 +67,6 @@ const ReviewScreen = () => {
                     keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 0}
                 >
                     <View style={styles.reviewContainer}>
-                        <Text style={[commonStyles.subtitleText, styles.title]}>
-                            리뷰
-                        </Text>
                         {isLoading ? (
                             <View style={styles.centerContainer}>
                                 <ActivityIndicator
@@ -122,14 +124,10 @@ const styles = StyleSheet.create({
     reviewContainer: {
         flex: 1,
         paddingHorizontal: 42,
+        paddingTop: 12,
     },
     scroll: {
         paddingBottom: 20,
-    },
-    title: {
-        fontWeight: 'bold',
-        marginTop: 45,
-        marginBottom: 25,
     },
     centerContainer: {
         flex: 1,

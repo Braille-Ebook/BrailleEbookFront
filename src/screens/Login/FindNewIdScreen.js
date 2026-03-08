@@ -12,6 +12,7 @@ import { ConfirmModal } from '../../modals';
 import { findIdByEmail } from '../../api/authService';
 import commonStyles from '../../../assets/styles/commonStyles';
 import commonColors from '../../../assets/colors/commonColors';
+import AuthScreenLayout from '../../components/AuthScreenLayout';
 
 const FindNewIdScreen = () => {
     const navigation = useNavigation();
@@ -48,45 +49,47 @@ const FindNewIdScreen = () => {
     };
 
     return (
-        <View style={styles.findIdScreen}>
-            <Text style={commonStyles.titleText}>아이디 찾기</Text>
-            <View style={styles.textInputContainer}>
-                <TextInput
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="이메일"
-                    style={styles.textInput}
-                    keyboardType='email-address'
-                    autoCapitalize='none'
+        <AuthScreenLayout fallbackRoute='LoginScreen'>
+            <View style={styles.findIdScreen}>
+                <Text style={commonStyles.titleText}>아이디 찾기</Text>
+                <View style={styles.textInputContainer}>
+                    <TextInput
+                        value={email}
+                        onChangeText={setEmail}
+                        placeholder='이메일'
+                        style={styles.textInput}
+                        keyboardType='email-address'
+                        autoCapitalize='none'
+                    />
+                </View>
+                <View style={styles.spacer} />
+                {loading ? (
+                    <ActivityIndicator
+                        size='large'
+                        color={commonColors.purple}
+                    />
+                ) : (
+                    <Pressable onPress={findId}>
+                        <View style={styles.buttonContainer}>
+                            <Text style={styles.buttonText}>아이디 찾기</Text>
+                        </View>
+                    </Pressable>
+                )}
+                <ConfirmModal
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    title='알림'
+                    text={modalText}
+                    buttonText='확인'
                 />
             </View>
-            <View style={styles.spacer} />
-            {loading ? (
-                <ActivityIndicator size='large' color={commonColors.purple} />
-            ) : (
-                <Pressable onPress={findId}>
-                    <View style={styles.buttonContainer}>
-                        <Text style={styles.buttonText}>아이디 찾기</Text>
-                    </View>
-                </Pressable>
-            )}
-            <ConfirmModal
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
-                title={'알림'}
-                text={modalText}
-                buttonText={'확인'}
-            />
-        </View>
+        </AuthScreenLayout>
     );
 };
 
 const styles = StyleSheet.create({
     findIdScreen: {
         flex: 1,
-        paddingHorizontal: 42,
-        paddingTop: 60,
-        paddingBottom: 40,
     },
     textInputContainer: {
         width: '100%',

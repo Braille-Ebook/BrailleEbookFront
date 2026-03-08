@@ -6,7 +6,7 @@ import {
     GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { useRoute, useFocusEffect } from '@react-navigation/native';
+import { useRoute, useFocusEffect, useNavigation } from '@react-navigation/native';
 
 import PdfBar from '../components/PdfBar';
 import PdfPage from '../components/PdfPage';
@@ -15,6 +15,7 @@ import commonColors from '../../assets/colors/commonColors';
 import { getLastPosition, getPdfPage, postLastPosition } from '../api';
 
 export default function PdfScreen() {
+    const navigation = useNavigation();
     const route = useRoute();
     const bookId = route.params?.bookId;
     const startFromBeginning = route.params?.startFromBeginning ?? false;
@@ -121,6 +122,14 @@ export default function PdfScreen() {
         <GestureHandlerRootView style={styles.flexFill}>
             <View style={styles.pdfScreen}>
                 <PdfBar
+                    onPressBack={() => {
+                        if (navigation.canGoBack()) {
+                            navigation.goBack();
+                            return;
+                        }
+
+                        navigation.navigate('BookScreen', { bookId });
+                    }}
                     setOpen={setIsMenuOpen}
                     bookmark={isBookmarked}
                     setBookmark={setIsBookmarked}

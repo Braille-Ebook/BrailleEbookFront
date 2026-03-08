@@ -13,6 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import commonColors from '../../../assets/colors/commonColors';
 import { bookOpenedBig } from '../../../assets/icons';
+import AuthScreenLayout from '../../components/AuthScreenLayout';
 import LoginConfirmModal from '../../modals/LoginConfirmModal';
 import {
     buildKakaoLoginUrl,
@@ -144,79 +145,89 @@ const LoginScreen = () => {
     };
 
     return (
-        <View style={styles.container}>
-            <View style={styles.logoWrapper}>
-                <Image source={bookOpenedBig} style={styles.logo} />
-            </View>
+        <AuthScreenLayout
+            centered={true}
+            contentContainerStyle={styles.scrollContent}
+            showBackButton={false}
+        >
+            <View style={styles.container}>
+                <View style={styles.logoWrapper}>
+                    <Image source={bookOpenedBig} style={styles.logo} />
+                </View>
 
-            <View style={styles.inputContainer}>
-                <TextInput
-                    value={identifier}
-                    onChangeText={setIdentifier}
-                    placeholder='아이디 또는 이메일'
-                    style={styles.textInput}
-                    autoCapitalize='none'
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        value={identifier}
+                        onChangeText={setIdentifier}
+                        placeholder='아이디 또는 이메일'
+                        style={styles.textInput}
+                        autoCapitalize='none'
+                    />
+                    <TextInput
+                        value={password}
+                        onChangeText={setPassword}
+                        placeholder='비밀번호'
+                        secureTextEntry
+                        style={[styles.textInput, styles.passwordInput]}
+                    />
+                </View>
+
+                {loading ? (
+                    <ActivityIndicator
+                        size='large'
+                        color={commonColors.purple}
+                    />
+                ) : (
+                    <Pressable onPress={handleLogin} style={styles.loginButton}>
+                        <Text style={styles.loginButtonText}>로그인하기</Text>
+                    </Pressable>
+                )}
+
+                <Pressable onPress={handleKakaoLogin} style={styles.kakaoButton}>
+                    <Text style={styles.kakaoText}>Login with Kakao</Text>
+                </Pressable>
+
+                <LoginConfirmModal
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    success={loginResult}
                 />
-                <TextInput
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder='비밀번호'
-                    secureTextEntry
-                    style={[styles.textInput, styles.passwordInput]}
-                />
+                <View style={styles.accountManagementContainer}>
+                    <Pressable
+                        onPress={() => {
+                            navigation.navigate('SignUpScreen');
+                        }}
+                    >
+                        <Text style={styles.accountManagement}>회원가입</Text>
+                    </Pressable>
+                    <Text style={styles.accountManagementDivider}>/</Text>
+                    <Pressable
+                        onPress={() => {
+                            navigation.navigate('FindNewIdScreen');
+                        }}
+                    >
+                        <Text style={styles.accountManagement}>아이디 찾기</Text>
+                    </Pressable>
+                    <Text style={styles.accountManagementDivider}>/</Text>
+                    <Pressable
+                        onPress={() => {
+                            navigation.navigate('FindNewPwScreen');
+                        }}
+                    >
+                        <Text style={styles.accountManagement}>비밀번호 찾기</Text>
+                    </Pressable>
+                </View>
             </View>
-
-            {loading ? (
-                <ActivityIndicator size='large' color={commonColors.purple} />
-            ) : (
-                <Pressable onPress={handleLogin} style={styles.loginButton}>
-                    <Text style={styles.loginButtonText}>로그인하기</Text>
-                </Pressable>
-            )}
-
-            <Pressable onPress={handleKakaoLogin} style={styles.kakaoButton}>
-                <Text style={styles.kakaoText}>Login with Kakao</Text>
-            </Pressable>
-
-            <LoginConfirmModal
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
-                success={loginResult}
-            />
-            <View style={styles.accountManagementContainer}>
-                <Pressable
-                    onPress={() => {
-                        navigation.navigate('SignUpScreen');
-                    }}
-                >
-                    <Text style={styles.accountManagement}>회원가입</Text>
-                </Pressable>
-                <Text style={styles.accountManagementDivider}>/</Text>
-                <Pressable
-                    onPress={() => {
-                        navigation.navigate('FindNewIdScreen');
-                    }}
-                >
-                    <Text style={styles.accountManagement}>아이디 찾기</Text>
-                </Pressable>
-                <Text style={styles.accountManagementDivider}>/</Text>
-                <Pressable
-                    onPress={() => {
-                        navigation.navigate('FindNewPwScreen');
-                    }}
-                >
-                    <Text style={styles.accountManagement}>임시비번 받기</Text>
-                </Pressable>
-            </View>
-        </View>
+        </AuthScreenLayout>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        paddingHorizontal: 42,
+    scrollContent: {
         justifyContent: 'center',
+    },
+    container: {
+        width: '100%',
         alignItems: 'center',
     },
     logoWrapper: {
@@ -256,7 +267,12 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     kakaoText: { color: '#000', fontWeight: 'bold' },
-    accountManagementContainer: { flexDirection: 'row', marginTop: 5 },
+    accountManagementContainer: {
+        flexDirection: 'row',
+        justifyContent: 'center',
+        flexWrap: 'wrap',
+        marginTop: 24,
+    },
     accountManagementDivider: { color: '#4A90E2', marginHorizontal: 10 },
     accountManagement: { color: '#4A90E2', textDecoration: 'underline' },
 });

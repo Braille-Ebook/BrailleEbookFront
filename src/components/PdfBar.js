@@ -1,19 +1,25 @@
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Image, Pressable } from 'react-native';
 import React from 'react';
+import { whiteBackIcon } from '../../assets/icons';
 
-export default function PdfBar({ setOpen, bookmark, setBookmark }) {
+export default function PdfBar({ setOpen, bookmark, setBookmark, onPressBack }) {
     return (
         <View style={styles.barContainer}>
-            <Pressable
-                onPress={() => {
-                    setOpen((prev) => !prev);
-                }}
-            >
-                <Image
-                    source={require('../../assets/icons/menu.png')}
-                    style={styles.menuIcon}
-                />
-            </Pressable>
+            <View style={styles.leftGroup}>
+                <Pressable onPress={onPressBack} style={styles.backButton}>
+                    <Image source={whiteBackIcon} style={styles.backIcon} />
+                </Pressable>
+                <Pressable
+                    onPress={() => {
+                        setOpen((prev) => !prev);
+                    }}
+                >
+                    <Image
+                        source={require('../../assets/icons/menu.png')}
+                        style={styles.menuIcon}
+                    />
+                </Pressable>
+            </View>
             <Pressable
                 onPress={() => {
                     setBookmark((prev) => !prev);
@@ -41,6 +47,21 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    leftGroup: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    backButton: {
+        width: 32,
+        height: 32,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    backIcon: {
+        width: 24,
+        height: 24,
     },
     menuIcon: { width: 25, height: 25 },
     bookmarkIcon: { width: 40, height: 40 },
