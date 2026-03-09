@@ -43,7 +43,10 @@ const HomeScreen = () => {
     }
 
     return (
-        <ScrollView contentContainerStyle={styles.scrollContainer}>
+        <ScrollView
+            style={styles.scrollView}
+            contentContainerStyle={styles.scrollContainer}
+        >
             {errorMessage !== '' && (
                 <Text style={styles.errorText}>{errorMessage}</Text>
             )}
@@ -63,6 +66,9 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
+    scrollView: {
+        flex: 1,
+    },
     scrollContainer: {
         paddingTop: 2,
         paddingBottom: 8,

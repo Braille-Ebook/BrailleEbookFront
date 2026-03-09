@@ -8,6 +8,9 @@ function extractToken(loginResponse) {
 }
 
 export const KAKAO_REDIRECT_URI = 'brailleebookfront://auth/kakao/callback';
+export const KAKAO_SERVER_CALLBACK_URI = buildAbsoluteUrl(
+    authApi.getKakaoCallbackPath()
+);
 
 function buildAbsoluteUrl(path) {
     return `${API_BASE_URL}${path}`;
@@ -88,7 +91,9 @@ export async function completeKakaoLoginFromCode({ code, state } = {}) {
         params: {
             code,
             state,
-            redirect_uri: KAKAO_REDIRECT_URI,
+            // Kakao REST API redirect_uri must match the server callback URI
+            // that was used when requesting the authorization code.
+            redirect_uri: KAKAO_SERVER_CALLBACK_URI,
         },
     });
     const data = res.data;

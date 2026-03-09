@@ -63,7 +63,7 @@ const BookSearchScreen = () => {
                     onSelect={idx => setSelectedIndex(idx)}
                 />
 
-                {renderContent()}
+                <View style={styles.contentContainer}>{renderContent()}</View>
             </View>
         </SafeAreaView>
     );
@@ -99,6 +99,10 @@ const styles = StyleSheet.create({
         width: 32,
         height: 32,
         resizeMode: 'contain',
+    },
+    contentContainer: {
+        flex: 1,
+        minHeight: 0,
     },
 });
 

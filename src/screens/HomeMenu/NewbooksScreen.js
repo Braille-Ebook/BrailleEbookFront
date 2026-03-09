@@ -31,7 +31,10 @@ const NewbooksScreen = () => {
     );
 
   return (
-    <ScrollView contentContainerStyle={styles.scrollContent}>
+    <ScrollView
+      style={styles.scrollView}
+      contentContainerStyle={styles.scrollContent}
+    >
       {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
       <Text style={styles.sectionTitle}>신간 도서</Text>
       <BookList books={books} />
@@ -40,6 +43,9 @@ const NewbooksScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  scrollView: {
+    flex: 1,
+  },
   scrollContent: {
     paddingTop: 2,
     paddingBottom: 8,
