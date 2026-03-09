@@ -33,7 +33,7 @@ const BestsellerScreen = () => {
   }
 
   return (
-    <ScrollView style={styles.scrollView}>
+    <ScrollView contentContainerStyle={styles.scrollContent}>
       {errorMessage !== '' && <Text style={styles.errorText}>{errorMessage}</Text>}
       <Text style={styles.sectionTitle}>인기 도서</Text>
       <BookList books={books} />
@@ -42,12 +42,15 @@ const BestsellerScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  scrollView: { paddingLeft: 5 },
+  scrollContent: {
+    paddingTop: 2,
+    paddingBottom: 8,
+  },
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
     color: commonColors.black,
-    marginBottom: -20,
+    marginBottom: 12,
   },
   loadingContainer: {
     flex: 1,

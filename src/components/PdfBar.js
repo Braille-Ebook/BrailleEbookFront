@@ -40,7 +40,7 @@ export default function PdfBar({ setOpen, bookmark, setBookmark, onPressBack }) 
 const styles = StyleSheet.create({
     barContainer: {
         width: '100%',
-        height: 55,
+        height: 72,
         paddingHorizontal: 15,
         backgroundColor: 'rgb(64,64,64)',
         display: 'flex',
@@ -53,15 +53,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     backButton: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         justifyContent: 'center',
         alignItems: 'center',
         marginRight: 12,
     },
     backIcon: {
-        width: 24,
-        height: 24,
+        width: 48,
+        height: 48,
     },
     menuIcon: { width: 25, height: 25 },
     bookmarkIcon: { width: 40, height: 40 },

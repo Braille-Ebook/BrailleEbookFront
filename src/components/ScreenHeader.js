@@ -62,28 +62,28 @@ export default function ScreenHeader({
 
 const styles = StyleSheet.create({
     header: {
-        height: 52,
+        minHeight: 68,
         flexDirection: 'row',
         alignItems: 'center',
         paddingHorizontal: 20,
         backgroundColor: commonColors.white,
     },
     side: {
-        width: 40,
+        width: 64,
         justifyContent: 'center',
     },
     right: {
         alignItems: 'flex-end',
     },
     backButton: {
-        width: 32,
-        height: 32,
+        width: 64,
+        height: 64,
         justifyContent: 'center',
         alignItems: 'center',
     },
     backIcon: {
-        width: 24,
-        height: 24,
+        width: 48,
+        height: 48,
         tintColor: commonColors.black,
     },
     title: {

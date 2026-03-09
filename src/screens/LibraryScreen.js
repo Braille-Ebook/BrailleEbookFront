@@ -7,29 +7,49 @@ import {
     ScrollView,
     Pressable,
     ActivityIndicator,
+    useWindowDimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { useQuery } from '@tanstack/react-query';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BookListItem } from '../components';
 import { bookOpened } from '../../assets/icons';
 import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
+import { normalizeBookData } from '../utils';
 
 import { getLibraryInfo } from '../api';
 
 const LibraryScreen = () => {
     const navigation = useNavigation();
+    const { width } = useWindowDimensions();
     const { data = [], isLoading, error } = useQuery({
         queryKey: ['library'],
         queryFn: getLibraryInfo,
     });
+    const books = data.map(normalizeBookData);
+    const isCompactScreen = width < 390;
 
     return (
-        <View style={styles.libraryContainer}>
+        <SafeAreaView style={styles.libraryContainer}>
             <View style={styles.titleContainer}>
-                <Image source={bookOpened} style={styles.bookOpened} />
-                <Text style={commonStyles.titleText}>내 라이브러리</Text>
+                <Image
+                    source={bookOpened}
+                    style={[
+                        styles.bookOpened,
+                        isCompactScreen && styles.compactBookOpened,
+                    ]}
+                />
+                <Text
+                    style={[
+                        commonStyles.titleText,
+                        styles.titleText,
+                        isCompactScreen && styles.compactTitleText,
+                    ]}
+                >
+                    내 라이브러리
+                </Text>
             </View>
             {isLoading ? (
                 <View style={styles.centerContainer}>
@@ -48,13 +68,14 @@ const LibraryScreen = () => {
                 <ScrollView
                     showsVerticalScrollIndicator={false}
                     style={styles.scrollView}
+                    contentContainerStyle={styles.scrollContent}
                 >
-                    {data.length === 0 ? (
+                    {books.length === 0 ? (
                         <Text style={styles.messageText}>
                             북마크한 책이 없습니다.
                         </Text>
                     ) : (
-                        data.map((item, index) => (
+                        books.map((item, index) => (
                             <Pressable
                                 onPress={() => {
                                     navigation.navigate('BookScreen', {
@@ -62,6 +83,7 @@ const LibraryScreen = () => {
                                     });
                                 }}
                                 key={item?.book_id ?? item?.id ?? index}
+                                style={styles.itemPressable}
                             >
                                 <BookListItem data={item} />
                             </Pressable>
@@ -69,20 +91,31 @@ const LibraryScreen = () => {
                     )}
                 </ScrollView>
             )}
-        </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     libraryContainer: {
-        height: '100%',
+        flex: 1,
+        backgroundColor: commonColors.white,
     },
     bookOpened: {
         marginRight: 16,
+        width: 40,
+        height: 40,
+        resizeMode: 'contain',
+    },
+    compactBookOpened: {
+        width: 32,
+        height: 32,
     },
     scrollView: {
         flex: 1,
-        paddingLeft: 20,
+    },
+    scrollContent: {
+        paddingHorizontal: 16,
+        paddingBottom: 24,
     },
     centerContainer: {
         flex: 1,
@@ -93,11 +126,24 @@ const styles = StyleSheet.create({
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginVertical: 35,
+        alignItems: 'center',
+        marginTop: 20,
+        marginBottom: 24,
+        paddingHorizontal: 16,
+    },
+    titleText: {
+        fontWeight: '700',
+        textAlign: 'center',
+    },
+    compactTitleText: {
+        fontSize: 22,
     },
     messageText: {
         color: commonColors.blue,
         textAlign: 'center',
+    },
+    itemPressable: {
+        width: '100%',
     },
 });
 
