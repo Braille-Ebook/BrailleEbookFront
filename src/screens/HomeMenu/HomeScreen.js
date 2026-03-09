@@ -47,25 +47,36 @@ const HomeScreen = () => {
             {errorMessage !== '' && (
                 <Text style={styles.errorText}>{errorMessage}</Text>
             )}
-            <Text style={styles.title}>최근에 읽은 책</Text>
-            <BookList books={recentBooks.map((item) => item?.Book || item)} />
+            <View style={styles.section}>
+                <Text style={styles.title}>최근에 읽은 책</Text>
+                <BookList books={recentBooks.map((item) => item?.Book || item)} />
+            </View>
 
-            <Text style={styles.title}>추천 도서</Text>
-            <BookList books={recommendedBooks} />
+            <View style={styles.section}>
+                <Text style={styles.title}>추천 도서</Text>
+                <BookList
+                    books={recommendedBooks.map((item) => item?.Book || item)}
+                />
+            </View>
         </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     scrollContainer: {
-        paddingLeft: 5,
-        paddingVertical: 5,
+        paddingTop: 2,
+        paddingBottom: 8,
         alignItems: 'flex-start',
+    },
+    section: {
+        width: '100%',
+        marginBottom: 4,
     },
     title: {
         fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: -20,
+        marginBottom: 12,
+        color: commonColors.black,
     },
     loadingContainer: {
         flex: 1,
