@@ -9,6 +9,33 @@ export const getAuthorAndTranslator = (author, translator) => {
 
     return translator ? `${author} 글, ${translator} 번역` : `${author} 글`;
 };
+
+export const normalizeBookData = book => {
+    if (!book || typeof book !== 'object') {
+        return {};
+    }
+
+    const nestedBook = [book.Book, book.book, book.bookInfo].find(
+        candidate => candidate && typeof candidate === 'object'
+    );
+    const normalized = nestedBook ? { ...book, ...nestedBook } : { ...book };
+    const bookId =
+        normalized.book_id ??
+        nestedBook?.book_id ??
+        normalized.id ??
+        nestedBook?.id ??
+        null;
+
+    return {
+        ...normalized,
+        book_id: bookId,
+        image_url: normalized.image_url ?? normalized.imageUrl ?? null,
+        publish_date: normalized.publish_date ?? normalized.publishDate ?? null,
+        bookmark_num:
+            normalized.bookmark_num ?? normalized.bookmarkNum ?? 0,
+    };
+};
+
 export const getDateString = (stringDate) => {
     if (!stringDate) {
         return '-';
