@@ -228,8 +228,9 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     profileImage: {
-        width: 100,
-        height: 100,
+        width: 120,
+        aspectRatio: 76 / 84,
+        resizeMode: 'contain',
     },
     row: { flexDirection: 'row', paddingVertical: 3 },
     rowTitle: { width: 100, color: commonColors.purple, fontWeight: 'bold' },

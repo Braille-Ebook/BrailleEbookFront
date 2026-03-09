@@ -45,7 +45,14 @@ const styles = StyleSheet.create({
         marginTop: 8,
         fontWeight: '600',
     },
-    idImage: { width: 160, height: 160, alignSelf: 'center', marginVertical: 40 },
+    idImage: {
+        width: '100%',
+        maxWidth: 260,
+        aspectRatio: 278 / 177,
+        alignSelf: 'center',
+        marginVertical: 40,
+        resizeMode: 'contain',
+    },
     buttonContainer: {
         width: '100%',
         height: 40,
