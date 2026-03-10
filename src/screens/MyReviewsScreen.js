@@ -21,7 +21,11 @@ import { getMypageReviews } from '../api';
 
 const MyReviewsScreen = () => {
     const navigation = useNavigation();
-    const { data = [], isLoading, error } = useQuery({
+    const {
+        data = [],
+        isLoading,
+        error,
+    } = useQuery({
         queryKey: ['myPageReviews'],
         queryFn: getMypageReviews,
     });
@@ -30,7 +34,10 @@ const MyReviewsScreen = () => {
             <ScreenHeader fallbackRoute='Bottom' title='내가 쓴 리뷰' />
             <View style={styles.myReviewsScreen}>
                 {isLoading ? (
-                    <ActivityIndicator size='large' color={commonColors.purple} />
+                    <ActivityIndicator
+                        size='large'
+                        color={commonColors.purple}
+                    />
                 ) : error ? (
                     <Text style={styles.messageText}>
                         {error?.message || '리뷰 정보를 불러오지 못했습니다.'}
@@ -47,11 +54,14 @@ const MyReviewsScreen = () => {
                                     key={item?.reviewId ?? item?.id ?? index}
                                     onPress={() => {
                                         if (item?.bookId ?? item?.book_id) {
-                                            navigation.navigate('ReviewScreen', {
-                                                bookId:
-                                                    item?.bookId ??
-                                                    item?.book_id,
-                                            });
+                                            navigation.navigate(
+                                                'ReviewScreen',
+                                                {
+                                                    bookId:
+                                                        item?.bookId ??
+                                                        item?.book_id,
+                                                }
+                                            );
                                         }
                                     }}
                                 >
@@ -67,7 +77,9 @@ const MyReviewsScreen = () => {
                                                     item?.author ||
                                                     item?.nickname ||
                                                     '작성자 정보 없음',
-                                                styles: [commonStyles.smallText],
+                                                styles: [
+                                                    commonStyles.smallText,
+                                                ],
                                             },
                                             {
                                                 text:
