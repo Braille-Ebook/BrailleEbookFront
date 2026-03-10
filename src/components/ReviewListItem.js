@@ -12,14 +12,16 @@ import { likeReviews } from '../api';
 const ReviewListItem = ({ data, bookId }) => {
     const navigation = useNavigation();
     const queryClient = useQueryClient();
-    const reviewId = data?.reviewId ?? data?.id;
+    const reviewId = data?.review_id ?? data?.id;
     const isEditable = data?.isLiked == null;
-    const likeCount = data?.likeNum ?? data?.likeCount ?? 0;
+    const likeCount = data?.like_count ?? 0;
 
     const mutation = useMutation({
         mutationFn: () => likeReviews({ bookId, reviewId }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['bookReviews', bookId] });
+            queryClient.invalidateQueries({
+                queryKey: ['bookReviews', bookId],
+            });
         },
     });
     return (
@@ -38,7 +40,9 @@ const ReviewListItem = ({ data, bookId }) => {
                 <Pressable
                     disabled={mutation.isPending || !reviewId}
                     onPress={() => {
+                        console.log('checking');
                         if (isEditable) {
+                            console.log('is pressing');
                             navigation.navigate('ReviewEditScreen', {
                                 orgText: data?.content ?? '',
                                 bookId,

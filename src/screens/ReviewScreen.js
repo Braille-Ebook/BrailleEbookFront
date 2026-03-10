@@ -9,6 +9,7 @@ import {
     TouchableWithoutFeedback,
     Keyboard,
     ActivityIndicator,
+    Pressable,
 } from 'react-native';
 import { React, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -76,7 +77,8 @@ const ReviewScreen = () => {
                             </View>
                         ) : error ? (
                             <Text style={styles.messageText}>
-                                {error?.message || '리뷰를 불러오지 못했습니다.'}
+                                {error?.message ||
+                                    '리뷰를 불러오지 못했습니다.'}
                             </Text>
                         ) : (
                             <ScrollView contentContainerStyle={styles.scroll}>
