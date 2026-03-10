@@ -33,7 +33,11 @@ const MyPageScreen = () => {
     // ------------------------------
     // 유저 정보 꺼내기
     // ------------------------------
-    const { data = {}, isLoading, error } = useQuery({
+    const {
+        data = {},
+        isLoading,
+        error,
+    } = useQuery({
         queryKey: ['myPage'],
         queryFn: getMypageInfo,
     });
@@ -74,7 +78,10 @@ const MyPageScreen = () => {
                 );
             }
         } catch (err) {
-            Alert.alert('오류', err?.message || '서버 통신 중 문제가 발생했습니다.');
+            Alert.alert(
+                '오류',
+                err?.message || '서버 통신 중 문제가 발생했습니다.'
+            );
         }
     };
 
@@ -123,7 +130,8 @@ const MyPageScreen = () => {
                 )}
                 {error && (
                     <Text style={styles.infoStateText}>
-                        {error?.message || '마이페이지 정보를 불러오지 못했습니다.'}
+                        {error?.message ||
+                            '마이페이지 정보를 불러오지 못했습니다.'}
                     </Text>
                 )}
             </View>

@@ -12,7 +12,7 @@ import {
     Pressable,
 } from 'react-native';
 import { React, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRoute } from '@react-navigation/native';
 
 import { ReviewListItem, CommentInputBar } from '../components';
@@ -23,23 +23,36 @@ import { getReviews, postReviews } from '../api';
 
 const ReviewScreen = () => {
     const route = useRoute();
+    const queryClient = useQueryClient();
     const bookId = route.params?.bookId;
 
     const [text, onChangeText] = useState('');
+
+    //리뷰 데이터 받기
     const {
         data = [],
         isLoading,
         error,
-        refetch,
     } = useQuery({
         queryKey: ['bookReviews', bookId],
         queryFn: () => getReviews({ bookId }),
         enabled: !!bookId,
     });
 
-    const handleSubmitReview = async (content) => {
-        await postReviews({ bookId, body: { content } });
-        await refetch();
+    //새 리뷰 포스트
+    const postReviewMutation = useMutation({
+        mutationFn: (content) => postReviews({ bookId, body: { content } }),
+        onSuccess: () => {
+            //관련 데이터들 새로 받게 하기
+            queryClient.invalidateQueries({
+                queryKey: ['bookReviews', bookId],
+            });
+            queryClient.invalidateQueries({ queryKey: ['myPage'] });
+            queryClient.invalidateQueries({ queryKey: ['myPageReviews'] });
+        },
+    });
+    const handleSubmitReview = (content) => {
+        postReviewMutation.mutate(content);
     };
 
     if (!bookId) {
