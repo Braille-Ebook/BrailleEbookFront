@@ -8,35 +8,81 @@ import {
     ActivityIndicator,
     Alert,
 } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { getAuthorAndTranslator, getDateString } from '../utils';
+import {
+    getAuthorAndTranslator,
+    getBookBookmarkCount,
+    getDateString,
+    normalizeBookData,
+} from '../utils';
 import { bookmarkIcon, bookmarkIconFill } from '../../assets/icons';
 import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
 import ScreenHeader from '../components/ScreenHeader';
 import { getBookById, toggleBookBookmark } from '../api/bookApi';
 
+const mergeBookIntoLibrary = (current, nextBook, targetBookId) => {
+    const nextBooks = Array.isArray(current) ? current : [];
+    const filteredBooks = nextBooks.filter(item => {
+        const currentBook = normalizeBookData(item);
+
+        return (currentBook?.book_id ?? currentBook?.id) !== targetBookId;
+    });
+
+    return [nextBook, ...filteredBooks];
+};
+
 const BookScreen = () => {
     const navigation = useNavigation();
     const route = useRoute();
     const queryClient = useQueryClient();
     const bookId = route.params?.bookId;
+    const bookmarkStateQueryKey = ['bookBookmarkState', bookId];
+    const defaultBookmarkState = {
+        isBookmarked: false,
+        bookmarkCount: 0,
+    };
     const { data, isLoading, error } = useQuery({
         queryKey: ['book', bookId],
         queryFn: () => getBookById(bookId),
         enabled: !!bookId,
     });
+    const { data: bookmarkState = defaultBookmarkState } = useQuery({
+        queryKey: bookmarkStateQueryKey,
+        queryFn: () => defaultBookmarkState,
+        enabled: !!bookId,
+        initialData: defaultBookmarkState,
+        staleTime: Infinity,
+    });
     const bookmarkMutation = useMutation({
         mutationFn: () => toggleBookBookmark(bookId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['book', bookId] });
-            queryClient.invalidateQueries({ queryKey: ['library'] });
         },
     });
+
+    useEffect(() => {
+        if (!data || !bookId) {
+            return;
+        }
+
+        const normalizedBook = normalizeBookData(data);
+        const nextBookmarkState = {
+            isBookmarked: normalizedBook.isBookmarked ?? false,
+            bookmarkCount: getBookBookmarkCount(normalizedBook),
+        };
+
+        if (queryClient.getQueryData(['bookBookmarkState', bookId]) == null) {
+            queryClient.setQueryData(
+                ['bookBookmarkState', bookId],
+                nextBookmarkState
+            );
+        }
+    }, [bookId, data, queryClient]);
 
     const openPdf = (startFromBeginning = false) => {
         if (!data.pdf_url) {
@@ -51,9 +97,57 @@ const BookScreen = () => {
     };
 
     const handleBookmarkToggle = async () => {
+        if (!bookId || bookmarkMutation.isPending) {
+            return;
+        }
+
+        const previousBookmarked = bookmarkState.isBookmarked;
+        const previousBookmarkCount = bookmarkState.bookmarkCount;
+        const previousLibraryData = queryClient.getQueryData(['library']);
+        const normalizedBook = data ? normalizeBookData(data) : null;
+        const nextBookmarked = !previousBookmarked;
+        const nextBookmarkCount = Math.max(
+            previousBookmarkCount + (nextBookmarked ? 1 : -1),
+            0
+        );
+
+        queryClient.setQueryData(bookmarkStateQueryKey, {
+            isBookmarked: nextBookmarked,
+            bookmarkCount: nextBookmarkCount,
+        });
+        if (nextBookmarked && normalizedBook) {
+            queryClient.setQueryData(['library'], current =>
+                mergeBookIntoLibrary(
+                    current,
+                    {
+                        ...normalizedBook,
+                        isBookmarked: true,
+                        bookmark_num: nextBookmarkCount,
+                    },
+                    bookId
+                )
+            );
+        } else if (!nextBookmarked) {
+            queryClient.setQueryData(['library'], current =>
+                Array.isArray(current)
+                    ? current.filter(item => {
+                          const currentBook = normalizeBookData(item);
+                          return (
+                              (currentBook?.book_id ?? currentBook?.id) !== bookId
+                          );
+                      })
+                    : current
+            );
+        }
+
         try {
             await bookmarkMutation.mutateAsync();
         } catch (bookmarkError) {
+            queryClient.setQueryData(bookmarkStateQueryKey, {
+                isBookmarked: previousBookmarked,
+                bookmarkCount: previousBookmarkCount,
+            });
+            queryClient.setQueryData(['library'], previousLibraryData);
             Alert.alert(
                 '알림',
                 bookmarkError?.message || '북마크 처리에 실패했습니다.'
@@ -94,12 +188,11 @@ const BookScreen = () => {
             );
         }
 
-        const authorText = getAuthorAndTranslator(data.author, data.translator);
-        const isBookmarked =
-            data?.isBookmarked === true || data?.isBookmarked === 'true';
+        const book = normalizeBookData(data);
+        const authorText = getAuthorAndTranslator(book.author, book.translator);
         const summary =
-            typeof data.summary === 'string' && data.summary.trim() !== ''
-                ? data.summary
+            typeof book.summary === 'string' && book.summary.trim() !== ''
+                ? book.summary
                 : '줄거리 정보가 없습니다.';
 
         return (
@@ -107,24 +200,24 @@ const BookScreen = () => {
                 <View style={styles.bookContainer}>
                     <Image
                         source={
-                            data.image_url
-                                ? { uri: data.image_url }
+                            book.image_url
+                                ? { uri: book.image_url }
                                 : require('../../assets/images/littleRedRidingHood.png')
                         }
                         style={styles.image}
                     />
                     <View style={styles.detailContainer}>
                         <Text style={[commonStyles.titleText, styles.title]}>
-                            {data.title}
+                            {book.title}
                         </Text>
                         {authorText !== '' && (
                             <Text style={styles.contentText}>{authorText}</Text>
                         )}
                         <Text style={styles.contentText}>
-                            {data.publisher || '출판사 정보 없음'}
+                            {book.publisher || '출판사 정보 없음'}
                         </Text>
                         <Text style={styles.contentText}>
-                            {getDateString(data.publish_date)}
+                            {getDateString(book.publish_date)}
                         </Text>
                         <View style={styles.bookmarkContainer}>
                             <Pressable
@@ -133,13 +226,13 @@ const BookScreen = () => {
                             >
                                 <Image
                                     source={
-                                        isBookmarked
+                                        bookmarkState.isBookmarked
                                             ? bookmarkIconFill
                                             : bookmarkIcon
                                     }
                                 />
                             </Pressable>
-                            <Text>{`북마크 ${data.bookmark_num ?? 0}회`}</Text>
+                            <Text>{`북마크 ${bookmarkState.bookmarkCount}회`}</Text>
                         </View>
                         <View style={styles.buttonContainer}>
                             <Pressable onPress={() => openPdf(true)}>
@@ -196,31 +289,31 @@ const BookScreen = () => {
                         <View style={styles.tableRow}>
                             <Text style={styles.column1}>장르</Text>
                             <Text style={styles.column2}>
-                                {data.genre || '정보 없음'}
+                                {book.genre || '정보 없음'}
                             </Text>
                         </View>
                         <View style={styles.tableRow}>
                             <Text style={styles.column1}>ISBN</Text>
                             <Text style={styles.column2}>
-                                {data.ISBN || data.isbn || '-'}
+                                {book.ISBN || book.isbn || '-'}
                             </Text>
                         </View>
                         <View style={styles.tableRow}>
                             <Text style={styles.column1}>발행(출시)일자</Text>
                             <Text style={styles.column2}>
-                                {getDateString(data.publish_date)}
+                                {getDateString(book.publish_date)}
                             </Text>
                         </View>
                         <View style={styles.tableRow}>
                             <Text style={styles.column1}>쪽수</Text>
                             <Text style={styles.column2}>
-                                {data.length ? `${data.length}쪽` : '-'}
+                                {book.length ? `${book.length}쪽` : '-'}
                             </Text>
                         </View>
                         <View style={styles.tableRow}>
                             <Text style={styles.column1}>PDF 제공 여부</Text>
                             <Text style={styles.column2}>
-                                {data.pdf_url ? '제공' : '미제공'}
+                                {book.pdf_url ? '제공' : '미제공'}
                             </Text>
                         </View>
                     </View>

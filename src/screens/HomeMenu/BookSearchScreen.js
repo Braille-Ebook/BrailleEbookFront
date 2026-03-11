@@ -39,7 +39,10 @@ const BookSearchScreen = () => {
     };
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView
+            style={styles.container}
+            edges={['top', 'left', 'right']}
+        >
             <View style={styles.inner}>
                 <TouchableOpacity
                     style={styles.searchBar}

@@ -30,7 +30,10 @@ const GenreListScreen = () => {
 
   if (loading) {
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView
+            style={styles.container}
+            edges={['top', 'left', 'right']}
+        >
             <ScreenHeader fallbackRoute='Bottom' title={genre} />
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size='large' color={commonColors.purple} />
@@ -40,7 +43,10 @@ const GenreListScreen = () => {
   }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView
+            style={styles.container}
+            edges={['top', 'left', 'right']}
+        >
             <ScreenHeader fallbackRoute='Bottom' title={genre} />
             <ScrollView contentContainerStyle={styles.scrollContent}>
                 {errorMessage !== '' && (
@@ -57,7 +63,7 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: commonColors.white,
     },
-    scrollContent: { flexGrow: 1, paddingHorizontal: 16, paddingVertical: 20 },
+    scrollContent: { paddingHorizontal: 16, paddingVertical: 20 },
     loadingContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
     errorText: {
         color: commonColors.blue,

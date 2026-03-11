@@ -10,7 +10,7 @@ import {
     useWindowDimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BookListItem } from '../components';
@@ -21,8 +21,23 @@ import { normalizeBookData } from '../utils';
 
 import { getLibraryInfo } from '../api';
 
+const hasExplicitBookmarkFlag = book => {
+    const sources = [book, book?.Book, book?.book, book?.bookInfo].filter(
+        candidate => candidate && typeof candidate === 'object'
+    );
+
+    return sources.some(
+        source =>
+            source.isBookmarked != null ||
+            source.is_bookmarked != null ||
+            source.bookmarked != null ||
+            source.is_bookmark != null
+    );
+};
+
 const LibraryScreen = () => {
     const navigation = useNavigation();
+    const queryClient = useQueryClient();
     const { width } = useWindowDimensions();
     const {
         data = [],
@@ -31,36 +46,36 @@ const LibraryScreen = () => {
     } = useQuery({
         queryKey: ['library'],
         queryFn: getLibraryInfo,
+        staleTime: 30000,
     });
-    const books = data.map((item) => {
-        const book = normalizeBookData(item);
-        return {
-            ...book,
-            isBookmarked: true,
-        };
-    });
+    const books = data
+        .map(item => {
+            const book = normalizeBookData(item);
+            const bookId = book?.book_id ?? book?.id;
+            const cachedBookmarkState =
+                bookId != null
+                    ? queryClient.getQueryData(['bookBookmarkState', bookId])
+                    : null;
+            const resolvedIsBookmarked =
+                cachedBookmarkState?.isBookmarked ??
+                (hasExplicitBookmarkFlag(item) ? book.isBookmarked : true);
+            const resolvedBookmarkCount =
+                cachedBookmarkState?.bookmarkCount ?? book.bookmark_num;
+
+            return {
+                ...book,
+                isBookmarked: resolvedIsBookmarked,
+                bookmark_num: resolvedBookmarkCount,
+            };
+        })
+        .filter(book => book?.isBookmarked);
     const isCompactScreen = width < 390;
 
     return (
-        <SafeAreaView style={styles.libraryContainer}>
-            <View style={styles.titleContainer}>
-                <Image
-                    source={bookOpened}
-                    style={[
-                        styles.bookOpened,
-                        isCompactScreen && styles.compactBookOpened,
-                    ]}
-                />
-                <Text
-                    style={[
-                        commonStyles.titleText,
-                        styles.titleText,
-                        isCompactScreen && styles.compactTitleText,
-                    ]}
-                >
-                    내 라이브러리
-                </Text>
-            </View>
+        <SafeAreaView
+            style={styles.libraryContainer}
+            edges={['top', 'left', 'right']}
+        >
             {isLoading ? (
                 <View style={styles.centerContainer}>
                     <ActivityIndicator
@@ -76,10 +91,28 @@ const LibraryScreen = () => {
                 </View>
             ) : (
                 <ScrollView
-                    showsVerticalScrollIndicator={false}
+                    showsVerticalScrollIndicator
                     style={styles.scrollView}
                     contentContainerStyle={styles.scrollContent}
                 >
+                    <View style={styles.titleContainer}>
+                        <Image
+                            source={bookOpened}
+                            style={[
+                                styles.bookOpened,
+                                isCompactScreen && styles.compactBookOpened,
+                            ]}
+                        />
+                        <Text
+                            style={[
+                                commonStyles.titleText,
+                                styles.titleText,
+                                isCompactScreen && styles.compactTitleText,
+                            ]}
+                        >
+                            내 라이브러리
+                        </Text>
+                    </View>
                     {books.length === 0 ? (
                         <Text style={styles.messageText}>
                             북마크한 책이 없습니다.

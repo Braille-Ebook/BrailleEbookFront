@@ -10,7 +10,7 @@ export const getAuthorAndTranslator = (author, translator) => {
     return translator ? `${author} 글, ${translator} 번역` : `${author} 글`;
 };
 
-export const normalizeBookData = book => {
+const getMergedBookData = book => {
     if (!book || typeof book !== 'object') {
         return {};
     }
@@ -18,12 +18,60 @@ export const normalizeBookData = book => {
     const nestedBook = [book.Book, book.book, book.bookInfo].find(
         candidate => candidate && typeof candidate === 'object'
     );
-    const normalized = nestedBook ? { ...book, ...nestedBook } : { ...book };
+
+    return nestedBook ? { ...book, ...nestedBook } : { ...book };
+};
+
+const getBooleanFlag = value => {
+    if (typeof value === 'boolean') {
+        return value;
+    }
+
+    if (typeof value === 'number') {
+        return value === 1;
+    }
+
+    if (typeof value === 'string') {
+        const normalizedValue = value.trim().toLowerCase();
+
+        if (['true', '1', 'y', 'yes'].includes(normalizedValue)) {
+            return true;
+        }
+
+        if (['false', '0', 'n', 'no', ''].includes(normalizedValue)) {
+            return false;
+        }
+    }
+
+    return false;
+};
+
+export const getBookBookmarkCount = book => {
+    const mergedBook = getMergedBookData(book);
+
+    return Number(mergedBook.bookmark_num ?? mergedBook.bookmarkNum ?? 0) || 0;
+};
+
+export const getIsBookmarked = book => {
+    const mergedBook = getMergedBookData(book);
+    const rawBookmarkFlag =
+        mergedBook.isBookmarked ??
+        mergedBook.is_bookmarked ??
+        mergedBook.bookmarked ??
+        mergedBook.is_bookmark;
+
+    return rawBookmarkFlag == null ? false : getBooleanFlag(rawBookmarkFlag);
+};
+
+export const normalizeBookData = book => {
+    if (!book || typeof book !== 'object') {
+        return {};
+    }
+
+    const normalized = getMergedBookData(book);
     const bookId =
         normalized.book_id ??
-        nestedBook?.book_id ??
         normalized.id ??
-        nestedBook?.id ??
         null;
 
     return {
@@ -31,8 +79,8 @@ export const normalizeBookData = book => {
         book_id: bookId,
         image_url: normalized.image_url ?? normalized.imageUrl ?? null,
         publish_date: normalized.publish_date ?? normalized.publishDate ?? null,
-        bookmark_num:
-            normalized.bookmark_num ?? normalized.bookmarkNum ?? 0,
+        bookmark_num: getBookBookmarkCount(normalized),
+        isBookmarked: getIsBookmarked(normalized),
     };
 };
 
