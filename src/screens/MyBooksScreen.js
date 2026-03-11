@@ -21,19 +21,28 @@ import { getMypageBooks } from '../api';
 
 const MyBooksScreen = () => {
     const navigation = useNavigation();
-    const { data = [], isLoading, error } = useQuery({
+    const {
+        data = [],
+        isLoading,
+        error,
+    } = useQuery({
         queryKey: ['myPageBooks'],
         queryFn: getMypageBooks,
     });
+    console.log(data);
     return (
         <SafeAreaView style={styles.safeArea}>
             <ScreenHeader fallbackRoute='Bottom' title='내가 읽은 책' />
             <View style={styles.myBookScreen}>
                 {isLoading ? (
-                    <ActivityIndicator size='large' color={commonColors.purple} />
+                    <ActivityIndicator
+                        size='large'
+                        color={commonColors.purple}
+                    />
                 ) : error ? (
                     <Text style={styles.messageText}>
-                        {error?.message || '읽은 책 정보를 불러오지 못했습니다.'}
+                        {error?.message ||
+                            '읽은 책 정보를 불러오지 못했습니다.'}
                     </Text>
                 ) : (
                     <ScrollView>
@@ -47,7 +56,7 @@ const MyBooksScreen = () => {
                                     key={item?.book_id ?? item?.id ?? index}
                                     onPress={() => {
                                         navigation.navigate('BookScreen', {
-                                            bookId: item?.book_id ?? item?.id,
+                                            bookId: item?.bookId,
                                         });
                                     }}
                                 >
@@ -58,7 +67,9 @@ const MyBooksScreen = () => {
                                                 text:
                                                     item?.author ||
                                                     '저자 정보 없음',
-                                                styles: [commonStyles.smallText],
+                                                styles: [
+                                                    commonStyles.smallText,
+                                                ],
                                             },
                                             {
                                                 text: getTimeAgo(
