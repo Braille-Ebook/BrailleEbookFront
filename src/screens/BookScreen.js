@@ -22,12 +22,12 @@ import {
 import { bookmarkIcon, bookmarkIconFill } from '../../assets/icons';
 import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
-import ScreenHeader from '../components/ScreenHeader';
+import { ScreenHeader, ReviewListItem } from '../components';
 import { getBookById, toggleBookBookmark } from '../api/bookApi';
 
 const mergeBookIntoLibrary = (current, nextBook, targetBookId) => {
     const nextBooks = Array.isArray(current) ? current : [];
-    const filteredBooks = nextBooks.filter(item => {
+    const filteredBooks = nextBooks.filter((item) => {
         const currentBook = normalizeBookData(item);
 
         return (currentBook?.book_id ?? currentBook?.id) !== targetBookId;
@@ -116,7 +116,7 @@ const BookScreen = () => {
             bookmarkCount: nextBookmarkCount,
         });
         if (nextBookmarked && normalizedBook) {
-            queryClient.setQueryData(['library'], current =>
+            queryClient.setQueryData(['library'], (current) =>
                 mergeBookIntoLibrary(
                     current,
                     {
@@ -128,12 +128,13 @@ const BookScreen = () => {
                 )
             );
         } else if (!nextBookmarked) {
-            queryClient.setQueryData(['library'], current =>
+            queryClient.setQueryData(['library'], (current) =>
                 Array.isArray(current)
-                    ? current.filter(item => {
+                    ? current.filter((item) => {
                           const currentBook = normalizeBookData(item);
                           return (
-                              (currentBook?.book_id ?? currentBook?.id) !== bookId
+                              (currentBook?.book_id ?? currentBook?.id) !==
+                              bookId
                           );
                       })
                     : current
@@ -259,9 +260,21 @@ const BookScreen = () => {
                         >
                             리뷰
                         </Text>
-                        <Text style={styles.contentText}>
-                            리뷰는 전체 목록 화면에서 불러옵니다.
-                        </Text>
+                        <View>
+                            {data?.bestReviews ? (
+                                data.bestReviews.map((review) => (
+                                    <ReviewListItem
+                                        key={review.review_id}
+                                        data={review}
+                                        bookId={bookId}
+                                    />
+                                ))
+                            ) : (
+                                <Text style={styles.contentText}>
+                                    리뷰는 전체 목록 화면에서 불러옵니다.
+                                </Text>
+                            )}
+                        </View>
                         <Pressable
                             onPress={() => {
                                 navigation.navigate('ReviewScreen', { bookId });
