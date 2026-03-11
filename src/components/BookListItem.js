@@ -25,7 +25,8 @@ const BookListItem = ({ data }) => {
             : '제목 없음';
     const authorText = getAuthorAndTranslator(book?.author, book?.translator);
     const bookmarkCount = book?.bookmark_num ?? book?.bookmarkNum ?? 0;
-    const isBookmarked = book?.isBookmarked ?? bookmarkCount > 0;
+    const isBookmarked =
+        book?.isBookmarked === true || book?.isBookmarked === 'true';
 
     return (
         <View style={styles.bookContainer}>
@@ -77,7 +78,9 @@ const BookListItem = ({ data }) => {
                         }
                         style={styles.bookmarkIcon}
                     />
-                    <Text style={styles.bookmarkText}>{`북마크 ${bookmarkCount}회`}</Text>
+                    <Text
+                        style={styles.bookmarkText}
+                    >{`북마크 ${bookmarkCount}회`}</Text>
                 </View>
             </View>
         </View>

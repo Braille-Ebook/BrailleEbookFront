@@ -87,7 +87,8 @@ const BookScreen = () => {
             return (
                 <View style={styles.centerContainer}>
                     <Text style={styles.messageText}>
-                        {error?.message || '책 상세 정보를 불러오지 못했습니다.'}
+                        {error?.message ||
+                            '책 상세 정보를 불러오지 못했습니다.'}
                     </Text>
                 </View>
             );
@@ -95,8 +96,7 @@ const BookScreen = () => {
 
         const authorText = getAuthorAndTranslator(data.author, data.translator);
         const isBookmarked =
-            data.isBookmarked ??
-            (data.bookmark_num ?? data.bookmarkNum ?? 0) > 0;
+            data?.isBookmarked === true || data?.isBookmarked === 'true';
         const summary =
             typeof data.summary === 'string' && data.summary.trim() !== ''
                 ? data.summary
@@ -161,7 +161,9 @@ const BookScreen = () => {
                 </View>
                 <View style={styles.bottomScreenContainer}>
                     <View style={styles.contentContainer}>
-                        <Text style={[commonStyles.subtitleText, styles.subtitle]}>
+                        <Text
+                            style={[commonStyles.subtitleText, styles.subtitle]}
+                        >
                             리뷰
                         </Text>
                         <Text style={styles.contentText}>
@@ -178,13 +180,17 @@ const BookScreen = () => {
                         </Pressable>
                     </View>
                     <View style={styles.contentContainer}>
-                        <Text style={[commonStyles.subtitleText, styles.subtitle]}>
+                        <Text
+                            style={[commonStyles.subtitleText, styles.subtitle]}
+                        >
                             줄거리
                         </Text>
                         <Text>{summary}</Text>
                     </View>
                     <View style={styles.contentContainer}>
-                        <Text style={[commonStyles.subtitleText, styles.subtitle]}>
+                        <Text
+                            style={[commonStyles.subtitleText, styles.subtitle]}
+                        >
                             기본정보
                         </Text>
                         <View style={styles.tableRow}>

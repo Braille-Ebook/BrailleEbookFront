@@ -24,11 +24,21 @@ import { getLibraryInfo } from '../api';
 const LibraryScreen = () => {
     const navigation = useNavigation();
     const { width } = useWindowDimensions();
-    const { data = [], isLoading, error } = useQuery({
+    const {
+        data = [],
+        isLoading,
+        error,
+    } = useQuery({
         queryKey: ['library'],
         queryFn: getLibraryInfo,
     });
-    const books = data.map(normalizeBookData);
+    const books = data.map((item) => {
+        const book = normalizeBookData(item);
+        return {
+            ...book,
+            isBookmarked: true,
+        };
+    });
     const isCompactScreen = width < 390;
 
     return (

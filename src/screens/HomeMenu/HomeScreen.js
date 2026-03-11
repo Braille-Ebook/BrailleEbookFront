@@ -26,7 +26,9 @@ const HomeScreen = () => {
                 setRecentBooks(recentRes || []);
                 setRecommendedBooks(recommendRes || []);
             } catch (err) {
-                setErrorMessage(err?.message || '홈 데이터를 불러오지 못했습니다.');
+                setErrorMessage(
+                    err?.message || '홈 데이터를 불러오지 못했습니다.'
+                );
             } finally {
                 setLoading(false);
             }
@@ -52,7 +54,9 @@ const HomeScreen = () => {
             )}
             <View style={styles.section}>
                 <Text style={styles.title}>최근에 읽은 책</Text>
-                <BookList books={recentBooks.map((item) => item?.Book || item)} />
+                <BookList
+                    books={recentBooks.map((item) => item?.Book || item)}
+                />
             </View>
 
             <View style={styles.section}>
