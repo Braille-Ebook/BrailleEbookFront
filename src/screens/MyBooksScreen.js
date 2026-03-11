@@ -29,7 +29,6 @@ const MyBooksScreen = () => {
         queryKey: ['myPageBooks'],
         queryFn: getMypageBooks,
     });
-    console.log(data);
     return (
         <SafeAreaView style={styles.safeArea}>
             <ScreenHeader fallbackRoute='Bottom' title='내가 읽은 책' />
