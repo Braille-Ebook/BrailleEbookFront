@@ -23,7 +23,7 @@ import { bookmarkIcon, bookmarkIconFill } from '../../assets/icons';
 import commonStyles from '../../assets/styles/commonStyles';
 import commonColors from '../../assets/colors/commonColors';
 import { ScreenHeader, ReviewListItem } from '../components';
-import { getBookById, toggleBookBookmark } from '../api/bookApi';
+import { getBookById, readFromStart, toggleBookBookmark } from '../api/bookApi';
 
 const mergeBookIntoLibrary = (current, nextBook, targetBookId) => {
     const nextBooks = Array.isArray(current) ? current : [];
@@ -46,6 +46,8 @@ const BookScreen = () => {
         isBookmarked: false,
         bookmarkCount: 0,
     };
+
+    //책 데이터 가져오기
     const { data, isLoading, error } = useQuery({
         queryKey: ['book', bookId],
         queryFn: () => getBookById(bookId),
@@ -58,11 +60,18 @@ const BookScreen = () => {
         initialData: defaultBookmarkState,
         staleTime: Infinity,
     });
+
+    //책 북마크하기
     const bookmarkMutation = useMutation({
         mutationFn: () => toggleBookBookmark(bookId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['book', bookId] });
         },
+    });
+
+    //책 위치 정보 초기화하기 (처음부터 읽기 버튼 누를 시)
+    const readFromStartMutation = useMutation({
+        mutationFn: (bookId) => readFromStart(bookId),
     });
 
     useEffect(() => {
@@ -84,15 +93,18 @@ const BookScreen = () => {
         }
     }, [bookId, data, queryClient]);
 
-    const openPdf = (startFromBeginning = false) => {
+    const openPdf = async (startFromBeginning = false) => {
         if (!data.pdf_url) {
             Alert.alert('알림', '이 책은 아직 본문이 등록되지 않았습니다.');
             return;
         }
+        if (startFromBeginning) {
+            await readFromStartMutation.mutateAsync(bookId);
+            console.log('starting from beginning');
+        }
 
         navigation.navigate('PdfScreen', {
             bookId,
-            startFromBeginning,
         });
     };
 

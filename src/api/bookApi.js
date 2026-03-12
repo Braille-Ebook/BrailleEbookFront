@@ -10,8 +10,9 @@ export const toggleBookBookmark = async (bookId) => {
     return res.data;
 };
 
-export const startBook = async (bookId) => {
-    const res = await http.post(`/book/${bookId}/start`);
+export const readFromStart = async (bookId) => {
+    console.log('force read from start');
+    const res = await http.post(`/book/${bookId}/start?force=true`);
     return res.data;
 };
 

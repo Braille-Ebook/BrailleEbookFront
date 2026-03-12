@@ -1,12 +1,16 @@
 import { View, StyleSheet, ActivityIndicator, Text } from 'react-native';
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
     Gesture,
     GestureDetector,
     GestureHandlerRootView,
 } from 'react-native-gesture-handler';
 import { useQuery, useMutation } from '@tanstack/react-query';
-import { useRoute, useFocusEffect, useNavigation } from '@react-navigation/native';
+import {
+    useRoute,
+    useFocusEffect,
+    useNavigation,
+} from '@react-navigation/native';
 
 import PdfBar from '../components/PdfBar';
 import PdfPage from '../components/PdfPage';
@@ -18,65 +22,71 @@ export default function PdfScreen() {
     const navigation = useNavigation();
     const route = useRoute();
     const bookId = route.params?.bookId;
-    const startFromBeginning = route.params?.startFromBeginning ?? false;
+
     const [currentChar, setCurrentChar] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
 
+    //1. 데이터 처리
+    //최근 위치 저장할 ref
+    const positionRef = useRef({ page: 1, char: 0 });
+    useEffect(() => {
+        positionRef.current = {
+            page: currentPage,
+            char: currentChar,
+        };
+    }, [currentPage, currentChar]); //state 바뀔때마다 ref내용 업뎃
+
+    //유저의 최근 위치 불러오고 저장하기
     const positionQuery = useQuery({
         queryKey: ['pagePosition', bookId],
         queryFn: () => getLastPosition({ bookId }),
-        enabled: !!bookId && !startFromBeginning,
+        enabled: !!bookId,
+        refetchOnMount: 'always',
     });
+    useEffect(() => {
+        if (!positionQuery.data) return;
+        console.log(positionQuery.data);
+        setCurrentPage(Number(positionQuery.data.last_page));
+        setCurrentChar(Number(positionQuery.data.last_char));
+    }, [positionQuery.data]);
+
+    //유저가 읽어야할 pdf 페이지 불러오기
     const contentQuery = useQuery({
         queryKey: ['pageContent', bookId, currentPage],
         queryFn: () => getPdfPage({ bookId, page: currentPage }),
-        enabled: !!bookId,
-    });
-    const mutation = useMutation({
-        mutationFn: ({ bookId: targetBookId, position }) =>
-            postLastPosition({ bookId: targetBookId, position }),
-        onSuccess: () => {},
+        enabled: !!bookId && positionQuery.isSuccess,
     });
 
-    useEffect(() => {
-        if (startFromBeginning) {
-            setCurrentPage(1);
-            setCurrentChar(0);
-            return;
-        }
+    //pdf 화면 나가면 책 위치 저장
+    const exitPdfMutation = useMutation({
+        mutationFn: ({ bookId, position }) =>
+            postLastPosition({ bookId, position }),
+    });
+    useFocusEffect(
+        useCallback(() => {
+            positionQuery.refetch();
+            return () => {
+                if (bookId) {
+                    const { page, char } = positionRef.current;
 
-        if (!positionQuery.data) {
-            return;
-        }
+                    exitPdfMutation.mutate({
+                        bookId,
+                        position: {
+                            lastPage: page,
+                            lastChar: char,
+                        },
+                    });
+                }
+            };
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, [bookId])
+    );
+    const pageContent = contentQuery.data;
+    const totalPage = 100;
 
-        const savedPage =
-            Number(positionQuery.data?.lastPage ?? positionQuery.data?.page) ||
-            1;
-        const savedChar =
-            Number(positionQuery.data?.lastChar ?? positionQuery.data?.char) ||
-            0;
-
-        setCurrentPage(savedPage);
-        setCurrentChar(savedChar);
-    }, [positionQuery.data, startFromBeginning]);
-
-    const pagePayload = contentQuery.data;
-    const pageContent =
-        typeof pagePayload === 'string'
-            ? pagePayload
-            : pagePayload?.content ??
-              pagePayload?.text ??
-              pagePayload?.pageContent ??
-              '';
-    const totalPage =
-        Number(
-            pagePayload?.totalPage ??
-                pagePayload?.totalPages ??
-                pagePayload?.maxPage
-        ) || currentPage;
-
+    //2. 이벤트 핸들러
     const panGesture = Gesture.Pan().onEnd((event) => {
         const { translationX } = event;
 
@@ -91,22 +101,6 @@ export default function PdfScreen() {
             setCurrentChar(0);
         }
     });
-
-    useFocusEffect(
-        useCallback(() => {
-            return () => {
-                if (bookId) {
-                    mutation.mutate({
-                        bookId,
-                        position: {
-                            lastPage: currentPage,
-                            lastChar: currentChar,
-                        },
-                    });
-                }
-            };
-        }, [bookId, currentPage, currentChar, mutation])
-    );
 
     if (!bookId) {
         return (
