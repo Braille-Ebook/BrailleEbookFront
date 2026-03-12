@@ -40,9 +40,7 @@ const ReviewListItem = ({ data, bookId }) => {
                 <Pressable
                     disabled={mutation.isPending || !reviewId}
                     onPress={() => {
-                        console.log('checking');
                         if (isEditable) {
-                            console.log('is pressing');
                             navigation.navigate('ReviewEditScreen', {
                                 orgText: data?.content ?? '',
                                 bookId,

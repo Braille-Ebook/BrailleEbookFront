@@ -22,8 +22,7 @@ export const deletePageBookmark = async (bookId, page) => {
     );
     return result.data;
 };
-export const getPdfPage = async ({ bookId, page }) => {
-    console.log(page);
+export const getPdfData = async ({ bookId, page }) => {
     const result = await http.get(`/content/${bookId}?page=${page}`);
-    return result.data?.data ?? null;
+    return result.data.data;
 };
