@@ -17,7 +17,7 @@ import PdfBar from '../components/PdfBar';
 import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
 import commonColors from '../../assets/colors/commonColors';
-import { getLastPosition, getPdfPage, postLastPosition } from '../api';
+import { getLastPosition, getPdfData, postLastPosition } from '../api';
 
 export default function PdfScreen() {
     const navigation = useNavigation();
@@ -48,7 +48,6 @@ export default function PdfScreen() {
     });
     useEffect(() => {
         if (!positionQuery.data) return;
-        console.log(positionQuery.data);
         setCurrentPage(Number(positionQuery.data.last_page));
         setCurrentChar(Number(positionQuery.data.last_char));
     }, [positionQuery.data]);
@@ -56,7 +55,7 @@ export default function PdfScreen() {
     //유저가 읽어야할 pdf 페이지 불러오기
     const contentQuery = useQuery({
         queryKey: ['pageContent', bookId, currentPage],
-        queryFn: () => getPdfPage({ bookId, page: currentPage }),
+        queryFn: () => getPdfData({ bookId, page: currentPage }),
         enabled: !!bookId && positionQuery.isSuccess,
     });
 
@@ -84,8 +83,8 @@ export default function PdfScreen() {
             // eslint-disable-next-line react-hooks/exhaustive-deps
         }, [bookId])
     );
-    const pageContent = contentQuery.data;
-    const totalPage = 100;
+    const pageContent = contentQuery.data?.text;
+    const totalPage = contentQuery.data?.pages_num;
 
     //2. 이벤트 핸들러
     const panGesture = Gesture.Pan().onEnd((event) => {

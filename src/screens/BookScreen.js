@@ -100,7 +100,6 @@ const BookScreen = () => {
         }
         if (startFromBeginning) {
             await readFromStartMutation.mutateAsync(bookId);
-            console.log('starting from beginning');
         }
 
         navigation.navigate('PdfScreen', {

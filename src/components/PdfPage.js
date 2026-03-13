@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native';
 import React from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 
 export default function PdfPage({
     currentPage,
@@ -37,7 +38,9 @@ export default function PdfPage({
     };
     return (
         <Pressable style={styles.pdfPage} onPress={handlePress}>
-            <View>{highlightNthChar(char)}</View>
+            <ScrollView style={{ flex: 1 }}>
+                <View>{highlightNthChar(char)}</View>
+            </ScrollView>
             <View>
                 <Text style={styles.page}>
                     {currentPage}/{totalPage}

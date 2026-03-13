@@ -2,25 +2,30 @@ import { View, StyleSheet, Image, Pressable } from 'react-native';
 import React from 'react';
 import { whiteBackIcon } from '../../assets/icons';
 
-export default function PdfBar({ setOpen, bookmark, setBookmark, onPressBack }) {
+export default function PdfBar({
+    setOpen,
+    bookmark,
+    setBookmark,
+    onPressBack,
+}) {
     return (
         <View style={styles.barContainer}>
             <View style={styles.leftGroup}>
                 <Pressable onPress={onPressBack} style={styles.backButton}>
                     <Image source={whiteBackIcon} style={styles.backIcon} />
                 </Pressable>
-                <Pressable
-                    onPress={() => {
-                        setOpen((prev) => !prev);
-                    }}
-                >
-                    <Image
-                        source={require('../../assets/icons/menu.png')}
-                        style={styles.menuIcon}
-                    />
-                </Pressable>
+                {/*<Pressable
+                        onPress={() => {
+                            setOpen((prev) => !prev);
+                        }}
+                    >
+                        <Image
+                            source={require('../../assets/icons/menu.png')}
+                            style={styles.menuIcon}
+                        />
+                    </Pressable>*/}
             </View>
-            <Pressable
+            {/*<Pressable
                 onPress={() => {
                     setBookmark((prev) => !prev);
                 }}
@@ -33,7 +38,7 @@ export default function PdfBar({ setOpen, bookmark, setBookmark, onPressBack }) 
                     }
                     style={styles.bookmarkIcon}
                 />
-            </Pressable>
+            </Pressable> */}
         </View>
     );
 }
