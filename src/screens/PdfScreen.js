@@ -11,6 +11,7 @@ import {
     useFocusEffect,
     useNavigation,
 } from '@react-navigation/native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import PdfBar from '../components/PdfBar';
 import PdfPage from '../components/PdfPage';
@@ -114,65 +115,72 @@ export default function PdfScreen() {
 
     return (
         <GestureHandlerRootView style={styles.flexFill}>
-            <View style={styles.pdfScreen}>
-                <PdfBar
-                    onPressBack={() => {
-                        if (navigation.canGoBack()) {
-                            navigation.goBack();
-                            return;
-                        }
+            <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+                <View style={styles.pdfScreen}>
+                    <PdfBar
+                        onPressBack={() => {
+                            if (navigation.canGoBack()) {
+                                navigation.goBack();
+                                return;
+                            }
 
-                        navigation.navigate('BookScreen', { bookId });
-                    }}
-                    setOpen={setIsMenuOpen}
-                    bookmark={isBookmarked}
-                    setBookmark={setIsBookmarked}
-                />
-                {!isMenuOpen ? (
-                    <GestureDetector gesture={panGesture}>
-                        <View style={styles.flexFill}>
-                            {contentQuery.isLoading ? (
-                                <View style={styles.centerContainer}>
-                                    <ActivityIndicator
-                                        size='large'
-                                        color={commonColors.purple}
-                                    />
-                                </View>
-                            ) : contentQuery.error ? (
-                                <View style={styles.centerContainer}>
-                                    <Text style={styles.messageText}>
-                                        {contentQuery.error?.message ||
-                                            '본문을 불러오지 못했습니다.'}
-                                    </Text>
-                                </View>
-                            ) : (
-                                <PdfPage
-                                    currentPage={currentPage}
-                                    totalPage={totalPage}
-                                    char={currentChar}
-                                    setChar={setCurrentChar}
-                                    content={pageContent}
-                                />
-                            )}
-                        </View>
-                    </GestureDetector>
-                ) : (
-                    <BookmarkedPage
-                        bookId={bookId}
-                        setIsMenuOpen={setIsMenuOpen}
-                        setCurrentPage={setCurrentPage}
-                        setCurrentChar={setCurrentChar}
+                            navigation.navigate('BookScreen', { bookId });
+                        }}
+                        setOpen={setIsMenuOpen}
+                        bookmark={isBookmarked}
+                        setBookmark={setIsBookmarked}
                     />
-                )}
-            </View>
+                    {!isMenuOpen ? (
+                        <GestureDetector gesture={panGesture}>
+                            <View style={styles.flexFill}>
+                                {contentQuery.isLoading ? (
+                                    <View style={styles.centerContainer}>
+                                        <ActivityIndicator
+                                            size='large'
+                                            color={commonColors.purple}
+                                        />
+                                    </View>
+                                ) : contentQuery.error ? (
+                                    <View style={styles.centerContainer}>
+                                        <Text style={styles.messageText}>
+                                            {contentQuery.error?.message ||
+                                                '본문을 불러오지 못했습니다.'}
+                                        </Text>
+                                    </View>
+                                ) : (
+                                    <PdfPage
+                                        currentPage={currentPage}
+                                        totalPage={totalPage}
+                                        char={currentChar}
+                                        setChar={setCurrentChar}
+                                        content={pageContent}
+                                    />
+                                )}
+                            </View>
+                        </GestureDetector>
+                    ) : (
+                        <BookmarkedPage
+                            bookId={bookId}
+                            setIsMenuOpen={setIsMenuOpen}
+                            setCurrentPage={setCurrentPage}
+                            setCurrentChar={setCurrentChar}
+                        />
+                    )}
+                </View>
+            </SafeAreaView>
         </GestureHandlerRootView>
     );
 }
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: 'rgb(64,64,64)',
+    },
     pdfScreen: {
         flex: 1,
         flexDirection: 'column',
+        backgroundColor: commonColors.white,
     },
     flexFill: {
         flex: 1,
