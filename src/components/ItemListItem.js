@@ -6,7 +6,7 @@ import { bookmarkIcon, bookmarkIconFill } from '../../assets/icons';
 const ItemListItem = ({ title, body, bookmark }) => {
     return (
         <View style={styles.itemContainer}>
-            <View>
+            <View style={styles.textContainer}>
                 <Text style={styles.title}>{title}</Text>
                 {body.map((item, index) => (
                     <Text
@@ -19,7 +19,9 @@ const ItemListItem = ({ title, body, bookmark }) => {
                 ))}
             </View>
             <Image
-                source={bookmark.isBookmarked ? bookmarkIcon : bookmarkIconFill}
+                source={
+                    bookmark?.isBookmarked ? bookmarkIconFill : bookmarkIcon
+                }
             />
         </View>
     );
@@ -31,6 +33,11 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         marginVertical: 10,
+    },
+    textContainer: {
+        flex: 1,
+        flexShrink: 1,
+        marginRight: 10,
     },
     title: {
         fontSize: 16,

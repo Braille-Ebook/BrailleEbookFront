@@ -9,46 +9,53 @@ import commonStyles from '../../assets/styles/commonStyles';
 import { likeReviews } from '../api';
 
 //댓글 모양의 리뷰 리스트 아이템
-const ReviewListItem = ({ data }) => {
+const ReviewListItem = ({ data, bookId }) => {
     const navigation = useNavigation();
     const queryClient = useQueryClient();
+    const reviewId = data?.review_id ?? data?.id;
+    const isEditable = data?.isLiked == null;
+    const likeCount = data?.like_count ?? 0;
 
     const mutation = useMutation({
-        mutationFn: ({ bookId, reviewId }) => likeReviews(bookId, reviewId),
+        mutationFn: () => likeReviews({ bookId, reviewId }),
         onSuccess: () => {
-            queryClient.invalidateQueries(['bookReviews', '/*data.bookId*/']);
+            queryClient.invalidateQueries({
+                queryKey: ['bookReviews', bookId],
+            });
         },
-        onError: (e) => {},
     });
     return (
         <View style={styles.reviewContainer}>
-            <Text style={styles.nickname}>{data.nickname}</Text>
+            <Text style={styles.nickname}>
+                {data?.nickname ?? data?.user?.nickname ?? '익명'}
+            </Text>
             <View style={styles.contentContainer}>
                 <View style={styles.textContainer}>
-                    <Text style={styles.content}>{data.content}</Text>
+                    <Text style={styles.content}>{data?.content ?? ''}</Text>
                     <Text
                         style={commonStyles.smallText}
-                    >{`좋아요 ${data.likeNum}개`}</Text>
+                    >{`좋아요 ${likeCount}개`}</Text>
                 </View>
 
                 <Pressable
+                    disabled={mutation.isPending || !reviewId}
                     onPress={() => {
-                        if (data.isLiked == null)
+                        if (isEditable) {
                             navigation.navigate('ReviewEditScreen', {
-                                orgText: data.content,
-                                bookId: '/*data.bookId*/',
-                                reviewId: '/*data.reviewId*/',
+                                orgText: data?.content ?? '',
+                                bookId,
+                                reviewId,
                             });
-                        else {
-                            /*mutation.mutate({data.bookId, data.reviewId})*/
+                        } else {
+                            mutation.mutate();
                         }
                     }}
                 >
                     <Image
                         source={
-                            data.isLiked == null
+                            isEditable
                                 ? edit
-                                : data.isLiked
+                                : data?.isLiked
                                 ? thumbFill
                                 : thumb
                         }
@@ -65,7 +72,7 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     nickname: {
-        color: commonColors.lightPurple,
+        color: commonColors.purple,
     },
     contentContainer: {
         flexDirection: 'row',

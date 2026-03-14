@@ -6,63 +6,187 @@ import {
     Image,
     ScrollView,
     Pressable,
+    ActivityIndicator,
+    useWindowDimensions,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { BookListItem } from '../components';
 import { bookOpened } from '../../assets/icons';
-import { libraryDummyData } from '../../assets/dummy';
+import commonColors from '../../assets/colors/commonColors';
 import commonStyles from '../../assets/styles/commonStyles';
+import { normalizeBookData } from '../utils';
 
 import { getLibraryInfo } from '../api';
 
+const hasExplicitBookmarkFlag = book => {
+    const sources = [book, book?.Book, book?.book, book?.bookInfo].filter(
+        candidate => candidate && typeof candidate === 'object'
+    );
+
+    return sources.some(
+        source =>
+            source.isBookmarked != null ||
+            source.is_bookmarked != null ||
+            source.bookmarked != null ||
+            source.is_bookmark != null
+    );
+};
+
 const LibraryScreen = () => {
     const navigation = useNavigation();
-    const { realData, isLoading, error } = useQuery({
+    const queryClient = useQueryClient();
+    const { width } = useWindowDimensions();
+    const {
+        data = [],
+        isLoading,
+        error,
+    } = useQuery({
         queryKey: ['library'],
         queryFn: getLibraryInfo,
+        staleTime: 30000,
     });
+    const books = data
+        .map(item => {
+            const book = normalizeBookData(item);
+            const bookId = book?.book_id ?? book?.id;
+            const cachedBookmarkState =
+                bookId != null
+                    ? queryClient.getQueryData(['bookBookmarkState', bookId])
+                    : null;
+            const resolvedIsBookmarked =
+                cachedBookmarkState?.isBookmarked ??
+                (hasExplicitBookmarkFlag(item) ? book.isBookmarked : true);
+            const resolvedBookmarkCount =
+                cachedBookmarkState?.bookmarkCount ?? book.bookmark_num;
+
+            return {
+                ...book,
+                isBookmarked: resolvedIsBookmarked,
+                bookmark_num: resolvedBookmarkCount,
+            };
+        })
+        .filter(book => book?.isBookmarked);
+    const isCompactScreen = width < 390;
+
     return (
-        <View style={styles.libraryContainer}>
-            <View style={styles.titleContainer}>
-                <Image source={bookOpened} style={styles.bookOpened} />
-                <Text style={commonStyles.titleText}>내 라이브러리</Text>
-            </View>
-            <ScrollView
-                showsVerticalScrollIndicator={false}
-                style={styles.scrollView}
-            >
-                {libraryDummyData.map((data, index) => (
-                    <Pressable
-                        onPress={() => {
-                            navigation.navigate('BookScreen');
-                        }}
-                        key={index}
-                    >
-                        <BookListItem data={data} />
-                    </Pressable>
-                ))}
-            </ScrollView>
-        </View>
+        <SafeAreaView
+            style={styles.libraryContainer}
+            edges={['top', 'left', 'right']}
+        >
+            {isLoading ? (
+                <View style={styles.centerContainer}>
+                    <ActivityIndicator
+                        size='large'
+                        color={commonColors.purple}
+                    />
+                </View>
+            ) : error ? (
+                <View style={styles.centerContainer}>
+                    <Text style={styles.messageText}>
+                        {error?.message || '서재 정보를 불러오지 못했습니다.'}
+                    </Text>
+                </View>
+            ) : (
+                <ScrollView
+                    showsVerticalScrollIndicator
+                    style={styles.scrollView}
+                    contentContainerStyle={styles.scrollContent}
+                >
+                    <View style={styles.titleContainer}>
+                        <Image
+                            source={bookOpened}
+                            style={[
+                                styles.bookOpened,
+                                isCompactScreen && styles.compactBookOpened,
+                            ]}
+                        />
+                        <Text
+                            style={[
+                                commonStyles.titleText,
+                                styles.titleText,
+                                isCompactScreen && styles.compactTitleText,
+                            ]}
+                        >
+                            내 라이브러리
+                        </Text>
+                    </View>
+                    {books.length === 0 ? (
+                        <Text style={styles.messageText}>
+                            북마크한 책이 없습니다.
+                        </Text>
+                    ) : (
+                        books.map((item, index) => (
+                            <Pressable
+                                onPress={() => {
+                                    navigation.navigate('BookScreen', {
+                                        bookId: item?.book_id ?? item?.id,
+                                    });
+                                }}
+                                key={item?.book_id ?? item?.id ?? index}
+                                style={styles.itemPressable}
+                            >
+                                <BookListItem data={item} />
+                            </Pressable>
+                        ))
+                    )}
+                </ScrollView>
+            )}
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     libraryContainer: {
-        height: '100%',
+        flex: 1,
+        backgroundColor: commonColors.white,
     },
     bookOpened: {
         marginRight: 16,
+        width: 40,
+        height: 40,
+        resizeMode: 'contain',
+    },
+    compactBookOpened: {
+        width: 32,
+        height: 32,
     },
     scrollView: {
         flex: 1,
-        paddingLeft: 20,
+    },
+    scrollContent: {
+        paddingHorizontal: 16,
+        paddingBottom: 24,
+    },
+    centerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        paddingHorizontal: 20,
     },
     titleContainer: {
         flexDirection: 'row',
         justifyContent: 'center',
-        marginVertical: 35,
+        alignItems: 'center',
+        marginTop: 20,
+        marginBottom: 24,
+        paddingHorizontal: 16,
+    },
+    titleText: {
+        fontWeight: '700',
+        textAlign: 'center',
+    },
+    compactTitleText: {
+        fontSize: 22,
+    },
+    messageText: {
+        color: commonColors.blue,
+        textAlign: 'center',
+    },
+    itemPressable: {
+        width: '100%',
     },
 });
 

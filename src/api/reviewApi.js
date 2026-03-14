@@ -2,7 +2,7 @@ import { http } from './http';
 
 export const getReviews = async ({ bookId }) => {
     const result = await http.get(`/book/${bookId}/review`);
-    return result.data;
+    return result.data?.data ?? [];
 };
 export const postReviews = async ({ bookId, body }) => {
     const result = await http.post(`/book/${bookId}/review`, body);

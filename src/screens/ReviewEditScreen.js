@@ -1,6 +1,5 @@
 import {
     View,
-    Text,
     Image,
     StyleSheet,
     TextInput,
@@ -9,9 +8,11 @@ import {
 import { React, useState } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { send } from '../../assets/icons';
-import commonStyles from '../../assets/styles/commonStyles';
+import commonColors from '../../assets/colors/commonColors';
+import ScreenHeader from '../components/ScreenHeader';
 
 import { patchReviews } from '../api';
 
@@ -19,7 +20,9 @@ const ReviewEditScreen = () => {
     const queryClient = useQueryClient();
     const navigation = useNavigation();
     const route = useRoute();
-    const { orgText, bookId, reviewId } = route.params;
+    const orgText = route.params?.orgText ?? '';
+    const bookId = route.params?.bookId;
+    const reviewId = route.params?.reviewId;
     const [text, setText] = useState(orgText);
 
     /*
@@ -32,56 +35,77 @@ const ReviewEditScreen = () => {
     const [text, setText] = useState(review?.content ?? '');
     */
     const mutation = useMutation({
-        mutationFn: ({ bookId, reviewId, content }) =>
-            patchReviews(bookId, reviewId, content),
+        mutationFn: ({
+            bookId: targetBookId,
+            reviewId: targetReviewId,
+            content,
+        }) =>
+            patchReviews({
+                bookId: targetBookId,
+                reviewId: targetReviewId,
+                body: { content },
+            }),
         onSuccess: () => {
-            queryClient.invalidateQueries(['bookReviews', bookId]);
+            queryClient.invalidateQueries({ queryKey: ['bookReviews', bookId] });
             navigation.goBack();
         },
     });
+
+    const handleSubmit = () => {
+        if (!text.trim()) return;
+        mutation.mutate({ bookId, reviewId, content: text });
+    };
+
     return (
-        <View style={styles.reviewEditScreen}>
-            <View style={styles.topContainer}>
-                <Text style={[commonStyles.subtitleText, styles.title]}>
-                    리뷰 편집
-                </Text>
-                <Pressable
-                    disabled={mutation.isPending}
-                    onPress={() => {
-                        if (!text.trim()) return; //아무것도 없을 시 수정 불가능하게 하기 (후에 toast 만들기)
-                        mutation.mutate({ bookId, reviewId, content: text });
-                    }}
-                >
-                    <Image source={send} style={styles.icon} />
-                </Pressable>
-            </View>
-            <TextInput
-                multiline={true}
-                value={text}
-                onChangeText={setText}
-                style={styles.textInput}
+        <SafeAreaView style={styles.safeArea}>
+            <ScreenHeader
+                fallbackRoute={{ name: 'ReviewScreen', params: { bookId } }}
+                title='리뷰 편집'
+                right={
+                    <Pressable
+                        disabled={mutation.isPending}
+                        onPress={handleSubmit}
+                        style={styles.submitButton}
+                    >
+                        <Image source={send} style={styles.icon} />
+                    </Pressable>
+                }
             />
-        </View>
+            <View style={styles.reviewEditScreen}>
+                <TextInput
+                    multiline={true}
+                    value={text}
+                    onChangeText={setText}
+                    style={styles.textInput}
+                />
+            </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
+    safeArea: {
+        flex: 1,
+        backgroundColor: commonColors.white,
+    },
     reviewEditScreen: {
-        padding: 42,
-    },
-    topContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 15,
-    },
-    title: {
-        fontWeight: 'bold',
+        flex: 1,
+        paddingHorizontal: 42,
+        paddingTop: 12,
+        paddingBottom: 20,
     },
     icon: {
         width: 20,
         height: 20,
     },
+    submitButton: {
+        width: 32,
+        height: 32,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
     textInput: {
+        flex: 1,
         width: '100%',
         textAlignVertical: 'top',
     },

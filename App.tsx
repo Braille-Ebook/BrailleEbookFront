@@ -3,7 +3,7 @@
 // npm start로 Metro Bundler 실행
 
 import React from 'react';
-import { Image, ActivityIndicator, View } from 'react-native';
+import { Image, ActivityIndicator, View, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -12,8 +12,8 @@ import { starIcon, starFillIcon } from './assets/icons';
 
 import LoginScreen from './src/screens/Login/LoginScreen';
 import SignUpScreen from './src/screens/Login/SignUpScreen';
-import FindNewIdScreen from './src/screens/Login/FindNewPwScreen';
-import FindNewIdSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
+import FindNewIdScreen from './src/screens/Login/FindNewIdScreen';
+import FindNewIdSuccessScreen from './src/screens/Login/FindNewIdSuccessScreen';
 import FindNewPwScreen from './src/screens/Login/FindNewPwScreen';
 import FindNewPwSuccessScreen from './src/screens/Login/FindNewPwSuccessScreen';
 
@@ -41,13 +41,25 @@ const Tab = createBottomTabNavigator();
 function BottomTabScreen() {
     return (
         <Tab.Navigator
-            screenOptions={({ route }) => ({
+            screenOptions={() => ({
                 headerShown: false,
-                tabBarStyle: { height: 70 },
+                tabBarStyle: styles.tabBar,
+                tabBarActiveTintColor: commonColors.purple,
+                tabBarInactiveTintColor: commonColors.grey,
+                tabBarItemStyle: styles.tabBarItem,
+                tabBarLabelStyle: styles.tabBarLabel,
+                tabBarIconStyle: styles.tabBarIconWrapper,
                 tabBarIcon: ({ focused }) => (
                     <Image
                         source={focused ? starFillIcon : starIcon}
-                        style={{ width: 24, height: 24 }}
+                        style={[
+                            styles.tabBarIcon,
+                            {
+                                tintColor: focused
+                                    ? commonColors.purple
+                                    : commonColors.grey,
+                            },
+                        ]}
                     />
                 ),
             })}
@@ -60,7 +72,7 @@ function BottomTabScreen() {
             <Tab.Screen
                 name='LibraryScreen'
                 component={LibraryScreen}
-                options={{ title: '서재' }}
+                options={{ title: '라이브러리' }}
             />
             <Tab.Screen
                 name='MyPageScreen'
@@ -128,14 +140,7 @@ function RootNavigator() {
 
     if (loading) {
         return (
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: commonColors.white,
-                }}
-            >
+            <View style={styles.loadingContainer}>
                 <ActivityIndicator size='large' color={commonColors.purple} />
             </View>
         );
@@ -143,7 +148,11 @@ function RootNavigator() {
 
     return (
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name='Main' component={MainNavigator} />
+            {isAuthenticated ? (
+                <Stack.Screen name='Main' component={MainNavigator} />
+            ) : (
+                <Stack.Screen name='Auth' component={AuthNavigator} />
+            )}
         </Stack.Navigator>
     );
 }
@@ -163,3 +172,31 @@ export default function App() {
         </QueryClientProvider>
     );
 }
+
+const styles = StyleSheet.create({
+    tabBar: {
+        height: 74,
+        paddingTop: 2,
+        paddingBottom: 4,
+    },
+    tabBarItem: {
+        paddingVertical: 0,
+    },
+    tabBarLabel: {
+        marginTop: 4,
+        fontSize: 12,
+    },
+    tabBarIconWrapper: {
+        marginTop: 0,
+    },
+    tabBarIcon: {
+        width: 20,
+        height: 20,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: commonColors.white,
+    },
+});

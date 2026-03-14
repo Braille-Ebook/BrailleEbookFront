@@ -1,14 +1,23 @@
 import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React from 'react';
+import { ScrollView } from 'react-native-gesture-handler';
 
-import { bookContentData } from '../../assets/dummy';
-
-export default function PdfPage({ currentPage, totalPage, char, setChar }) {
-    const content = bookContentData.content;
+export default function PdfPage({
+    currentPage,
+    totalPage,
+    char,
+    setChar,
+    content,
+}) {
+    const safeContent =
+        typeof content === 'string' && content.length > 0
+            ? content
+            : '본문 정보가 없습니다.';
     const highlightNthChar = (n) => {
-        const before = content.slice(0, n);
-        const target = content[n];
-        const after = content.slice(n + 1);
+        const clampedIndex = Math.min(Math.max(n, 0), safeContent.length - 1);
+        const before = safeContent.slice(0, clampedIndex);
+        const target = safeContent[clampedIndex];
+        const after = safeContent.slice(clampedIndex + 1);
         return (
             <Text style={styles.text}>
                 {before}
@@ -22,14 +31,16 @@ export default function PdfPage({ currentPage, totalPage, char, setChar }) {
         const screenWidth = Dimensions.get('window').width;
 
         if (locationX > screenWidth / 2) {
-            setChar((prev) => Math.min(prev + 1, content.length - 1));
+            setChar((prev) => Math.min(prev + 1, safeContent.length - 1));
         } else {
             setChar((prev) => Math.max(prev - 1, 0));
         }
     };
     return (
         <Pressable style={styles.pdfPage} onPress={handlePress}>
-            <View>{highlightNthChar(char)}</View>
+            <ScrollView style={{ flex: 1 }}>
+                <View>{highlightNthChar(char)}</View>
+            </ScrollView>
             <View>
                 <Text style={styles.page}>
                     {currentPage}/{totalPage}

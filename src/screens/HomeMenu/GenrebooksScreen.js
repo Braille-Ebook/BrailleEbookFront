@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { ScrollView, View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 import GenreButton from '../../components/GenreButton';
 
-import commonColors from '../../../assets/colors/commonColors';
 import commonStyles from '../../../assets/styles/commonStyles';
 
 const genres = {
@@ -26,42 +25,54 @@ const genres = {
 };
 
 const GenrebooksScreen = () => {
-  const navigation = useNavigation();
+    const navigation = useNavigation();
 
-  const handlePress = (genre) => {
-    navigation.navigate('GenreListScreen', { genre });
-  };
+    const handlePress = genre => {
+        navigation.navigate('GenreListScreen', { genre });
+    };
 
-  return (
-    <ScrollView style={{ paddingHorizontal: 5, paddingVertical: 10 }}>
-      {Object.entries(genres).map(([category, genreList]) => (
-        <View key={category} style={{ marginBottom: 24 }}>
-          <Text style={[commonStyles.titleText, { fontWeight: 'bold' }, { marginBottom: 10 }]}>{category}</Text>
-          <View style={styles.genreGrid}>
-            {genreList.map((genre) => (
-              <GenreButton
-                key={genre.label}
-                label={genre.label}
-                icon={genre.icon}
-                onPress={() => handlePress(genre.label)}
-              />
+    return (
+        <ScrollView contentContainerStyle={styles.container}>
+            {Object.entries(genres).map(([category, genreList]) => (
+                <View key={category} style={styles.section}>
+                    <Text style={[commonStyles.titleText, styles.sectionTitle]}>
+                        {category}
+                    </Text>
+                    <View style={styles.genreGrid}>
+                        {genreList.map(genre => (
+                            <GenreButton
+                                key={genre.label}
+                                label={genre.label}
+                                icon={genre.icon}
+                                onPress={() => handlePress(genre.label)}
+                            />
+                        ))}
+                    </View>
+                </View>
             ))}
-          </View>
-        </View>
-      ))}
-    </ScrollView>
-  );
+        </ScrollView>
+    );
 };
 
 const styles = StyleSheet.create({
-  genreGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    columnGap: 6,
-    rowGap: 8,
-  }
+    container: {
+        paddingHorizontal: 5,
+        paddingVertical: 10,
+    },
+    section: {
+        marginBottom: 24,
+    },
+    sectionTitle: {
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    genreGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+        columnGap: 6,
+        rowGap: 8,
+    },
 });
-
 
 export default GenrebooksScreen;

@@ -25,3 +25,4 @@ export { default as whiteBackIcon } from './whiteBackIcon.png';
 export { default as savedPageIcon } from './savedPageIcon.png';
 
 export { default as pw } from './pw.png';
+export { default as id_screen } from './id_screen.png';

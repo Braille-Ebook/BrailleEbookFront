@@ -8,3 +8,5 @@ export { default as CommentInputBar } from './CommentInputBar';
 
 export { default as HomeMenubar } from './HomeMenubar';
 export { default as GenreButton } from './GenreButton';
+
+export { default as ScreenHeader } from './ScreenHeader';

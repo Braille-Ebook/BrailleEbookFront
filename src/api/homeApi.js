@@ -7,7 +7,7 @@ import { http } from './http';
  */
 export async function getRecentBooks() {
   const res = await http.get('/home/recent');
-  return res.data;
+  return res.data?.data ?? [];
 }
 
 /**
@@ -16,7 +16,7 @@ export async function getRecentBooks() {
  */
 export async function getRecommendedBooks() {
   const res = await http.get('/home/recommend');
-  return res.data;
+  return res.data?.data ?? [];
 }
 
 /**
@@ -25,7 +25,7 @@ export async function getRecommendedBooks() {
  */
 export async function getPopularBooks() {
   const res = await http.get('/home/popular');
-  return res.data;
+  return res.data?.data ?? [];
 }
 
 /**
@@ -34,7 +34,7 @@ export async function getPopularBooks() {
  */
 export async function getNewBooks() {
   const res = await http.get('/home/new');
-  return res.data;
+  return res.data?.data ?? [];
 }
 
 /**
@@ -44,5 +44,5 @@ export async function getNewBooks() {
 export async function getBooksByGenre(genre) {
   if (!genre) throw new Error('장르 이름이 필요합니다.');
   const res = await http.get('/home/genre', { params: { genre } });
-  return res.data;
+  return res.data?.data ?? [];
 }

@@ -3,44 +3,59 @@
 
 import React, { createContext, useEffect, useState, useContext } from 'react';
 import { getAuthToken, clearAuthToken } from '../api/http/tokenStorage';
+import { http } from '../api/http';
 import { logout as apiLogout } from '../api/authService';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [loading, setLoading] = useState(true);
 
-  // 앱 시작 시 토큰 존재 여부 확인
-  useEffect(() => {
-    async function checkToken() {
-      const token = await getAuthToken();
-      setIsAuthenticated(!!token);
-      setLoading(false);
-    }
-    checkToken();
-  }, []);
+    // 앱 시작 시 토큰 또는 세션 쿠키 존재 여부 확인
+    useEffect(() => {
+        async function checkSession() {
+            try {
+                const token = await getAuthToken();
+                if (token) {
+                    setIsAuthenticated(true);
+                    return;
+                }
 
-  const login = () => setIsAuthenticated(true);
+                await http.get('/mypage/info');
+                setIsAuthenticated(true);
+            } catch (_error) {
+                setIsAuthenticated(false);
+            } finally {
+                setLoading(false);
+            }
+        }
 
-  const logout = async () => {
-    try {
-      await apiLogout();
-    } catch (e) {
-      console.warn('Logout error (ignored):', e);
-    } finally {
-      await clearAuthToken();
-      setIsAuthenticated(false);
-    }
-  };
+        checkSession();
+    }, []);
 
-  return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
-      {children}
-    </AuthContext.Provider>
-  );
+    const login = () => setIsAuthenticated(true);
+
+    const logout = async () => {
+        try {
+            await apiLogout();
+        } catch (e) {
+            console.warn('Logout error (ignored):', e);
+        } finally {
+            await clearAuthToken();
+            setIsAuthenticated(false);
+        }
+    };
+
+    return (
+        <AuthContext.Provider
+            value={{ isAuthenticated, loading, login, logout }}
+        >
+            {children}
+        </AuthContext.Provider>
+    );
 }
 
 export function useAuth() {
-  return useContext(AuthContext);
+    return useContext(AuthContext);
 }

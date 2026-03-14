@@ -4,60 +4,92 @@ import {
     TextInput,
     StyleSheet,
     Pressable,
+    ActivityIndicator,
 } from 'react-native';
 import { React, useState } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { ConfirmModal } from '../../modals';
+import { findIdByEmail } from '../../api/authService';
 import commonStyles from '../../../assets/styles/commonStyles';
 import commonColors from '../../../assets/colors/commonColors';
+import AuthScreenLayout from '../../components/AuthScreenLayout';
 
 const FindNewIdScreen = () => {
     const navigation = useNavigation();
     const [email, setEmail] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalText, setModalText] = useState('');
+    const [loading, setLoading] = useState(false);
 
-    const findId = () => {
-        if (!email) {
+    const findId = async () => {
+        if (!email.trim()) {
+            setModalText('이메일을 입력해주세요.');
             setModalVisible(true);
-        } else {
-            navigation.navigate('FindIdSuccessScreen', { userId: 'test15' });
+            return;
+        }
+
+        setLoading(true);
+        try {
+            const res = await findIdByEmail({ email: email.trim() });
+            if (res?.success && res?.userId) {
+                navigation.navigate('FindNewIdSuccessScreen', {
+                    userId: res.userId,
+                });
+                return;
+            }
+
+            setModalText(res?.message || '아이디를 찾지 못했습니다.');
+            setModalVisible(true);
+        } catch (err) {
+            setModalText(err?.message || '아이디 찾기에 실패했습니다.');
+            setModalVisible(true);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <View style={styles.findIdScreen}>
-            <Text style={commonStyles.titleText}>아이디 찾기</Text>
-            <View style={styles.textInputContainer}>
-                <TextInput
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="이메일"
-                    style={styles.textInput}
+        <AuthScreenLayout fallbackRoute='LoginScreen'>
+            <View style={styles.findIdScreen}>
+                <Text style={commonStyles.titleText}>아이디 찾기</Text>
+                <View style={styles.textInputContainer}>
+                    <TextInput
+                        value={email}
+                        onChangeText={setEmail}
+                        placeholder='이메일'
+                        style={styles.textInput}
+                        keyboardType='email-address'
+                        autoCapitalize='none'
+                    />
+                </View>
+                <View style={styles.spacer} />
+                {loading ? (
+                    <ActivityIndicator
+                        size='large'
+                        color={commonColors.purple}
+                    />
+                ) : (
+                    <Pressable onPress={findId}>
+                        <View style={styles.buttonContainer}>
+                            <Text style={styles.buttonText}>아이디 찾기</Text>
+                        </View>
+                    </Pressable>
+                )}
+                <ConfirmModal
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    title='알림'
+                    text={modalText}
+                    buttonText='확인'
                 />
             </View>
-            <View style={{ flex: 1 }} />
-            <Pressable onPress={findId}>
-                <View style={styles.buttonContainer}>
-                    <Text style={styles.buttonText}>아이디 찾기</Text>
-                </View>
-            </Pressable>
-            <ConfirmModal
-                modalVisible={modalVisible}
-                setModalVisible={setModalVisible}
-                title={'이메일 오류'}
-                text={'존재하지 않는 이메일입니다.'}
-                buttonText={'확인'}
-            />
-        </View>
+        </AuthScreenLayout>
     );
 };
 
 const styles = StyleSheet.create({
     findIdScreen: {
         flex: 1,
-        paddingHorizontal: 42,
-        paddingTop: 60,
-        paddingBottom: 40,
     },
     textInputContainer: {
         width: '100%',
@@ -86,6 +118,9 @@ const styles = StyleSheet.create({
     },
     buttonText: {
         color: commonColors.white,
+    },
+    spacer: {
+        flex: 1,
     },
 });
 

@@ -40,9 +40,29 @@ class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
 
   override func bundleURL() -> URL? {
 #if DEBUG
-    RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index")
+    let provider = RCTBundleURLProvider.sharedSettings()
+    let metroHost = configuredMetroHost()
+
+    if !metroHost.isEmpty {
+      provider.jsLocation = metroHost
+    }
+
+    if let bundleURL = provider.jsBundleURL(forBundleRoot: "index") {
+      return bundleURL
+    }
+
+    return URL(string: "http://\(metroHost)/index.bundle?platform=ios&dev=true&minify=false")
 #else
     Bundle.main.url(forResource: "main", withExtension: "jsbundle")
 #endif
+  }
+
+  private func configuredMetroHost() -> String {
+    if let metroHost = Bundle.main.object(forInfoDictionaryKey: "MetroHost") as? String,
+       !metroHost.isEmpty {
+      return metroHost
+    }
+
+    return "localhost:8081"
   }
 }

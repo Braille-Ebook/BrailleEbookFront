@@ -1,20 +1,31 @@
-import { View, Text, StyleSheet, Image, Pressable } from 'react-native';
+import { View, StyleSheet, Image, Pressable } from 'react-native';
 import React from 'react';
+import { whiteBackIcon } from '../../assets/icons';
 
-export default function PdfBar({ setOpen, bookmark, setBookmark }) {
+export default function PdfBar({
+    setOpen,
+    bookmark,
+    setBookmark,
+    onPressBack,
+}) {
     return (
         <View style={styles.barContainer}>
-            <Pressable
-                onPress={() => {
-                    setOpen((prev) => !prev);
-                }}
-            >
-                <Image
-                    source={require('../../assets/icons/menu.png')}
-                    style={styles.menuIcon}
-                />
-            </Pressable>
-            <Pressable
+            <View style={styles.leftGroup}>
+                <Pressable onPress={onPressBack} style={styles.backButton}>
+                    <Image source={whiteBackIcon} style={styles.backIcon} />
+                </Pressable>
+                {/*<Pressable
+                        onPress={() => {
+                            setOpen((prev) => !prev);
+                        }}
+                    >
+                        <Image
+                            source={require('../../assets/icons/menu.png')}
+                            style={styles.menuIcon}
+                        />
+                    </Pressable>*/}
+            </View>
+            {/*<Pressable
                 onPress={() => {
                     setBookmark((prev) => !prev);
                 }}
@@ -27,20 +38,35 @@ export default function PdfBar({ setOpen, bookmark, setBookmark }) {
                     }
                     style={styles.bookmarkIcon}
                 />
-            </Pressable>
+            </Pressable> */}
         </View>
     );
 }
 const styles = StyleSheet.create({
     barContainer: {
         width: '100%',
-        height: 55,
+        height: 72,
         paddingHorizontal: 15,
         backgroundColor: 'rgb(64,64,64)',
         display: 'flex',
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    leftGroup: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    backButton: {
+        width: 64,
+        height: 64,
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 12,
+    },
+    backIcon: {
+        width: 48,
+        height: 48,
     },
     menuIcon: { width: 25, height: 25 },
     bookmarkIcon: { width: 40, height: 40 },

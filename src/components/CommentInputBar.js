@@ -6,9 +6,8 @@ import { send } from '../../assets/icons';
 
 const CommentInputBar = ({ text, onChangeText, placeholder, onSubmit }) => {
     const mutation = useMutation({
-        mutationFn: (text) => onSubmit(text),
+        mutationFn: (submittedText) => onSubmit(submittedText),
         onSuccess: () => {
-            //queryClient.invalidateQueries(['bookReviews', '/*data.bookId*/']);
             onChangeText('');
         },
         onError: (e) => {},
@@ -22,14 +21,14 @@ const CommentInputBar = ({ text, onChangeText, placeholder, onSubmit }) => {
                     placeholder={placeholder}
                     style={styles.textInput}
                     onSubmitEditing={() => {
-                        if (!mutation.isLoading) {
+                        if (!mutation.isPending && text.trim()) {
                             mutation.mutate(text);
                         }
                     }}
                 />
                 <Pressable
                     onPress={() => {
-                        if (!mutation.isLoading) {
+                        if (!mutation.isPending && text.trim()) {
                             mutation.mutate(text);
                         }
                     }}
