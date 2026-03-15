@@ -18,6 +18,7 @@ import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
 import commonColors from '../../assets/colors/commonColors';
 import { getLastPosition, getPdfData, postLastPosition } from '../api';
+import { connectUSB, disconnectUSB, sendDataThroughUSB } from '../utils';
 
 export default function PdfScreen() {
     const navigation = useNavigation();
@@ -28,6 +29,21 @@ export default function PdfScreen() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
+
+    //USB 연결 & 연결 끊기
+    useEffect(() => {
+        const initUSB = async () => {
+            await connectUSB();
+            if (pageContent) {
+                sendDataThroughUSB(pageContent[currentChar]);
+            }
+        };
+        initUSB();
+        return () => {
+            disconnectUSB();
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     //1. 데이터 처리
     //최근 위치 저장할 ref
@@ -89,6 +105,7 @@ export default function PdfScreen() {
     //2. 이벤트 핸들러
     const panGesture = Gesture.Pan().onEnd((event) => {
         const { translationX } = event;
+        sendDataThroughUSB(pageContent[currentChar]);
 
         // Swipe left → next page
         if (translationX < -50) {
@@ -114,7 +131,10 @@ export default function PdfScreen() {
 
     return (
         <GestureHandlerRootView style={styles.flexFill}>
-            <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+            <SafeAreaView
+                style={styles.safeArea}
+                edges={['top', 'left', 'right']}
+            >
                 <View style={styles.pdfScreen}>
                     <PdfBar
                         onPressBack={() => {

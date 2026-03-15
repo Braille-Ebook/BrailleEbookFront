@@ -1,3 +1,5 @@
+export * from './arduinoUSBConnection';
+
 export const getAuthorAndTranslator = (author, translator) => {
     if (!author && !translator) {
         return '';
@@ -10,19 +12,19 @@ export const getAuthorAndTranslator = (author, translator) => {
     return translator ? `${author} 글, ${translator} 번역` : `${author} 글`;
 };
 
-const getMergedBookData = book => {
+const getMergedBookData = (book) => {
     if (!book || typeof book !== 'object') {
         return {};
     }
 
     const nestedBook = [book.Book, book.book, book.bookInfo].find(
-        candidate => candidate && typeof candidate === 'object'
+        (candidate) => candidate && typeof candidate === 'object'
     );
 
     return nestedBook ? { ...book, ...nestedBook } : { ...book };
 };
 
-const getBooleanFlag = value => {
+const getBooleanFlag = (value) => {
     if (typeof value === 'boolean') {
         return value;
     }
@@ -46,13 +48,13 @@ const getBooleanFlag = value => {
     return false;
 };
 
-export const getBookBookmarkCount = book => {
+export const getBookBookmarkCount = (book) => {
     const mergedBook = getMergedBookData(book);
 
     return Number(mergedBook.bookmark_num ?? mergedBook.bookmarkNum ?? 0) || 0;
 };
 
-export const getIsBookmarked = book => {
+export const getIsBookmarked = (book) => {
     const mergedBook = getMergedBookData(book);
     const rawBookmarkFlag =
         mergedBook.isBookmarked ??
@@ -63,16 +65,13 @@ export const getIsBookmarked = book => {
     return rawBookmarkFlag == null ? false : getBooleanFlag(rawBookmarkFlag);
 };
 
-export const normalizeBookData = book => {
+export const normalizeBookData = (book) => {
     if (!book || typeof book !== 'object') {
         return {};
     }
 
     const normalized = getMergedBookData(book);
-    const bookId =
-        normalized.book_id ??
-        normalized.id ??
-        null;
+    const bookId = normalized.book_id ?? normalized.id ?? null;
 
     return {
         ...normalized,

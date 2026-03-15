@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
+import { sendDataThroughUSB } from '../utils';
 
 export default function PdfPage({
     currentPage,
@@ -29,6 +30,7 @@ export default function PdfPage({
     const handlePress = (e) => {
         const { locationX } = e.nativeEvent;
         const screenWidth = Dimensions.get('window').width;
+        sendDataThroughUSB(content[char]);
 
         if (locationX > screenWidth / 2) {
             setChar((prev) => Math.min(prev + 1, safeContent.length - 1));
