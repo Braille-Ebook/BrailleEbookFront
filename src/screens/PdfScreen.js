@@ -30,6 +30,7 @@ export default function PdfScreen() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
     const [isUsbConnected, setIsUsbConnected] = useState(false);
+    const lastSentPositionRef = useRef('');
 
     //USB 연결 & 연결 끊기
     useEffect(() => {
@@ -129,8 +130,14 @@ export default function PdfScreen() {
             return;
         }
 
+        const positionKey = `${currentPage}:${safeIndex}:${pageContent[safeIndex]}`;
+        if (lastSentPositionRef.current === positionKey) {
+            return;
+        }
+
+        lastSentPositionRef.current = positionKey;
         sendDataThroughUSB(pageContent[safeIndex]);
-    }, [isUsbConnected, pageContent, currentChar]);
+    }, [isUsbConnected, pageContent, currentChar, currentPage]);
 
     //2. 이벤트 핸들러
     const panGesture = Gesture.Pan().onEnd((event) => {

@@ -1,3 +1,8 @@
+//PdfScreen.js:139에서 sendDataThroughUSB(pageContent[safeIndex])로 현재 하이라이트된 한 글자를 USB 시리얼로 전송하고, 
+//arduinoUSBConnection.js:68에서 ${payload}\n 형태로 글자 + 개행을 보냅니다.
+//즉 앱에서는 한 글자 + \n 단위로 전송되고, 아두이노의 read_serial_line이 이를 한 줄로 읽어서 처리합니다.
+//시리얼 모니터에서는 여러 글자를 한 줄로 입력할 수 있고, 앱에서는 항상 한 글자씩 들어오는 구조
+
 import {
     UsbSerialManager,
     Parity,

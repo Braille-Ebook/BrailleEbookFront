@@ -1,4 +1,5 @@
 // 점자표시기 세팅
+#include <string.h>
 #include "braille.h"
 int dataPin = 2; // DATA 핀번호
 int latchPin = 3; // LATCH 핀번호
@@ -8,6 +9,54 @@ braille bra(dataPin, latchPin, clockPin, no_module);
 
 
 char string_buffer[100]; // 수신 받은 문자열
+char string_buffer_serial[100][4]; // 수신 받은 문자열을 글자 단위로 분리하여 배열에 저장
+int str_char_count = 0; // 전체 문자개수
+
+unsigned char get_char_byte(char *pos);
+
+bool read_serial_line(char *out, int out_size)
+{
+  static char line_buffer[100];
+  static int line_index = 0;
+
+  while (Serial.available() > 0)
+  {
+    char c = (char)Serial.read();
+
+    if (c == '\r')
+    {
+      continue;
+    }
+
+    if (c == '\n')
+    {
+      line_buffer[line_index] = 0;
+      strncpy(out, line_buffer, out_size - 1);
+      out[out_size - 1] = 0;
+      for (int j = 0; j < (int)sizeof(line_buffer); j++) line_buffer[j] = 0;
+      line_index = 0;
+      return true;
+    }
+
+    if (line_index < (int)sizeof(line_buffer) - 1)
+    {
+      line_buffer[line_index++] = c;
+    }
+  }
+
+  return false;
+}
+
+void clear_serial_char_buffer()
+{
+  for (int i = 0; i < 100; i++)
+  {
+    string_buffer_serial[i][0] = 0;
+    string_buffer_serial[i][1] = 0;
+    string_buffer_serial[i][2] = 0;
+    string_buffer_serial[i][3] = 0;
+  }
+}
 
 byte hangul_cho[19] =
 {
@@ -238,65 +287,130 @@ void setup()
 
 void loop()
 {
-  if ( !Serial.available() ) // 수신 데이터가 없으면 대기
+  static char last_line[100] = {0};
+
+  if ( !read_serial_line(string_buffer, sizeof(string_buffer)) ) // 문자를 한 줄 단위로 수신
   {
     return;
   }
 
-  // 앱에서 "한 글자 + 개행(\n)" 형태로 전송
-  String str = Serial.readStringUntil('\n');
-  str.replace("\r", "");
-  str.trim();
-  if ( str.length() == 0 )
+  if ( string_buffer[0] == 0 )
   {
     return;
   }
 
-  strncpy(string_buffer, str.c_str(), sizeof(string_buffer) - 1);
-  string_buffer[sizeof(string_buffer) - 1] = 0;
-
-  int bytes = get_char_byte(string_buffer); // 문자열의 첫 글자만 처리
-
-  if ( bytes == 1 ) // ASCII 문자
+  // IME 중복 입력 방지: 이전 입력의 마지막 글자가 단독으로 다시 들어오면 건너뜀
   {
-    int code = (unsigned char)string_buffer[0];
-    if ( code < 0 || code > 126 )
+    int new_len = strlen(string_buffer);
+    int old_len = strlen(last_line);
+    if (old_len > new_len && new_len > 0 && new_len <= 3 &&
+        strncmp(string_buffer, last_line + old_len - new_len, new_len) == 0)
     {
-      code = 32; // 지원하지 않는 ASCII는 공백 처리
+      string_buffer[0] = 0;
+      return;
+    }
+  }
+  strncpy(last_line, string_buffer, sizeof(last_line) - 1);
+  last_line[sizeof(last_line) - 1] = 0;
+
+  clear_serial_char_buffer();
+  str_char_count = 0;
+
+  // 입력 받은 글자 각 배열에 할당
+  // 입력 받은 문자열이 UTF8이므로 문자를 한글의 경우 초성, 중성, 종성으로 분리해야함
+  {
+    int ind = 0; // 처리중인 문자열 BYTE 위치
+    int len = strlen(string_buffer); // 문자열 BYTE 수
+    int index = 0; // 문자의 현재 처리 개수
+
+    while ( ind < len && index < 100 ) // 처리가 완료될때까지
+    {
+      int bytes = get_char_byte(string_buffer + ind); // 해당 위치의 첫번째 바이트를 읽음
+
+      if ( bytes == 1 ) // ascii 인 경우
+      {
+        string_buffer_serial[index][0] = *(string_buffer + ind);
+        index++;
+      }
+      else if ( bytes == 3 && (ind + 2) < len ) // 한글인 경우
+      {
+        string_buffer_serial[index][0] = *(string_buffer + ind);
+        string_buffer_serial[index][1] = *(string_buffer + ind + 1);
+        string_buffer_serial[index][2] = *(string_buffer + ind + 2);
+        index++;
+      }
+      else
+      {
+        // 지원하지 않는 글자나 잘린 문자는 건너뜀
+      }
+
+      ind += bytes;
     }
 
-    ascii_braille(code);
-    Serial.print("점자 출력 - 영문 : ");
-    Serial.println(ascii_data[code], BIN);
-    return;
+    str_char_count = index;
   }
 
-  if ( bytes == 3 ) // 한글(UTF-8 3바이트) 문자
+  for ( int i = 0; i < str_char_count; i++) // 전체 문자에 대해서 처리
   {
-    unsigned int cho, jung, jong;
-    split_han_cho_jung_jong(
-      string_buffer[0],
-      string_buffer[1],
-      string_buffer[2],
-      cho,
-      jung,
-      jong
-    );
+    if ( string_buffer_serial[i][1] == 0 ) // ascii 코드인 경우
+    {
+      int code = (unsigned char)string_buffer_serial[i][0];
+      ascii_braille(code);
+      delay(200);
+      bra.all_off();
+      bra.refresh();
+      delay(100);
 
-    han_braille(cho, jung, jong);
-    Serial.print("점자 출력 - 한글 : ");
-    Serial.print(hangul_cho[cho], BIN);
-    Serial.print(",");
-    Serial.print(hangul_jung[jung], BIN);
-    Serial.print(",");
-    Serial.println(hangul_jong[jong], BIN);
-    return;
+      Serial.print("출력하는 텍스트: ");
+      Serial.print((char)code);
+      Serial.print(" : ASCII 코드=");
+      Serial.println(code);
+    }
+    else
+      // 한글인 경우
+    {
+      unsigned int cho, jung, jong;
+
+      split_han_cho_jung_jong(
+        string_buffer_serial[i][0],
+        string_buffer_serial[i][1],
+        string_buffer_serial[i][2],
+        cho,
+        jung,
+        jong
+      );
+
+      han_braille(cho, jung, jong);
+      delay(200);
+      bra.all_off();
+      bra.refresh();
+      delay(200);
+
+      char output_text[4];
+      output_text[0] = string_buffer_serial[i][0];
+      output_text[1] = string_buffer_serial[i][1];
+      output_text[2] = string_buffer_serial[i][2];
+      output_text[3] = 0;
+
+      Serial.print("출력하는 텍스트: ");
+      Serial.print(output_text);
+      Serial.print(" : 초성코드=");
+      Serial.print(cho);
+      Serial.print(", 중성코드=");
+      Serial.print(jung);
+      Serial.print(", 종성코드=");
+      Serial.print(jong);
+      Serial.print(" | UTF-8=");
+      Serial.print((unsigned char)string_buffer_serial[i][0], DEC);
+      Serial.print(",");
+      Serial.print((unsigned char)string_buffer_serial[i][1], DEC);
+      Serial.print(",");
+      Serial.println((unsigned char)string_buffer_serial[i][2], DEC);
+    }
   }
 
-  // 이모지/확장 유니코드 등 1,3바이트가 아닌 문자는 셀을 내림
-  bra.all_off();
-  bra.refresh();
-  Serial.println("지원하지 않는 문자");
+  Serial.println("");
+  string_buffer[0] = 0;
 }
 
 // UTF-8 문자열에서 한글자의 BYTE수를 구하는 함수
@@ -339,7 +453,7 @@ void ascii_braille(int code)
   bra.all_off();
   for ( int i = 0; i < 6; i++)
   {
-    int on_off = ascii_data[code] >> (5 - i) & 0b00000001; // 초성의 점자 데이타의 i번째 비트를 가져옴
+    int on_off = ascii_data[code] >> (5 - i) & 0b00000001;
     if ( on_off != 0 )
     {
       bra.on(0, i);
@@ -395,7 +509,7 @@ void han_braille(int index1, int index2, int index3)
   bra.all_off();
   for ( int i = 0; i < 6; i++)
   {
-    int on_off = hangul_cho[index1] >> (5 - i) & 0b00000001; // 초성의 점자 데이타의 i번째 비트를 가져옴
+    int on_off = hangul_cho[index1] >> (5 - i) & 0b00000001;
     if ( on_off != 0 )
     {
       bra.on(0, i);
@@ -408,7 +522,7 @@ void han_braille(int index1, int index2, int index3)
 
   for ( int i = 0; i < 6; i++)
   {
-    int on_off = hangul_jung[index2] >> (5 - i) & 0b00000001; // 중성의 점자 데이타의 i번째 비트를 가져옴
+    int on_off = hangul_jung[index2] >> (5 - i) & 0b00000001;
     if ( on_off != 0 )
     {
       bra.on(1, i);
@@ -419,10 +533,9 @@ void han_braille(int index1, int index2, int index3)
     }
   }
 
-  // 종성
   for ( int i = 0; i < 6; i++)
   {
-    int on_off = hangul_jong[index3] >> (5 - i) & 0b00000001; // 종성의 점자 데이타의 i번째 비트를 가져옴
+    int on_off = hangul_jong[index3] >> (5 - i) & 0b00000001;
     if ( on_off != 0 )
     {
       bra.on(2, i);
