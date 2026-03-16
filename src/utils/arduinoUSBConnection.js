@@ -3,7 +3,7 @@
 //즉 앱에서는 한 글자 + \n 단위로 전송되고, 아두이노의 read_serial_line이 이를 한 줄로 읽어서 처리합니다.
 //시리얼 모니터에서는 여러 글자를 한 줄로 입력할 수 있고, 앱에서는 항상 한 글자씩 들어오는 구조
 
-import {
+/*import {
     UsbSerialManager,
     Parity,
 } from 'react-native-usb-serialport-for-android';
@@ -87,4 +87,4 @@ export const disconnectUSB = () => {
     isConnected = false;
 };
 
-export const getUSBConnectionStatus = () => isConnected;
+export const getUSBConnectionStatus = () => isConnected;*/

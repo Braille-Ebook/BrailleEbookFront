@@ -18,7 +18,7 @@ import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
 import commonColors from '../../assets/colors/commonColors';
 import { getLastPosition, getPdfData, postLastPosition } from '../api';
-import { connectUSB, disconnectUSB, sendDataThroughUSB } from '../utils';
+//import { connectUSB, disconnectUSB, sendDataThroughUSB } from '../utils';
 
 export default function PdfScreen() {
     const navigation = useNavigation();
@@ -29,11 +29,11 @@ export default function PdfScreen() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
-    const [isUsbConnected, setIsUsbConnected] = useState(false);
+    //const [isUsbConnected, setIsUsbConnected] = useState(false);
     const lastSentPositionRef = useRef('');
 
     //USB 연결 & 연결 끊기
-    useEffect(() => {
+    /*useEffect(() => {
         let isMounted = true;
 
         const initUSB = async () => {
@@ -48,7 +48,7 @@ export default function PdfScreen() {
             isMounted = false;
             disconnectUSB();
         };
-    }, []);
+    }, []);*/
 
     //1. 데이터 처리
     //최근 위치 저장할 ref
@@ -117,7 +117,7 @@ export default function PdfScreen() {
     const totalPage = contentQuery.data?.pages_num;
 
     useEffect(() => {
-        if (!isUsbConnected) return;
+        //if (!isUsbConnected) return;
         if (typeof pageContent !== 'string' || !pageContent.length) return;
 
         const safeIndex = Math.min(
@@ -136,8 +136,8 @@ export default function PdfScreen() {
         }
 
         lastSentPositionRef.current = positionKey;
-        sendDataThroughUSB(pageContent[safeIndex]);
-    }, [isUsbConnected, pageContent, currentChar, currentPage]);
+        //sendDataThroughUSB(pageContent[safeIndex]);
+    }, [ pageContent, currentChar, currentPage]);
 
     //2. 이벤트 핸들러
     const panGesture = Gesture.Pan().onEnd((event) => {
