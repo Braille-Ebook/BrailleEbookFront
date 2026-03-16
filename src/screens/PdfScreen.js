@@ -18,6 +18,7 @@ import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
 import commonColors from '../../assets/colors/commonColors';
 import { getLastPosition, getPdfData, postLastPosition } from '../api';
+import { connectUSB, disconnectUSB, sendDataThroughUSB } from '../utils';
 
 export default function PdfScreen() {
     const navigation = useNavigation();
@@ -28,6 +29,25 @@ export default function PdfScreen() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
+    const [isUsbConnected, setIsUsbConnected] = useState(false);
+
+    //USB 연결 & 연결 끊기
+    useEffect(() => {
+        let isMounted = true;
+
+        const initUSB = async () => {
+            const connected = await connectUSB();
+            if (isMounted) {
+                setIsUsbConnected(connected);
+            }
+        };
+
+        initUSB();
+        return () => {
+            isMounted = false;
+            disconnectUSB();
+        };
+    }, []);
 
     //1. 데이터 처리
     //최근 위치 저장할 ref
@@ -48,8 +68,17 @@ export default function PdfScreen() {
     });
     useEffect(() => {
         if (!positionQuery.data) return;
-        setCurrentPage(Number(positionQuery.data.last_page));
-        setCurrentChar(Number(positionQuery.data.last_char));
+
+        const lastPage = Number(positionQuery.data.last_page);
+        const lastChar = Number(positionQuery.data.last_char);
+
+        if (Number.isFinite(lastPage) && lastPage > 0) {
+            setCurrentPage(lastPage);
+        }
+
+        if (Number.isFinite(lastChar) && lastChar >= 0) {
+            setCurrentChar(lastChar);
+        }
     }, [positionQuery.data]);
 
     //유저가 읽어야할 pdf 페이지 불러오기
@@ -86,6 +115,23 @@ export default function PdfScreen() {
     const pageContent = contentQuery.data?.text;
     const totalPage = contentQuery.data?.pages_num;
 
+    useEffect(() => {
+        if (!isUsbConnected) return;
+        if (typeof pageContent !== 'string' || !pageContent.length) return;
+
+        const safeIndex = Math.min(
+            Math.max(Number.isInteger(currentChar) ? currentChar : 0, 0),
+            pageContent.length - 1
+        );
+
+        if (safeIndex !== currentChar) {
+            setCurrentChar(safeIndex);
+            return;
+        }
+
+        sendDataThroughUSB(pageContent[safeIndex]);
+    }, [isUsbConnected, pageContent, currentChar]);
+
     //2. 이벤트 핸들러
     const panGesture = Gesture.Pan().onEnd((event) => {
         const { translationX } = event;
@@ -114,7 +160,10 @@ export default function PdfScreen() {
 
     return (
         <GestureHandlerRootView style={styles.flexFill}>
-            <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+            <SafeAreaView
+                style={styles.safeArea}
+                edges={['top', 'left', 'right']}
+            >
                 <View style={styles.pdfScreen}>
                     <PdfBar
                         onPressBack={() => {
