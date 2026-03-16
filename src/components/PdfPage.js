@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, Dimensions, Pressable } from 'react-native';
 import React from 'react';
 import { ScrollView } from 'react-native-gesture-handler';
-import { sendDataThroughUSB } from '../utils';
 
 export default function PdfPage({
     currentPage,
@@ -15,7 +14,11 @@ export default function PdfPage({
             ? content
             : '본문 정보가 없습니다.';
     const highlightNthChar = (n) => {
-        const clampedIndex = Math.min(Math.max(n, 0), safeContent.length - 1);
+        const targetIndex = Number.isInteger(n) ? n : 0;
+        const clampedIndex = Math.min(
+            Math.max(targetIndex, 0),
+            safeContent.length - 1
+        );
         const before = safeContent.slice(0, clampedIndex);
         const target = safeContent[clampedIndex];
         const after = safeContent.slice(clampedIndex + 1);
@@ -30,7 +33,7 @@ export default function PdfPage({
     const handlePress = (e) => {
         const { locationX } = e.nativeEvent;
         const screenWidth = Dimensions.get('window').width;
-        sendDataThroughUSB(content[char]);
+        if (!safeContent.length) return;
 
         if (locationX > screenWidth / 2) {
             setChar((prev) => Math.min(prev + 1, safeContent.length - 1));
