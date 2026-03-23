@@ -83,3 +83,4 @@ export const disconnectUSB = () => {
 };
 
 export const getUSBConnectionStatus = () => isConnected;
+            
