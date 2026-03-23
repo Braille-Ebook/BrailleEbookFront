@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(export LANG=en_US.UTF-8)",
+      "Bash(export LC_ALL=en_US.UTF-8)"
+    ]
+  }
+}
