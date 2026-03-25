@@ -11,7 +11,9 @@
       "Bash(lsof -ti:8081)",
       "Bash(xargs kill:*)",
       "Bash(xcodebuild -workspace BrailleEbookFront.xcworkspace -configuration Debug -scheme BrailleEbookFront -destination 'id=00008020-0009296E023A002E' build)",
-      "Bash(xcrun simctl:*)"
+      "Bash(xcrun simctl:*)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/woo/Documents/GitHub/BrailleEbookFront/assets/icons/braillebookIconPurple.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/woo/Documents/GitHub/BrailleEbookFront/assets/icons/appLogo.png)"
     ]
   }
 }
