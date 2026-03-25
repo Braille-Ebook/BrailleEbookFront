@@ -2,7 +2,16 @@
   "permissions": {
     "allow": [
       "Bash(export LANG=en_US.UTF-8)",
-      "Bash(export LC_ALL=en_US.UTF-8)"
+      "Bash(export LC_ALL=en_US.UTF-8)",
+      "Bash(grep -r brailleebookfront /Users/woo/Documents/GitHub/BrailleEbookFront --include=*.plist --include=*.xml --include=*.swift --include=*.js --include=*.json)",
+      "Bash(find /Users/woo/Documents/GitHub/BrailleEbookFront/ios/build -name *.swiftmodule)",
+      "Bash(find /Users/woo/Documents/GitHub/BrailleEbookFront/ios/Pods -name *.modulemap)",
+      "Bash(find /Users/woo/Documents/GitHub/BrailleEbookFront/ios/Pods/Headers/Public -name *.modulemap)",
+      "Bash(xcodebuild -workspace BrailleEbookFront.xcworkspace -scheme BrailleEbookFront -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 16' build)",
+      "Bash(lsof -ti:8081)",
+      "Bash(xargs kill:*)",
+      "Bash(xcodebuild -workspace BrailleEbookFront.xcworkspace -configuration Debug -scheme BrailleEbookFront -destination 'id=00008020-0009296E023A002E' build)",
+      "Bash(xcrun simctl:*)"
     ]
   }
 }

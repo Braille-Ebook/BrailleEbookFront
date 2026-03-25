@@ -21,6 +21,7 @@ import {
     completeSocialLogin,
     login,
     parseKakaoCallback,
+    KAKAO_REDIRECT_URI,
 } from '../../api/authService';
 import { validateLogin } from '../../api/authValidators';
 import { useAuth } from '../../context/AuthContext';
@@ -131,7 +132,7 @@ const LoginScreen = () => {
     };
 
     const handleKakaoLogin = async () => {
-        const kakaoLoginUrl = buildKakaoLoginUrl();
+        const kakaoLoginUrl = buildKakaoLoginUrl(KAKAO_REDIRECT_URI);
 
         try {
             await Linking.openURL(kakaoLoginUrl);

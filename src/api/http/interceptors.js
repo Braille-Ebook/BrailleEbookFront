@@ -8,10 +8,11 @@ export function attachInterceptors() {
   // Request: 토큰 자동 첨부 (토큰 있으면 항상 붙이는 방식 권장)
   http.interceptors.request.use(async (config) => {
     const token = await getAuthToken();
+    console.log(`[인터셉터] ${config.method?.toUpperCase()} ${config.url} | 토큰: ${token ? '있음' : '없음'}`);
     if (token) {
-      config.headers = config.headers ?? {};
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.set('Authorization', `Bearer ${token}`);
     }
+    console.log('[인터셉터] Authorization:', config.headers.get('Authorization'));
     return config;
   });
 

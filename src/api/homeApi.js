@@ -1,4 +1,4 @@
-import { http } from './http';
+import { http, getAuthToken } from './http';
 
 /**
  * [1] 최근에 읽은 책
@@ -6,7 +6,10 @@ import { http } from './http';
  * (로그인 여부 관계없이 요청 가능)
  */
 export async function getRecentBooks() {
+  const token = await getAuthToken();
+  console.log('[homeApi] 토큰 상태:', token ? `있음 (${token.substring(0, 10)}...)` : '없음');
   const res = await http.get('/home/recent');
+  console.log('[homeApi] /home/recent 응답:', JSON.stringify(res.data));
   return res.data?.data ?? [];
 }
 
@@ -16,6 +19,7 @@ export async function getRecentBooks() {
  */
 export async function getRecommendedBooks() {
   const res = await http.get('/home/recommend');
+  console.log('[homeApi] /home/recommend 응답:', JSON.stringify(res.data));
   return res.data?.data ?? [];
 }
 
