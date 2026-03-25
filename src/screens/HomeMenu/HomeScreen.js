@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import {
     ScrollView,
     Text,
@@ -6,6 +6,7 @@ import {
     View,
     ActivityIndicator,
 } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import BookList from '../../components/BookList';
 import commonColors from '../../../assets/colors/commonColors';
 import { getRecentBooks, getRecommendedBooks } from '../../api/homeApi';
@@ -16,25 +17,40 @@ const HomeScreen = () => {
     const [loading, setLoading] = useState(true);
     const [errorMessage, setErrorMessage] = useState('');
 
-    useEffect(() => {
-        async function loadHomeData() {
-            try {
-                const [recentRes, recommendRes] = await Promise.all([
+    useFocusEffect(
+        useCallback(() => {
+            let cancelled = false;
+
+            async function loadHomeData() {
+                setErrorMessage('');
+                const [recentResult, recommendResult] = await Promise.allSettled([
                     getRecentBooks(),
                     getRecommendedBooks(),
                 ]);
-                setRecentBooks(recentRes || []);
-                setRecommendedBooks(recommendRes || []);
-            } catch (err) {
-                setErrorMessage(
-                    err?.message || '홈 데이터를 불러오지 못했습니다.'
-                );
-            } finally {
+
+                if (cancelled) return;
+
+                if (recentResult.status === 'fulfilled') {
+                    setRecentBooks(recentResult.value || []);
+                }
+                if (recommendResult.status === 'fulfilled') {
+                    setRecommendedBooks(recommendResult.value || []);
+                }
+
+                const errors = [recentResult, recommendResult]
+                    .filter(r => r.status === 'rejected')
+                    .map(r => r.reason?.message);
+                if (errors.length > 0) {
+                    setErrorMessage(errors.join(' / '));
+                }
+
                 setLoading(false);
             }
-        }
-        loadHomeData();
-    }, []);
+            loadHomeData();
+
+            return () => { cancelled = true; };
+        }, [])
+    );
 
     if (loading) {
         return (

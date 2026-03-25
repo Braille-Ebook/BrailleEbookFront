@@ -1,7 +1,13 @@
-import {
-    UsbSerialManager,
-    Parity,
-} from 'react-native-usb-serialport-for-android';
+import { Platform } from 'react-native';
+
+let UsbSerialManager = null;
+let Parity = {};
+
+if (Platform.OS === 'android') {
+    const usb = require('react-native-usb-serialport-for-android');
+    UsbSerialManager = usb.UsbSerialManager;
+    Parity = usb.Parity;
+}
 
 //안드로이드 기기에만 가능
 let port = null;
@@ -20,6 +26,9 @@ const getPayload = (data) => {
 };
 
 export const connectUSB = async () => {
+    if (Platform.OS !== 'android') {
+        return false;
+    }
     console.log('connecting usb');
     try {
         const devices = await UsbSerialManager.list();
