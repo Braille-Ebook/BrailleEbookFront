@@ -4,7 +4,15 @@ import { API_BASE_URL } from './http/config';
 
 // 로그인 응답 내 토큰 필드명 변동 가능성 대응
 function extractToken(loginResponse) {
-    return loginResponse?.accessToken || loginResponse?.token || null;
+    return (
+        loginResponse?.accessToken ||
+        loginResponse?.token ||
+        loginResponse?.access_token ||
+        loginResponse?.data?.accessToken ||
+        loginResponse?.data?.token ||
+        loginResponse?.data?.access_token ||
+        null
+    );
 }
 
 export const KAKAO_REDIRECT_URI = 'brailleebookfront://auth/kakao/callback';
@@ -91,16 +99,18 @@ export async function completeKakaoLoginFromCode({ code, state } = {}) {
         params: {
             code,
             state,
-            // Kakao REST API redirect_uri must match the server callback URI
-            // that was used when requesting the authorization code.
             redirect_uri: KAKAO_SERVER_CALLBACK_URI,
         },
     });
     const data = res.data;
+    console.log('[카카오 로그인] 서버 응답:', JSON.stringify(data));
     const token = extractToken(data);
+    console.log('[카카오 로그인] 추출된 토큰:', token ? '있음' : '없음');
 
     if (token) {
         await setAuthToken(token);
+    } else {
+        console.warn('[카카오 로그인] 토큰을 찾을 수 없습니다. 응답 키:', Object.keys(data || {}));
     }
 
     return data;
