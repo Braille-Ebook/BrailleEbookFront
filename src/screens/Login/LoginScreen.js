@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import commonColors from '../../../assets/colors/commonColors';
-import { bookOpenedBig } from '../../../assets/icons';
+import { logo } from '../../../assets/icons';
 import AuthScreenLayout from '../../components/AuthScreenLayout';
 import LoginConfirmModal from '../../modals/LoginConfirmModal';
 import {
@@ -152,7 +152,7 @@ const LoginScreen = () => {
         >
             <View style={styles.container}>
                 <View style={styles.logoWrapper}>
-                    <Image source={bookOpenedBig} style={styles.logo} />
+                    <Image source={logo} style={styles.logo} />
                 </View>
 
                 <View style={styles.inputContainer}>
