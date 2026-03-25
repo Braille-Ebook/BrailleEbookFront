@@ -8,6 +8,7 @@ export { default as starFillIcon } from './starFillIcon.png';
 
 export { default as bookOpened } from './bookOpened.png';
 export { default as bookOpenedBig } from './bookOpenedBig.png';
+export {default as logo} from './logo.png';
 export { default as edit } from './edit.png';
 export { default as profile } from './profile.png';
 export { default as send } from './send.png';
