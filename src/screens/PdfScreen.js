@@ -18,7 +18,7 @@ import PdfPage from '../components/PdfPage';
 import BookmarkedPage from '../components/BookmarkedPage';
 import commonColors from '../../assets/colors/commonColors';
 import { getLastPosition, getPdfData, postLastPosition } from '../api';
-import { connectUSB, disconnectUSB, sendDataThroughUSB } from '../utils';
+import { connectBLE, disconnectBLE, sendDataThroughBLE } from '../utils';
 
 export default function PdfScreen() {
     const navigation = useNavigation();
@@ -29,23 +29,23 @@ export default function PdfScreen() {
     const [currentPage, setCurrentPage] = useState(1);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [isBookmarked, setIsBookmarked] = useState(false);
-    const [isUsbConnected, setIsUsbConnected] = useState(false);
+    const [isBleConnected, setIsBleConnected] = useState(false);
 
-    //USB 연결 & 연결 끊기
+    //BLE 연결 & 연결 끊기
     useEffect(() => {
         let isMounted = true;
 
-        const initUSB = async () => {
-            const connected = await connectUSB();
+        const initBLE = async () => {
+            const connected = await connectBLE();
             if (isMounted) {
-                setIsUsbConnected(connected);
+                setIsBleConnected(connected);
             }
         };
 
-        initUSB();
+        initBLE();
         return () => {
             isMounted = false;
-            disconnectUSB();
+            disconnectBLE();
         };
     }, []);
 
@@ -116,7 +116,7 @@ export default function PdfScreen() {
     const totalPage = contentQuery.data?.pages_num;
 
     useEffect(() => {
-        if (!isUsbConnected) return;
+        if (!isBleConnected) return;
         if (typeof pageContent !== 'string' || !pageContent.length) return;
 
         const safeIndex = Math.min(
@@ -129,8 +129,8 @@ export default function PdfScreen() {
             return;
         }
 
-        sendDataThroughUSB(pageContent[safeIndex]);
-    }, [isUsbConnected, pageContent, currentChar]);
+        sendDataThroughBLE(pageContent[safeIndex]);
+    }, [isBleConnected, pageContent, currentChar]);
 
     //2. 이벤트 핸들러
     const panGesture = Gesture.Pan().onEnd((event) => {
