@@ -1,4 +1,5 @@
-export * from './arduinoUSBConnection';
+//export * from './arduinoUSBConnection';
+export * from './arduinoBLEConnection';
 
 export const getAuthorAndTranslator = (author, translator) => {
     if (!author && !translator) {
